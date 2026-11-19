@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS counts (
   platform TEXT    NOT NULL,              -- chatgpt | claude | grok
   language TEXT    NOT NULL,              -- her answer's primary code only: pt for pt-BR
   country  TEXT    NOT NULL,              -- her answer, ISO 3166-1: IL, DE — never from her address
-  test     INTEGER NOT NULL,              -- 1: a run of the owner's own tests, counted apart
+  test     INTEGER NOT NULL,              -- 1: marked as a test (anyone can set it), counted apart
   n        INTEGER NOT NULL,
   PRIMARY KEY (day, event, platform, language, country, test)
 );

@@ -2,12 +2,13 @@
 // itself is src/worker.js, which exports its handler and nothing else: workerd refuses a main module
 // that exports anything but handlers.
 //
-// It keeps counts — one table of day, event, AI, language, country, a mark for the owner's own tests,
-// and a count — and no name or address. A line comes only when she presses a button on the
-// installation page; the page sends her answers as she gave them. Of the request the code reads its
-// path, its method, the headers Origin and Content-Length and its body — never its address, its
-// other headers or Cloudflare's guess of where it came from. Workers Logs and traces are off
-// (wrangler.toml); Cloudflare's live view can still show a request to whoever watches at that moment.
+// It keeps counts — one table of day, event, AI, language, country, a mark «test» (anyone can set it, so
+// it says «marked as a test», not «the owner's run»), and a count — and no name or address. A line comes
+// only when she presses a button on the installation page; the page sends her answers as she gave them.
+// Of the request the code reads its path, its query string (the owner's key and `since`, on /stats
+// alone), its method, the headers Origin and Content-Length and its body — never its address, its other
+// headers or Cloudflare's guess of where it came from. Workers Logs and traces are off (wrangler.toml);
+// Cloudflare's live view can still show a request to whoever watches at that moment.
 
 import { COUNTRIES } from "./countries.js";
 import { LANGUAGES, ALIASES } from "./languages.js";
