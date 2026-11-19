@@ -25,18 +25,21 @@ export const UNKNOWN = {
 };
 
 // Where the text goes (engine/platforms.toml, `field` and `field_all`) → a path through the menus in each language, the
-// buttons named as the screen shows them where the platform's own help names them (help.openai.com, «Projects in
-// ChatGPT» and «ChatGPT Custom Instructions», read 19.11.2026); where it does not — the Claude and Grok apps — the path
-// is said in words, never a button guessed. English keeps the release's words: the parity test holds them to the Issue.
+// buttons named as the screen shows them. ChatGPT in the browser — by the owner's own screens (chatgpt.com in Safari on
+// an iPhone, Russian interface, 19.11.2026): his name at the foot of the side menu → «Персонализация» → «Пользовательские
+// инструкции», the row ChatGPT → «Edit»; Personalization there is an item of that menu, not a page of «Настройки». A
+// project — «Проекты» → «+» from the same screens, then the project's ••• menu and its settings (help.openai.com,
+// «Projects in ChatGPT», read 19.11.2026: «Project settings»). In Hebrew the interface's own words were not seen, so its
+// paths name the English ones. Claude's and Grok's apps — in words, never a button guessed. English keeps the release's words: the parity test holds them to the Issue.
 // A release that changes a place breaks page/test/page.test.js until it is here.
 export const PLACES = {
   "ChatGPT app: a new project, its instructions": {
-    ru: "приложение ChatGPT → «New project» → в проекте меню ••• → «Project settings» → инструкции",
-    he: "אפליקציית ChatGPT ← «New project» ← בפרויקט התפריט ••• ← «Project settings» ← ההוראות",
+    ru: "приложение ChatGPT → «Проекты» → «+», новый проект → в проекте меню ••• → настройки проекта (Project settings) → инструкции",
+    he: "אפליקציית ChatGPT ← «Projects» ← «+», פרויקט חדש ← בפרויקט התפריט ••• ← «Project settings» ← ההוראות",
   },
   "chatgpt.com in your browser: Settings, Personalization": {
-    ru: "chatgpt.com в браузере → «Settings» → «Personalization» → поле «Custom Instructions»",
-    he: "chatgpt.com בדפדפן ← «Settings» ← «Personalization» ← השדה «Custom Instructions»",
+    ru: "chatgpt.com в браузере → ваше имя внизу бокового меню → «Персонализация» → «Пользовательские инструкции», строка ChatGPT → «Edit»",
+    he: "chatgpt.com בדפדפן ← השם שלכם בתחתית התפריט הצדדי ← «Personalization» ← «Custom instructions», השורה ChatGPT ← «Edit»",
   },
   "Claude app: a new project, its instructions; talk to the AI inside that project": {
     ru: "приложение Claude → новый проект → его инструкции; разговаривайте с ИИ внутри этого проекта",

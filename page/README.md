@@ -16,9 +16,10 @@ no sign-in, nothing kept.
   and the tests import it.
 - `i18n.js` — the page's own words in three languages. What she pastes and sends stays the engine's English. Where the
   text goes (`field`, `field_all` of the platform table) is said in Russian and Hebrew as a path through the menus
-  (`PLACES`), the buttons named as the screen shows them only where the platform's own help names them — ChatGPT's
-  «New project», «Project settings», «Settings», «Personalization», «Custom Instructions» (help.openai.com, read
-  19.11.2026); Claude's and Grok's apps in words. English keeps the release's words, held to the Issue. In Hebrew each
+  (`PLACES`), the buttons named as the screen shows them: ChatGPT in the browser by the owner's own screens (Safari on
+  an iPhone, Russian interface, 19.11.2026) — his name at the foot of the side menu, «Персонализация», «Пользовательские
+  инструкции», the row ChatGPT, «Edit»; a project — «Проекты», «+», then «Project settings» (help.openai.com, read
+  19.11.2026). Hebrew names the English buttons; Claude's and Grok's apps are said in words. English keeps the release's words, held to the Issue. In Hebrew each
   run of Latin words is an isolate (FSI … PDI, `app.js`, `isolate`), a short one with its spaces unbroken, so a button's
   name or «TEXT MARK 2.» keeps its quotes and arrows in a right-to-left line; what she copies is left as it is.
 - `done.html`, `done.js` — the page «it worked»: her AI's last message of installation links to it (INSTALL-12, from
@@ -79,5 +80,5 @@ counter takes lines from that origin (`counter/wrangler.toml`). `.nojekyll` keep
 выбранном ИИ. Три языка: русский, английский, иврит. Ничего не хранит. Одну строку в счётчик отправляет только по
 нажатию «Собрать и сообщить автору», после того как тексты собраны; день к строке ставит сам счётчик. Тексты сверяются
 с движком байт в байт тестом `test:parity`. По-русски и на иврите место для текста показано путём по меню со стрелками,
-кнопки — так, как они написаны на экране, там, где их называет справка самой платформы. Публикует владелец: GitHub
+кнопки ChatGPT — так, как они написаны на экране (по скриншотам владельца с chatgpt.com в Safari, русский интерфейс). Публикует владелец: GitHub
 Pages, ветка `main`, корень; данные уже собраны из выпуска `v0.1.14`.
