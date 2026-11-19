@@ -1,0 +1,33 @@
+/* The installation page: one column, large type, a phone first. Light and dark from the phone's own setting. */
+:root { --bg: #ffffff; --fg: #1d1d1f; --muted: #5f6368; --line: #d0d4d9; --box: #f4f6f8; --accent: #1f5fbf; --error: #b3261e; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #121417; --fg: #e8eaed; --muted: #a6adb4; --line: #3a4048; --box: #1d2126; --accent: #8ab4f8; --error: #f2b8b5; }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+main { max-width: 42rem; margin: 0 auto; padding: 16px; }
+h1 { font-size: 1.6rem; line-height: 1.25; margin: 0.5rem 0 1rem; }
+h2 { font-size: 1.25rem; margin: 1.75rem 0 0.5rem; }
+h3 { font-size: 1.05rem; margin: 1.25rem 0 0.25rem; }
+.langs { display: flex; gap: 8px; justify-content: flex-end; }
+.langs button { background: none; border: 1px solid var(--line); border-radius: 999px; color: var(--fg); padding: 4px 12px; font: inherit; font-size: 0.9rem; }
+.langs button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.privacy { border-inline-start: 3px solid var(--accent); padding-inline-start: 12px; }
+.field { margin: 0.9rem 0; }
+.field label, .field .label { display: block; font-weight: 600; margin-bottom: 4px; }
+select, input[type="text"] { width: 100%; font: inherit; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); margin-bottom: 6px; }
+.radios label { display: block; padding: 6px 0; font-weight: 400; }
+.hint { color: var(--muted); font-size: 0.9rem; margin: 2px 0; }
+.error { color: var(--error); font-weight: 600; min-height: 1.5em; }
+.buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1rem 0 0.5rem; }
+.buttons button[hidden] { display: none; }
+.buttons:has(> button[hidden]) { grid-template-columns: 1fr; }
+button.build { font: inherit; font-weight: 600; padding: 14px 10px; border-radius: 10px; border: 2px solid var(--accent); background: var(--box); color: var(--fg); min-height: 3.2rem; }
+button.build:disabled { opacity: 0.5; }
+.box { position: relative; margin: 0.5rem 0 1rem; }
+pre { white-space: pre-wrap; word-break: break-word; background: var(--box); border: 1px solid var(--line); border-radius: 8px; padding: 12px; padding-top: 44px; font: 14px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; max-height: 22rem; overflow: auto; text-align: left; }
+button.copy { position: absolute; top: 8px; inset-inline-end: 8px; font: inherit; font-size: 0.9rem; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--accent); background: var(--bg); color: var(--accent); }
+.plan { font-weight: 600; }
+.sent { color: var(--muted); font-size: 0.9rem; }
+footer { margin-top: 2.5rem; border-top: 1px solid var(--line); }

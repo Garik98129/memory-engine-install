@@ -1,5 +1,7 @@
-# The counter's tests (counter/README.md, «Tests»): node:sqlite runs the same SQL as D1. Read-only: the
-# job checks out the code and runs `npm test`, nothing else; the actions are pinned to full commits.
+# The tests (counter/README.md, «Tests»; page/README.md, «Tests»): `npm test` — the counter's, with node:sqlite
+# running the same SQL as D1, and the page's own; `parity` — the page against the engine's setup, byte for byte,
+# at the release the page's data was written from. Read-only: the jobs check code out and run tests, nothing
+# else; the actions are pinned to full commits.
 name: test
 
 on:
@@ -28,3 +30,32 @@ jobs:
           node-version: 22.23.5   # the version the tests were last run on; node:sqlite needs 22
       - run: node --version
       - run: npm test
+
+  parity:
+    name: page parity with the engine's setup
+    runs-on: ubuntu-24.04      # its python3 is 3.12, the Python the full way's setup runs on
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7.1.0
+        with:
+          node-version: 22.23.5
+      - name: The release the page's data names
+        id: release
+        run: node -e 'import("./page/data.js").then((m) => console.log("tag=" + m.DATA.release))' >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          repository: Garik98129/memory-engine-releases
+          ref: ${{ steps.release.outputs.tag }}
+          path: release
+          persist-credentials: false
+      - run: python3 --version
+      - name: The page's data is what that release writes
+        run: python3 page/write.py --release release --check
+      - name: The page against setup, byte for byte
+        run: npm run test:parity
+        env:
+          RELEASE_DIR: release
+          PYTHON: python3
