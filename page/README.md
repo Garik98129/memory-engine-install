@@ -22,7 +22,9 @@ no sign-in, nothing kept.
 - `write.py` — writes `data.js`: `python3.12 page/write.py --release <checkout of Garik98129/memory-engine-releases at a tag>`.
   It imports that release's `engine.setup.setup` and takes from it the one text, the installable rows of the platform
   table (with the line `setup` writes for each), the grammar lines, the messages, the limits; from the Python that runs
-  it — the Unicode tables `setup.name_ok` and C5 read, and the time zones `setup` accepts (without `Etc/`). Run it with
+  it — the Unicode tables `setup.name_ok` and C5 read, and the time zones `setup` accepts on that machine (without
+  `Etc/`; a machine whose tzdata also holds the old aliases, as GitHub's runner does — «America/Buenos_Aires» —, has
+  setup take those too, and the page does not offer them: `--check` says so in a NOTE). Run it with
   Python 3.12: the full way's `setup` runs on GitHub's ubuntu-24.04, whose `python3` is 3.12 (Unicode 15.0.0).
   `--check` compares `data.js` with what the release writes.
 

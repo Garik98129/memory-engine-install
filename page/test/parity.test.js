@@ -38,7 +38,11 @@ function answerSets() {
   const platforms = Object.keys(DATA.platforms);
   const langs = [["ru", []], ["en", ["he", "ru"]], ["he", ["en"]], ["pt-BR", ["en", "es", "fr"]], ["zh-Hant", []], ["uk", ["ru"]]];
   const places = [["IL", "Asia/Jerusalem"], ["DE", "Europe/Berlin"], ["US", "America/New_York"], ["BR", "America/Sao_Paulo"],
-    ["NL", "Europe/Amsterdam"], ["JP", "Asia/Tokyo"], ["AR", "America/Argentina/ComodRivadavia"]];
+    ["NL", "Europe/Amsterdam"], ["JP", "Asia/Tokyo"], ["AR", "America/Argentina/Buenos_Aires"],
+    ["KR", DATA.timezones.reduce((a, b) => (b.length > a.length ? b : a))]];   // the longest zone the page offers
+  // Answers from the page's own lists: a zone setup takes but the page does not offer (a backward link some tzdata
+  // holds, «America/Argentina/ComodRivadavia») is the page's narrowing, not a parity question.
+  for (const [country, zone] of places) assert.ok(DATA.countries.includes(country) && DATA.timezones.includes(zone), zone);
   let i = 0;
   for (const name of valid) {
     for (const platform of platforms) {
