@@ -14,7 +14,7 @@ enabled = false
 [[d1_databases]]
 binding = "DB"
 database_name = "memory-engine-counter"
-database_id = "set-at-deploy"   # the id `wrangler d1 create memory-engine-counter` prints
+database_id = "d9664fde-8e3a-4303-b5d1-082ce387aad1"   # the id `wrangler d1 create memory-engine-counter` prints
 
 [vars]
 # The one page whose browsers may send a line: the installation page on GitHub Pages. It keeps other
