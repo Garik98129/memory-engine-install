@@ -141,7 +141,7 @@ test("the page's English words of the Issue are the release's, sentence for sent
     const schedule = row.schedule === "paid" ? en.schedule.paid(row.plan) : en.schedule[row.schedule];
     const held = [
       en.three_steps, where, en.paste(lastLine(field), lastWords(field), length(field), marked), en.step3, en.after,
-      en.after2, en.notion[row.notion], schedule, `What works on ${row.title}.`, en.step2(DATA.manifests).split(" Give it")[0],
+      en.after2, en.old, en.notion[row.notion], schedule, `What works on ${row.title}.`, en.step2(DATA.manifests).split(" Give it")[0],
       "No daily task is set up at installation yet: a later release brings them. The nightly copy of your Notion is off",
     ];
     if (row.unknown) held.push(en.unknown(row.unknown));

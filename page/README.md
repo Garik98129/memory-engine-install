@@ -14,10 +14,16 @@ no sign-in, nothing kept.
   the fingerprints of `field_issue.marker` — of the text, and of her part without its outer line breaks, as
   `setup_run.open_issue` gives them — kept in the page as comments, unseen; the counter's line. Pure: the page
   and the tests import it.
-- `i18n.js` — the page's own words in three languages. What she pastes and sends stays the engine's English.
-- `done.html`, `done.js` — the page «it worked»: her AI's last message of installation links to it (INSTALL-12, a rules'
-  PR), and her AI never opens it itself: `done.html?p=<her AI>&l=<her language>&c=<her country>`. One line goes only when
-  she presses «Tell the author it worked».
+- `i18n.js` — the page's own words in three languages. What she pastes and sends stays the engine's English. Where the
+  text goes (`field`, `field_all` of the platform table) is said in Russian and Hebrew as a path through the menus
+  (`PLACES`), the buttons named as the screen shows them only where the platform's own help names them — ChatGPT's
+  «New project», «Project settings», «Settings», «Personalization», «Custom Instructions» (help.openai.com, read
+  19.11.2026); Claude's and Grok's apps in words. English keeps the release's words, held to the Issue. In Hebrew each
+  run of Latin words is an isolate (FSI … PDI, `app.js`, `isolate`), a short one with its spaces unbroken, so a button's
+  name or «TEXT MARK 2.» keeps its quotes and arrows in a right-to-left line; what she copies is left as it is.
+- `done.html`, `done.js` — the page «it worked»: her AI's last message of installation links to it (INSTALL-12, from
+  v0.1.14), and her AI never opens it itself: `done.html?p=<her AI>&l=<her language>&c=<her country>`. One line goes only
+  when she presses «Tell the author it worked», once: her answer outlives a change of language (`ended`).
 - `data.js` — written by `write.py` from a published release; never edited by hand.
 - `write.py` — writes `data.js`: `python3.12 page/write.py --release <checkout of Garik98129/memory-engine-releases at a tag>`.
   It imports that release's `engine.setup.setup` and takes from it the one text, the installable rows of the platform
@@ -30,7 +36,10 @@ no sign-in, nothing kept.
 
 **The line it sends** (counter/README.md): `{"e": "start", "p": …, "l": …, "c": …, "t": 0}` — only from a press of
 «Build and tell the author», after the texts are built and shown, by `fetch(…, {method: "POST", keepalive: true})` as an
-ordinary CORS request, never waited on; one line from the page, however often she presses. `?test=1` on the page's
+ordinary CORS request, never waited on; one line from the page, however often she presses. The line has no day: the
+counter puts the day, in UTC, on which it takes the line, and the pages say so. Opening «it worked» from her AI's link
+hands GitHub that link, with her AI, language and country in it, as any visit does: the page says «nothing reaches the
+author unless you press», not «nothing is sent». `?test=1` on the page's
 address marks a run as a test (`t: 1`, counted apart): the owner's own runs carry it, and anyone can set it, so in the
 numbers it means «marked as a test», not «the owner's run». Both pages load nothing but their own files and may
 connect to the counter alone (a Content-Security-Policy in each).
@@ -59,7 +68,7 @@ These three — C4 not ported, the language list, the country list — are where
   (`.github/workflows/test.yml`, job `parity`).
 
 **Publishing** — by the owner, after the release that carries the text's mark (`v0.1.14` or later, DESIGN_PHASE3 §5a,
-«The order»), with `data.js` written again from it: GitHub Pages, «Deploy from a branch», `main`, `/ (root)`. The page is
+«The order»), with `data.js` written again from it — `data.js` is v0.1.14's: GitHub Pages, «Deploy from a branch», `main`, `/ (root)`. The page is
 then at `https://garik98129.github.io/memory-engine-install/page/`, the page «it worked» at `…/page/done.html` — the
 counter takes lines from that origin (`counter/wrangler.toml`). `.nojekyll` keeps GitHub from building the folder.
 
@@ -68,6 +77,7 @@ counter takes lines from that origin (`counter/wrangler.toml`). `.nojekyll` keep
 **Страница установки.** Путь без личной копии: страница прямо в браузере телефона собирает из семи ответов то же, что
 даёт Issue полного пути, — общий текст для вставки, первое сообщение с личной частью, подключения и что работает на
 выбранном ИИ. Три языка: русский, английский, иврит. Ничего не хранит. Одну строку в счётчик отправляет только по
-нажатию «Собрать и сообщить автору», после того как тексты собраны. Тексты сверяются с движком байт в байт тестом
-`test:parity`. Публикует владелец: GitHub Pages, ветка `main`, корень; не раньше выпуска с пометкой текста (`v0.1.14` или
-новее) и после пересборки `data.js` из него.
+нажатию «Собрать и сообщить автору», после того как тексты собраны; день к строке ставит сам счётчик. Тексты сверяются
+с движком байт в байт тестом `test:parity`. По-русски и на иврите место для текста показано путём по меню со стрелками,
+кнопки — так, как они написаны на экране, там, где их называет справка самой платформы. Публикует владелец: GitHub
+Pages, ветка `main`, корень; данные уже собраны из выпуска `v0.1.14`.

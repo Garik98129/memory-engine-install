@@ -24,6 +24,30 @@ export const UNKNOWN = {
   },
 };
 
+// Where the text goes (engine/platforms.toml, `field` and `field_all`) → a path through the menus in each language, the
+// buttons named as the screen shows them where the platform's own help names them (help.openai.com, «Projects in
+// ChatGPT» and «ChatGPT Custom Instructions», read 19.11.2026); where it does not — the Claude and Grok apps — the path
+// is said in words, never a button guessed. English keeps the release's words: the parity test holds them to the Issue.
+// A release that changes a place breaks page/test/page.test.js until it is here.
+export const PLACES = {
+  "ChatGPT app: a new project, its instructions": {
+    ru: "приложение ChatGPT → «New project» → в проекте меню ••• → «Project settings» → инструкции",
+    he: "אפליקציית ChatGPT ← «New project» ← בפרויקט התפריט ••• ← «Project settings» ← ההוראות",
+  },
+  "chatgpt.com in your browser: Settings, Personalization": {
+    ru: "chatgpt.com в браузере → «Settings» → «Personalization» → поле «Custom Instructions»",
+    he: "chatgpt.com בדפדפן ← «Settings» ← «Personalization» ← השדה «Custom Instructions»",
+  },
+  "Claude app: a new project, its instructions; talk to the AI inside that project": {
+    ru: "приложение Claude → новый проект → его инструкции; разговаривайте с ИИ внутри этого проекта",
+    he: "אפליקציית Claude ← פרויקט חדש ← ההוראות שלו; דברו עם ה-AI בתוך הפרויקט הזה",
+  },
+  "Grok app: the instructions field": {
+    ru: "приложение Grok → поле инструкций",
+    he: "אפליקציית Grok ← שדה ההוראות",
+  },
+};
+
 export const T = {
   en: {
     lang_name: "English",
@@ -32,7 +56,7 @@ export const T = {
     privacy_h: "What this page does — and does not",
     privacy: [
       "From your answers it builds, here in your browser, the instructions to paste into your AI and the first message to send it. It keeps nothing. Of your answers three can leave this page — your AI, your language and your country — and only if you press «Build and tell the author».",
-      "Then it sends one line: that an installation began, those three as you answered them, and the day. No name, no address, no cookie. One such line leaves this page, however often you press. «Build without it» sends nothing.",
+      "Then it sends one line: that an installation began, and those three as you answered them; the day is the counter's own — the day the line reaches it. No name, no address, no cookie. One such line leaves this page, however often you press. «Build without it» sends nothing.",
       "Three things are not this page's to stop: GitHub, which serves the page, logs a visitor's address; that one line, if you send it, passes through Cloudflare, which sees your address on the way; and your answers go where you paste them — your first message stays in your AI's chat history.",
       "Your records live in your own Notion, and your AI's own platform keeps your chats. The rules your AI reads are public, in Garik98129/memory-engine-releases. Before your AI pays, sends or deletes anything, it shows you what and asks — the one exception, if you choose it, is a short e-mail you dictate.",
     ],
@@ -85,7 +109,7 @@ export const T = {
     step1_h: "1. The instructions.",
     where_one: (f) => `Open ${f}.`,
     where_two: (f, all) => `First choose where your assistant lives. Only in a project — ${f}: you talk to it there, and your other chats stay as they are. Or in all your chats — ${all}: it then looks at your Notion before its first answer in every chat, and may offer to record from any of them. One place, not both.`,
-    paste: (last, words, n, marked) => `Add the whole text below to what stands there — your own instructions stay, this goes beside them — exactly as it is, and save. Check that its last line came in too: ${marked ? `it is «${last}» — keep it: your AI reads it to know its text is whole and current. The text` : `it ends «${words}» It`} is the same for everybody: new rules do not change it, and neither does a change of your settings. It is ${n} characters long, and needs that much room beside what you have there.`,
+    paste: (last, words, n, marked) => `The text below takes that place alone: put it in place of whatever stands there — exactly as it is — and save. If you wrote instructions of your own there, copy them out first: you give them to your AI after the first message. Check that its last line came in too: ${marked ? `it is «${last}» — keep it: your AI reads it to know its text is whole and current. The text` : `it ends «${words}» It`} is the same for everybody: new rules do not change it, and neither does a change of your settings. It is ${n} characters long: it fills most of the place, and nothing else goes beside it.`,
     copy: "Copy",
     copied: "Copied",
     step2_h: "2. Connections.",
@@ -94,6 +118,7 @@ export const T = {
     step3: "Send your AI, in a new conversation — inside the project, if the text went into one:",
     after: "It answers in your language, first tells you what it can do — and that it shows you and asks before it sends, buys or deletes anything (short e-mails you dictate can go without the question, if you choose) — then looks at what you already have in Notion and asks «is it this one?» for what fits, asks — if your language is not English — in which language to name what it makes, and asks one «yes?» for the whole plan. It makes only what is missing; you make nothing there by hand. Not using Notion yet? Send the same message on the day you connect it. If it stops halfway, send it again.",
     after2: "Then it asks a few questions — how to address you, what to help with first, how you like answers, what you must avoid; skip any. It can learn more about you later: on any day, say «continue setup» in your language.",
+    old: "Your old instructions, if you copied any: once your AI has finished, send them to it with the words «My old instructions — keep in my Notion what is worth keeping», in your language. It tells you what it recorded, or that nothing needed keeping.",
     works_h: (t) => `What works on ${t}.`,
     notion: { yes: "Your AI writes your records into Notion itself.", unknown: "Whether this AI can create pages in Notion is not known yet: if it cannot, your records cannot be kept there — that is why it is in beta.", no: "This AI cannot write to Notion." },
     schedule: { yes: "It can do daily things on its own.", paid: (p) => `Daily things on its own need the ${p} plan.`, unconfirmed: "Whether it does daily things on its own on your plan is not confirmed yet.", no: "It cannot do anything on its own on a schedule." },
@@ -108,7 +133,7 @@ export const T = {
     not_sent: "Nothing was sent.",
     footer: (r) => `Written from release ${r} of the memory engine. The page's code is public: Garik98129/memory-engine-install.`,
     done_title: "It worked?",
-    done_text: "If your AI has just finished your installation, you can tell the author it worked: one line — «it worked», your AI, your language and your country, and the day. No name, no address. Nothing is sent unless you press the button.",
+    done_text: "If your AI has just finished your installation, you can tell the author it worked: one line — «it worked», your AI, your language and your country; the day is the counter's own — the day the line reaches it. No name, no address. Nothing reaches the author unless you press the button; GitHub, which serves this page, saw its address when you opened it, as on any visit.",
     done_tell: "Tell the author it worked",
     done_skip: "Don't tell",
     done_sent: "Thank you — the line is sent; this page does not wait for an answer.",
@@ -122,7 +147,7 @@ export const T = {
     privacy_h: "Что делает эта страница — и чего не делает",
     privacy: [
       "Из ваших ответов она прямо здесь, в вашем браузере, собирает инструкции, которые вы вставите в свой ИИ, и первое сообщение ему. Она ничего не хранит. Из ваших ответов покинуть страницу могут три — ваш ИИ, язык и страна — и только если вы нажмёте «Собрать и сообщить автору».",
-      "Тогда она отправит одну строку: что установка началась, эти три ответа — как вы их указали — и день. Без имени, без адреса, без cookies. С этой страницы уходит только одна такая строка, сколько бы раз вы ни нажимали. «Собрать без этого» не отправляет ничего.",
+      "Тогда она отправит одну строку: что установка началась, и эти три ответа — как вы их указали; день ставит сам счётчик — день, когда строка до него дошла. Без имени, без адреса, без cookies. С этой страницы уходит только одна такая строка, сколько бы раз вы ни нажимали. «Собрать без этого» не отправляет ничего.",
       "Три вещи от этой страницы не зависят: GitHub, на котором она лежит, записывает адрес посетителя; эта одна строка, если вы её отправите, проходит через Cloudflare, который видит ваш адрес по пути; а ваши ответы попадают туда, куда вы их вставите, — первое сообщение остаётся в истории чата вашего ИИ.",
       "Ваши записи живут в вашем собственном Notion, а чаты хранит платформа вашего ИИ. Правила, которые читает ИИ, открытые — в Garik98129/memory-engine-releases. Прежде чем что-то оплатить, отправить или удалить, ваш ИИ показывает, что именно, и спрашивает; единственное исключение, если вы его выберете, — короткое письмо, которое вы диктуете.",
     ],
@@ -175,7 +200,7 @@ export const T = {
     step1_h: "1. Инструкции.",
     where_one: (f) => `Откройте: ${f}.`,
     where_two: (f, all) => `Сначала выберите, где будет жить ваш помощник. Только в проекте — ${f}: вы разговариваете с ним там, остальные чаты остаются как были. Или во всех чатах — ${all}: тогда перед первым ответом в каждом чате он заглядывает в ваш Notion и может предложить записать что-то из любого из них. Одно место, не оба.`,
-    paste: (last, words, n, marked) => `Добавьте весь текст ниже к тому, что там уже стоит, — ваши собственные инструкции остаются, этот текст встаёт рядом — ровно как он есть, и сохраните. Проверьте, что вошла и его последняя строка: ${marked ? `«${last}» — не удаляйте её: по ней ИИ узнаёт, что текст целый и свежий.` : `текст кончается словами «${words}»`} Текст одинаковый для всех: новые правила его не меняют, смена ваших настроек тоже. В нём ${n} знаков, и столько места ему нужно рядом с тем, что у вас там уже есть.`,
+    paste: (last, words, n, marked) => `Текст ниже встаёт на это место один: замените им всё, что там стоит, — ровно как он есть, — и сохраните. Если вы писали там свои инструкции, сначала скопируйте их: вы отдадите их ИИ после первого сообщения. Проверьте, что вошла и его последняя строка: ${marked ? `«${last}» — не удаляйте её: по ней ИИ узнаёт, что текст целый и свежий.` : `текст кончается словами «${words}».`} Текст одинаковый для всех: новые правила его не меняют, смена ваших настроек тоже. В нём ${n} знаков: он занимает почти всё место, и рядом с ним ничего больше не встаёт.`,
     copy: "Скопировать",
     copied: "Скопировано",
     step2_h: "2. Подключения.",
@@ -184,6 +209,7 @@ export const T = {
     step3: "Отправьте своему ИИ в новом разговоре — внутри проекта, если текст встал в проект:",
     after: "Он ответит на вашем языке, сначала расскажет, что умеет, — и что показывает и спрашивает, прежде чем что-то отправить, купить или удалить (короткие письма, которые вы диктуете, могут уходить без вопроса, если вы так решите), — потом посмотрит, что у вас уже есть в Notion, и спросит «это оно?» о подходящем, спросит — если ваш язык не английский, — на каком языке называть то, что он создаст, и спросит одно «да?» на весь план. Создаст только недостающее; руками там ничего делать не нужно. Ещё не пользуетесь Notion? Отправьте то же сообщение в день, когда подключите его. Если он остановится на полпути — отправьте снова.",
     after2: "Потом он задаст несколько вопросов — как к вам обращаться, с чем помочь сначала, какие ответы вам удобны, чего вам нужно избегать; любой можно пропустить. Узнать вас лучше он сможет и позже: в любой день скажите на своём языке «продолжи настройку».",
+    old: "Ваши старые инструкции, если вы их скопировали: когда ИИ закончит, отправьте их ему со словами «Мои старые инструкции — сохрани в моём Notion то, что стоит сохранить». Он скажет, что записал, или что сохранять было нечего.",
     works_h: (t) => `Что работает в ${t}.`,
     notion: { yes: "Ваш ИИ сам записывает ваши записи в Notion.", unknown: "Пока неизвестно, может ли этот ИИ создавать страницы в Notion: если не может, записи там вести не получится — поэтому он в бете.", no: "Этот ИИ не умеет писать в Notion." },
     schedule: { yes: "Ежедневные дела он умеет делать сам.", paid: (p) => `Для ежедневных дел без вас нужен тариф ${p}.`, unconfirmed: "Делает ли он ежедневные дела сам на вашем тарифе — пока не подтверждено.", no: "Ничего по расписанию сам он делать не умеет." },
@@ -198,7 +224,7 @@ export const T = {
     not_sent: "Ничего не отправлено.",
     footer: (r) => `Страница собрана из выпуска ${r} движка памяти. Код страницы открытый: Garik98129/memory-engine-install.`,
     done_title: "Получилось?",
-    done_text: "Если ваш ИИ только что закончил установку, можно сообщить автору, что всё получилось: одна строка — «получилось», ваш ИИ, язык и страна, и день. Без имени, без адреса. Ничего не отправляется, пока вы не нажмёте кнопку.",
+    done_text: "Если ваш ИИ только что закончил установку, можно сообщить автору, что всё получилось: одна строка — «получилось», ваш ИИ, язык и страна; день ставит сам счётчик — день, когда строка до него дошла. Без имени, без адреса. Автору ничего не придёт, пока вы не нажмёте кнопку; GitHub, на котором лежит эта страница, увидел её адрес, когда вы её открыли, — как при любом посещении.",
     done_tell: "Сообщить автору, что получилось",
     done_skip: "Не сообщать",
     done_sent: "Спасибо — строка отправлена; ответа страница не ждёт.",
@@ -212,7 +238,7 @@ export const T = {
     privacy_h: "מה הדף הזה עושה — ומה לא",
     privacy: [
       "מהתשובות שלכם הוא בונה, כאן בדפדפן שלכם, את ההוראות שתדביקו ב-AI שלכם ואת ההודעה הראשונה אליו. הוא לא שומר כלום. מהתשובות שלכם רק שלוש יכולות לצאת מהדף — ה-AI, השפה והמדינה — ורק אם תלחצו «לבנות ולספר למחבר».",
-      "אז הוא ישלח שורה אחת: שהתקנה התחילה, שלוש התשובות האלה כפי שעניתם עליהן, והיום. בלי שם, בלי כתובת, בלי עוגיות. מהדף הזה יוצאת שורה כזאת אחת בלבד, לא משנה כמה פעמים תלחצו. «לבנות בלי זה» לא שולח כלום.",
+      "אז הוא ישלח שורה אחת: שהתקנה התחילה, ושלוש התשובות האלה כפי שעניתם עליהן; את היום המונה רושם בעצמו — היום שבו השורה הגיעה אליו. בלי שם, בלי כתובת, בלי עוגיות. מהדף הזה יוצאת שורה כזאת אחת בלבד, לא משנה כמה פעמים תלחצו. «לבנות בלי זה» לא שולח כלום.",
       "שלושה דברים לא תלויים בדף הזה: GitHub, שמגיש את הדף, רושם את הכתובת של מי שנכנס; השורה האחת, אם תשלחו אותה, עוברת דרך Cloudflare, שרואה את הכתובת שלכם בדרך; והתשובות שלכם הולכות לאן שתדביקו אותן — ההודעה הראשונה נשארת בהיסטוריית השיחות של ה-AI שלכם.",
       "הרשומות שלכם נמצאות ב-Notion שלכם, והפלטפורמה של ה-AI שומרת את השיחות. הכללים שה-AI קורא ציבוריים, ב-Garik98129/memory-engine-releases. לפני שה-AI שלכם משלם, שולח או מוחק משהו, הוא מראה לכם מה ושואל; החריג היחיד, אם תבחרו בו, הוא מייל קצר שאתם מכתיבים.",
     ],
@@ -265,7 +291,7 @@ export const T = {
     step1_h: "1. ההוראות.",
     where_one: (f) => `פתחו: ${f}.`,
     where_two: (f, all) => `קודם בחרו איפה העוזר שלכם יחיה. רק בפרויקט — ${f}: שם מדברים איתו, ושאר השיחות נשארות כמו שהיו. או בכל השיחות — ${all}: אז הוא מציץ ב-Notion שלכם לפני התשובה הראשונה בכל שיחה, ויכול להציע לרשום משהו מכל אחת מהן. מקום אחד, לא שניהם.`,
-    paste: (last, words, n, marked) => `הוסיפו את כל הטקסט שלמטה למה שכבר כתוב שם — ההוראות שלכם נשארות, הטקסט הזה נכנס לצידן — בדיוק כמו שהוא, ושמרו. בדקו שגם השורה האחרונה שלו נכנסה: ${marked ? `«${last}» — השאירו אותה: לפיה ה-AI יודע שהטקסט שלם ועדכני.` : `הטקסט מסתיים במילים «${words}».`} הטקסט זהה לכולם: כללים חדשים לא משנים אותו, וגם שינוי ההגדרות שלכם לא. יש בו ${n} תווים, וזה המקום שהוא צריך לצד מה שכבר יש לכם שם.`,
+    paste: (last, words, n, marked) => `הטקסט שלמטה תופס את המקום הזה לבדו: שימו אותו במקום כל מה שכתוב שם — בדיוק כמו שהוא — ושמרו. אם כתבתם שם הוראות משלכם, העתיקו אותן קודם: תתנו אותן ל-AI אחרי ההודעה הראשונה. בדקו שגם השורה האחרונה שלו נכנסה: ${marked ? `«${last}» — השאירו אותה: לפיה ה-AI יודע שהטקסט שלם ועדכני.` : `הטקסט מסתיים במילים «${words}».`} הטקסט זהה לכולם: כללים חדשים לא משנים אותו, וגם שינוי ההגדרות שלכם לא. יש בו ${n} תווים: הוא ממלא את רוב המקום, ושום דבר אחר לא נכנס לצידו.`,
     copy: "העתקה",
     copied: "הועתק",
     step2_h: "2. חיבורים.",
@@ -274,6 +300,7 @@ export const T = {
     step3: "שלחו ל-AI שלכם, בשיחה חדשה — בתוך הפרויקט, אם הטקסט נכנס לפרויקט:",
     after: "הוא יענה בשפה שלכם, קודם יספר מה הוא יודע לעשות — ושהוא מראה לכם ושואל לפני שהוא שולח, קונה או מוחק משהו (מיילים קצרים שאתם מכתיבים יכולים לצאת בלי השאלה, אם תבחרו בזה) — אחר כך יסתכל מה כבר יש לכם ב-Notion וישאל «זה זה?» על מה שמתאים, ישאל — אם השפה שלכם אינה אנגלית — באיזו שפה לקרוא למה שהוא יוצר, וישאל «כן?» אחד על כל התוכנית. הוא יוצר רק את מה שחסר; אתם לא יוצרים שם כלום ביד. עוד לא משתמשים ב-Notion? שלחו את אותה הודעה ביום שתחברו אותו. אם הוא נעצר באמצע, שלחו אותה שוב.",
     after2: "אחר כך הוא ישאל כמה שאלות — איך לפנות אליכם, במה לעזור קודם, אילו תשובות נוחות לכם, ממה עליכם להימנע; אפשר לדלג על כל אחת. הוא יכול להכיר אתכם טוב יותר גם אחר כך: בכל יום אמרו בשפה שלכם «המשך הגדרה».",
+    old: "ההוראות הישנות שלכם, אם העתקתם אותן: כשה-AI יסיים, שלחו לו אותן עם המילים «ההוראות הישנות שלי — שמור ב-Notion שלי את מה ששווה לשמור». הוא יגיד לכם מה רשם, או שלא היה מה לשמור.",
     works_h: (t) => `מה עובד ב-${t}.`,
     notion: { yes: "ה-AI שלכם כותב את הרשומות שלכם ל-Notion בעצמו.", unknown: "עוד לא ידוע אם ה-AI הזה יכול ליצור דפים ב-Notion: אם לא, אי אפשר יהיה לשמור שם את הרשומות שלכם — ולכן הוא בבטא.", no: "ה-AI הזה לא יכול לכתוב ל-Notion." },
     schedule: { yes: "הוא יכול לעשות דברים יומיים בעצמו.", paid: (p) => `בשביל דברים יומיים בלעדיכם צריך מנוי ${p}.`, unconfirmed: "עוד לא אושר אם הוא עושה דברים יומיים בעצמו במנוי שלכם.", no: "הוא לא יכול לעשות שום דבר בעצמו לפי לוח זמנים." },
@@ -288,7 +315,7 @@ export const T = {
     not_sent: "לא נשלח כלום.",
     footer: (r) => `הדף נבנה מגרסה ${r} של מנוע הזיכרון. הקוד של הדף ציבורי: Garik98129/memory-engine-install.`,
     done_title: "ההתקנה הצליחה?",
-    done_text: "אם ה-AI שלכם בדיוק סיים את ההתקנה, אפשר לספר למחבר שהיא הצליחה: שורה אחת — «הצליח», ה-AI, השפה והמדינה שלכם, והיום. בלי שם, בלי כתובת. שום דבר לא נשלח עד שתלחצו על הכפתור.",
+    done_text: "אם ה-AI שלכם בדיוק סיים את ההתקנה, אפשר לספר למחבר שהיא הצליחה: שורה אחת — «הצליח», ה-AI, השפה והמדינה שלכם; את היום המונה רושם בעצמו — היום שבו השורה הגיעה אליו. בלי שם, בלי כתובת. שום דבר לא מגיע למחבר עד שתלחצו על הכפתור; GitHub, שמגיש את הדף הזה, ראה את הכתובת שלו כשפתחתם אותו — כמו בכל ביקור.",
     done_tell: "לספר למחבר שההתקנה הצליחה",
     done_skip: "לא לספר",
     done_sent: "תודה — השורה נשלחה; הדף לא מחכה לתשובה.",

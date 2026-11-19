@@ -3,7 +3,7 @@
 // after the texts are built, and never waits on the answer (counter/README.md, «What the page must do»).
 
 import { DATA } from "./data.js";
-import { T, LANGS, RTL, UNKNOWN } from "./i18n.js";
+import { T, LANGS, RTL, UNKNOWN, PLACES } from "./i18n.js";
 import { refusal, part, firstMessage, fieldText, lastLine, lastWords, MARK_RE, length, marker, line } from "./build.js";
 
 export const COUNTER = "https://memory-engine-counter.memory-engine.workers.dev/e";
@@ -22,10 +22,19 @@ export function uiLanguage() {
   return "en";
 }
 
+// In a right-to-left page a run of Latin words — a button's name, «ChatGPT», «TEXT MARK 2.» — is set apart as
+// an isolate (FSI … PDI), so the browser keeps its quotes and arrows where the sentence has them; without it a path
+// such as «New project» ← «Project settings» came out jumbled (seen in a phone-sized render, 19.11.2026). A full stop
+// goes inside only before a closing «»», where it belongs to the words quoted; a short run keeps its spaces unbroken,
+// for a line that wraps inside it turns it round («TEXT» on one line, «MARK 2.» on the next). What she copies is set
+// apart from this: a copy box holds its text as it is.
+const LATIN_RUN = /[A-Za-z0-9](?:[A-Za-z0-9 ,:/_.-]*[A-Za-z0-9])?(?:\.(?=»))?/g;
+export const isolate = (s) => s.replace(LATIN_RUN, (m) => `\u2068${m.length <= 24 ? m.replaceAll(" ", "\u00a0") : m}\u2069`);
+
 export function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
-    if (k === "text") node.textContent = v;
+    if (k === "text") node.textContent = document.documentElement.dir === "rtl" ? isolate(v) : v;
     else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
     else if (v !== false && v !== null && v !== undefined) node.setAttribute(k, v === true ? "" : v);
   }
@@ -233,7 +242,9 @@ export function render(code) {
 
 function installOutput(t, a, field, p) {
   const row = DATA.platforms[a.platform];
-  const where = row.field_all ? t.where_two(row.field, row.field_all) : t.where_one(row.field);
+  // English keeps the release's own words (the parity test holds them to the Issue); the others go by the menus.
+  const place = (words) => (t === T.en ? words : PLACES[words]?.[langOf(t)] || words);
+  const where = row.field_all ? t.where_two(place(row.field), place(row.field_all)) : t.where_one(place(row.field));
   const unknown = row.unknown ? t.unknown(t === T.en ? row.unknown : (UNKNOWN[row.unknown]?.[langOf(t)] || row.unknown)) : "";
   const schedule = row.schedule === "paid" ? t.schedule.paid(row.plan) : t.schedule[row.schedule];
   return [
@@ -251,6 +262,7 @@ function installOutput(t, a, field, p) {
     copyBox(firstMessage(p), t),
     el("p", { text: t.after }),
     el("p", { text: t.after2 }),
+    el("p", { text: t.old }),
     el("h3", { text: t.works_h(row.title) }),
     el("p", { text: [t.notion[row.notion], schedule, unknown, t.no_daily].filter(Boolean).join(" ") }),
     el("h3", { text: t.later_h }),
