@@ -86,7 +86,7 @@ test("nothing of the request is kept but the five answers: no address, no header
   assert.equal(kept[0].language, "pt", "the primary code alone: no region, no subtag that could single anybody out");
 });
 
-test("her own test runs are counted apart", async () => {
+test("lines marked as a test are counted apart", async () => {
   const db = d1();
   await handle(post(LINE), env(db), NOW);
   await handle(post({ ...LINE, t: 1 }), env(db), NOW);
@@ -135,7 +135,7 @@ test("a body that is no short UTF-8 line is refused, and read no further than it
   assert.deepEqual(rows(db), []);
 });
 
-test("another page's browser may not send a line; a script that sets the page's Origin can — said in DESIGN", async () => {
+test("a browser on another site may not send a line; a script that sets the page's Origin can — said in DESIGN", async () => {
   for (const origin of ["https://evil.example", "null", "https://garik98129.github.io.evil.example"]) {
     const db = d1();
     assert.equal((await handle(post(LINE, { Origin: origin }), env(db), NOW)).status, 403, origin);

@@ -17,8 +17,9 @@ database_name = "memory-engine-counter"
 database_id = "d9664fde-8e3a-4303-b5d1-082ce387aad1"   # the id `wrangler d1 create memory-engine-counter` prints
 
 [vars]
-# The one page whose browsers may send a line: the installation page on GitHub Pages. It keeps other
-# pages out, not a script, which can set any Origin.
+# The origin whose browsers may send a line: the owner's GitHub Pages — any page under it, the
+# installation page and every other one there, not that page alone. It keeps other sites' pages out,
+# not a script, which can set any Origin.
 ALLOWED_ORIGIN = "https://garik98129.github.io"
 
 # STATS_KEY — a secret of at least 32 random characters (`wrangler secret put STATS_KEY`), never in
