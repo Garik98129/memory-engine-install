@@ -149,7 +149,7 @@ test("a browser on another site may not send a line; a script that sets the page
   assert.equal((await handle(post(LINE), env(db), NOW)).status, 204, "Origin is a header a script sets: the limit, named");
 });
 
-test("the page's preflight is answered for the page alone, and /e takes only POST", async () => {
+test("a preflight is answered for the allowed origin alone, and /e takes only POST", async () => {
   const db = d1();
   const preflight = await handle(new Request("https://counter.example/e", { method: "OPTIONS", headers: { Origin: ORIGIN } }), env(db), NOW);
   assert.equal(preflight.status, 204);
