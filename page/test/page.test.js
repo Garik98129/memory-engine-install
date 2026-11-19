@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { DATA } from "../data.js";
 import { T, LANGS, UNKNOWN } from "../i18n.js";
-import { refusal, part, firstMessage, fieldText, lastLine, nameOk, mixedWords, marker, line, doneAnswers, length } from "../build.js";
+import { refusal, part, firstMessage, fieldText, lastLine, lastWords, MARK_RE, nameOk, mixedWords, marker, line, doneAnswers, length } from "../build.js";
 import { parse, PLATFORMS, handle } from "../../counter/src/counter.js";
 import { COUNTRIES } from "../../counter/src/countries.js";
 import { LANGUAGES, ALIASES } from "../../counter/src/languages.js";
@@ -114,12 +114,14 @@ test("the one text fits every platform's field, and its last line is what the pa
   for (const [k, row] of Object.entries(DATA.platforms)) assert.ok(length(field) <= row.limit, k);
   assert.ok(!field.startsWith("\n") && !field.endsWith("\n"));
   assert.equal(lastLine(field), field.split("\n").at(-1));
+  assert.ok(field.endsWith(lastWords(field)), "a text without the mark: the page names the words it ends with");
+  assert.ok(MARK_RE.test("TEXT MARK 2.") && !MARK_RE.test("TEXT MARK 2") && !MARK_RE.test("Never say a record exists."));
 });
 
-test("the fingerprints are the engine's: sha256 of the text and of her part", async () => {
+test("the fingerprints are the engine's: sha256 of the text and of her part without its outer line breaks", async () => {
   const [f, p] = await marker("abc", "x\n");
   assert.equal(f, "field-digest: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
-  assert.match(p, /^part-digest: [0-9a-f]{64}$/);
+  assert.equal(p, "part-digest: 2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881", "sha256 of «x», as setup_run strips it");
   assert.deepEqual(await marker("abc"), [f], "no part — no part-digest, as field_issue.marker");
 });
 
@@ -136,9 +138,10 @@ test("the page sends as the counter asks: POST, keepalive, an ordinary CORS requ
   const app = source("app.js");
   assert.match(app, /COUNTER = "https:\/\/memory-engine-counter\.memory-engine\.workers\.dev\/e"/);
   assert.match(app, /fetch\(COUNTER, \{ method: "POST", body: text, keepalive: true, credentials: "omit" \}\)/);
-  for (const page of ["app.js", "done.js", "build.js", "index.html", "done.html"]) {
+  for (const page of ["app.js", "done.js", "build.js", "main.js", "index.html", "done.html"]) {
     const text = source(page);
-    for (const bad of ["no-cors", "sendBeacon", "no-referrer", "document.cookie", "localStorage", "XMLHttpRequest"]) {
+    for (const bad of ["no-cors", "sendBeacon", "no-referrer", "document.cookie", "localStorage", "XMLHttpRequest",
+      "innerHTML", "insertAdjacentHTML", "eval(", "http://"]) {
       assert.ok(!text.includes(bad), `${page}: ${bad}`);
     }
   }
@@ -146,6 +149,8 @@ test("the page sends as the counter asks: POST, keepalive, an ordinary CORS requ
   assert.ok(go.indexOf("installOutput(") < go.indexOf("send(line("), "the texts are built before the line is sent");
   assert.ok(!/await[^;]*send\(/.test(go), "nothing waits on the counter");
   assert.equal((app.match(/send\(line\(/g) || []).length, 1, "one place sends, behind «Build and tell the author»");
+  assert.match(go, /const sendIt = asked && !sentOnce;/, "one line from this page, however often she presses");
+  assert.ok(go.indexOf("send(line(") < go.indexOf("await marker("), "the fingerprints never hold the line back");
   assert.equal((source("done.js").match(/send\(line\(/g) || []).length, 1, "one place sends on «it worked», on her press");
 });
 
@@ -154,4 +159,14 @@ test("both buttons look the same: one class, one size", () => {
   assert.match(app, /tellBtn = el\("button", \{ type: "button", class: "build", text: t\.build_tell \}\)/);
   assert.match(app, /onlyBtn = el\("button", \{ type: "button", class: "build", text: t\.build_only \}\)/);
   assert.match(source("style.css"), /\.buttons \{ display: grid; grid-template-columns: 1fr 1fr;/);
+});
+
+test("the pages load only their own files and may talk to the counter alone", () => {
+  const csp = "default-src 'none'; script-src 'self'; style-src 'self'; connect-src https://memory-engine-counter.memory-engine.workers.dev; base-uri 'none'; form-action 'none'";
+  for (const page of ["index.html", "done.html"]) {
+    const html = source(page);
+    assert.ok(html.includes(`content="${csp}"`), page);
+    assert.ok(!/<script(?![^>]*\bsrc=)[^>]*>/.test(html), `${page}: no inline script`);
+    assert.ok(!/https?:\/\/(?!memory-engine-counter\.memory-engine\.workers\.dev)/.test(html), `${page}: no outside resource`);
+  }
 });

@@ -4,13 +4,14 @@
 
 import { DATA } from "./data.js";
 import { T, LANGS, RTL, UNKNOWN } from "./i18n.js";
-import { refusal, part, firstMessage, fieldText, lastLine, length, marker, line } from "./build.js";
+import { refusal, part, firstMessage, fieldText, lastLine, lastWords, MARK_RE, length, marker, line } from "./build.js";
 
 export const COUNTER = "https://memory-engine-counter.memory-engine.workers.dev/e";
 
 const params = new URLSearchParams(location.search);
-// A run of the owner's own tests carries ?test=1: its line is marked, and counted apart.
+// ?test=1 marks a run as a test — the owner's own runs carry it; anyone can set it — and the counter counts it apart.
 export const TEST = params.get("test") === "1";
+let sentOnce = false;            // one line from this page, however often she presses
 
 export function uiLanguage() {
   const asked = params.get("lang");
@@ -179,13 +180,21 @@ export function render(code) {
     const field = fieldText();
     if (purpose() === "settings") out.append(...settingsOutput(t, p));
     else out.append(...installOutput(t, a, field, p));
-    for (const mark of await marker(field, p)) out.append(document.createComment(` ${mark} `));
-    // The texts are built and shown first; the line goes after them, and nothing waits on it.
-    const sendIt = tell && purpose() !== "settings";
-    if (sendIt) send(line("start", a, TEST));
+    // The texts are built and shown first; the line goes after them, once from this page, and nothing waits on it.
+    const asked = tell && purpose() !== "settings";
+    const sendIt = asked && !sentOnce;
+    if (sendIt) {
+      sentOnce = true;
+      send(line("start", a, TEST));
+    }
     out.append(el("p", { class: "sent", text: sendIt
       ? t.sent(`start · ${DATA.platforms[a.platform].title} · ${a.language} · ${a.country}${TEST ? " · test" : ""}`)
-      : t.not_sent }));
+      : asked ? t.sent_before : t.not_sent }));
+    try {
+      for (const mark of await marker(field, p)) out.append(document.createComment(` ${mark} `));
+    } catch {
+      // no crypto.subtle (a page not served over https): the texts stand, without their fingerprints
+    }
     out.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   tellBtn.addEventListener("click", go(true));
@@ -233,7 +242,7 @@ function installOutput(t, a, field, p) {
     el("p", { text: t.three_steps }),
     el("h3", { text: t.step1_h }),
     el("p", { text: where }),
-    el("p", { text: t.paste(lastLine(field), length(field)) }),
+    el("p", { text: t.paste(lastLine(field), lastWords(field), length(field), MARK_RE.test(lastLine(field))) }),
     copyBox(field, t),
     el("h3", { text: t.step2_h }),
     el("p", { text: t.step2(DATA.manifests) }),

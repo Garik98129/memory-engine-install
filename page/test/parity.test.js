@@ -10,7 +10,8 @@ import { mkdtempSync, writeFileSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DATA } from "../data.js";
-import { part, firstMessage, fieldText, nameOk, mixedWords, length, refusal } from "../build.js";
+import { part, firstMessage, fieldText, nameOk, mixedWords, length, refusal, marker, lastLine, lastWords, MARK_RE } from "../build.js";
+import { T } from "../i18n.js";
 
 const RELEASE = process.env.RELEASE_DIR;
 const PYTHON = process.env.PYTHON || "python3";
@@ -83,7 +84,7 @@ test("every name: the page takes exactly the names setup takes", () => {
   });
 });
 
-test("every set of answers: the same refusal or the same part and messages, byte for byte", () => {
+test("every set of answers: the same refusal or the same part, messages and fingerprints, byte for byte", async () => {
   const sets = answerSets();
   const dir = mkdtempSync(join(tmpdir(), "parity-"));
   writeFileSync(join(dir, "in.json"), JSON.stringify({ answers: sets, names: [] }));
@@ -92,6 +93,7 @@ test("every set of answers: the same refusal or the same part and messages, byte
   assert.equal(out.messages.first, DATA.messages.first);
   assert.equal(out.messages.settings, DATA.messages.settings);
   let built = 0;
+  const fingerprints = [];
   sets.forEach((a, k) => {
     const py = out.answers[k];
     const why = refusal(a);
@@ -102,11 +104,44 @@ test("every set of answers: the same refusal or the same part and messages, byte
     assert.equal(p, py.part, `part ${JSON.stringify(a)}`);
     assert.equal(firstMessage(p), py.first);
     assert.equal(firstMessage(p, DATA.messages.settings), py.settings);
+    fingerprints.push([p, py.marker]);
   });
+  for (const [p, want] of fingerprints) {
+    const lines = (await marker(fieldText(), p)).map((m) => `<!-- ${m} -->\n`).join("");
+    assert.equal(lines, want, "field_issue.marker, as setup_run.open_issue ends the Issue");
+  }
   assert.ok(built > 100, `${built} parts compared`);
 });
 
 test("every answer the page's lists can give is one setup takes", () => {
   const out = python(["--sweep"]);
   assert.deepEqual(out.refused, []);
+});
+
+// The page's English words of the Issue (i18n.js) against the release's own `setup.issue` for the same answers:
+// a release that rewords the Issue fails here until the page's three languages follow it. Three of the page's
+// sentences differ on purpose, and are not held: step 2's last (no repository of hers exists on this way), the
+// nightly copy's (it can be turned on only on the full way), and «Later» (a change of settings comes back here).
+test("the page's English words of the Issue are the release's, sentence for sentence", () => {
+  const field = fieldText();
+  const marked = MARK_RE.test(lastLine(field));
+  const sets = Object.entries(DATA.platforms).map(([platform, row]) => [row, { platform, language: "en",
+    work_languages: [], country: "DE", timezone: "Europe/Berlin", name: "Anna", gender: "female" }]);
+  const dir = mkdtempSync(join(tmpdir(), "parity-"));
+  writeFileSync(join(dir, "in.json"), JSON.stringify({ answers: sets.map(([, a]) => a), names: [] }));
+  const out = python(["--answers", join(dir, "in.json")]);
+  const en = T.en;
+  sets.forEach(([row, a], k) => {
+    const issue = out.answers[k].issue.replaceAll("**", "").replaceAll("`", "");     // Markdown aside: the page shows plain text
+    const where = row.field_all ? en.where_two(row.field, row.field_all) : en.where_one(row.field);
+    const schedule = row.schedule === "paid" ? en.schedule.paid(row.plan) : en.schedule[row.schedule];
+    const held = [
+      en.three_steps, where, en.paste(lastLine(field), lastWords(field), length(field), marked), en.step3, en.after,
+      en.after2, en.notion[row.notion], schedule, `What works on ${row.title}.`, en.step2(DATA.manifests).split(" Give it")[0],
+      "No daily task is set up at installation yet: a later release brings them. The nightly copy of your Notion is off",
+    ];
+    if (row.unknown) held.push(en.unknown(row.unknown));
+    if (row.plan !== "any") held.push(en.need_plan(row.plan));
+    for (const words of held) assert.ok(issue.includes(words), `${a.platform}: «${words.slice(0, 80)}…» is not in setup.issue`);
+  });
 });

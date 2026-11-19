@@ -27,6 +27,8 @@ def engine(release: Path):
     setup = importlib.import_module("engine.setup.setup")
     checks = importlib.import_module("engine.checks.text_check")
     limits = importlib.import_module("engine.checks.limits_check")
+    global field_issue
+    field_issue = importlib.import_module("engine.checks.field_issue")
     return setup, checks, limits
 
 
@@ -44,8 +46,15 @@ def built(setup, answers: dict) -> dict:
     except setup.SetupError as exc:
         return {"ok": False, "why": str(exc)}
     part = files[setup.PART]
+    table = setup.platforms()
+    field = setup.field_text()
+    manifests = setup._toml(setup.DEFAULTS)["release"]["manifests"]
     return {"ok": True, "part": part, "first": setup.first_message(part),
-            "settings": setup.first_message(part, setup.SETTINGS_MESSAGE)}
+            "settings": setup.first_message(part, setup.SETTINGS_MESSAGE),
+            # as setup_run.open_issue ends the Issue: the text's and her part's fingerprints
+            "marker": field_issue.marker(field, part.strip(chr(10))),
+            # the Issue of the full way for these answers: the page's English words are held to it
+            "issue": setup.issue(table[answers["platform"]], field, part, manifests)}
 
 
 def sweep(setup, found: dict) -> list[str]:

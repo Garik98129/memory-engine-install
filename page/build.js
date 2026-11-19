@@ -92,8 +92,7 @@ export function mixedWords(line, d = DATA) {
 // null when it takes them all. The page offers its lists alone, so most of these never fire from it — they
 // hold an answer that came in some other way (a link, a hand-edited page) to what setup takes.
 export function refusal(a, d = DATA) {
-  const row = d.platforms[a.platform];
-  if (!row) return "platform";
+  if (!Object.hasOwn(d.platforms, a.platform)) return "platform";
   if (a.language.length > d.limits.language || !LANGUAGE_RE.test(a.language) || !d.languages.includes(a.language)) return "language";
   if (!COUNTRY_RE.test(a.country) || !d.countries.includes(a.country)) return "country";
   if (!a.timezone.includes("/") || a.timezone.length > d.limits.timezone || !d.timezones.includes(a.timezone)) return "timezone";
@@ -143,7 +142,13 @@ export function fieldText(d = DATA) {
 
 export const lastLine = (field) => field.slice(field.lastIndexOf("\n") + 1);
 
-// field_issue.marker: the fingerprints of what a page hands over, as every Issue of the full way keeps them.
+// The text's mark (CORE-16, from v0.1.14): its last line, «TEXT MARK 2.». A text without one ends with the words
+// the Issue of its release asked her to check: the last four.
+export const MARK_RE = /^TEXT MARK \d+\.$/;
+export const lastWords = (field) => lastLine(field).split(" ").slice(-4).join(" ");
+
+// field_issue.marker: the fingerprints of what a page hands over, as every Issue of the full way keeps them — her
+// part without its outer line breaks, as setup_run.open_issue gives it to the marker.
 export async function digest(text) {
   const bytes = new TextEncoder().encode(text);
   const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
@@ -151,7 +156,8 @@ export async function digest(text) {
 }
 
 export async function marker(field, partText = "") {
-  return [`field-digest: ${await digest(field)}`, ...(partText ? [`part-digest: ${await digest(partText)}`] : [])];
+  const p = stripNewlines(partText);
+  return [`field-digest: ${await digest(field)}`, ...(p ? [`part-digest: ${await digest(p)}`] : [])];
 }
 
 // The counter's line (counter/README.md, «What it takes»): the event, her AI, her language, her country as she

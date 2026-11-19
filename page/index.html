@@ -3,14 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src https://memory-engine-counter.memory-engine.workers.dev; base-uri 'none'; form-action 'none'">
 <title>Install your AI memory</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main id="app"><noscript>This page builds your texts in your browser and needs JavaScript. · Эта страница собирает тексты в вашем браузере, ей нужен JavaScript. · הדף הזה בונה את הטקסטים בדפדפן שלכם וצריך JavaScript.</noscript></main>
-<script type="module">
-import { render, uiLanguage } from "./app.js";
-render(uiLanguage());
-</script>
+<script type="module" src="main.js"></script>
 </body>
 </html>
