@@ -1,0 +1,8 @@
+{
+  "name": "memory-engine-install",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test counter/test/*.test.js"
+  }
+}
