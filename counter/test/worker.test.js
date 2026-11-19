@@ -3,9 +3,10 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
-import { handle, parse, CEILING, BODY_MAX, KEY_MIN } from "../src/worker.js";
+import { handle, parse, CEILING, BODY_MAX, KEY_MIN } from "../src/counter.js";
 import { COUNTRIES } from "../src/countries.js";
 import { LANGUAGES, ALIASES } from "../src/languages.js";
+import * as main from "../src/worker.js";
 
 const ORIGIN = "https://garik98129.github.io";
 const KEY = "a-key-of-the-owner-0123456789abcdef";
@@ -226,14 +227,24 @@ test("the numbers need the owner's key, and a short key opens nothing", async ()
   assert.deepEqual((await (await ask(`?key=${KEY}&since=2026-11-20`)).json()).map((row) => row.day), ["2026-11-21"]);
 });
 
+test("the Worker's main module exports its handler and nothing else — workerd refuses anything more", async () => {
+  assert.deepEqual(Object.keys(main), ["default"]);
+  assert.deepEqual(Object.keys(main.default), ["fetch"]);
+  const db = d1();
+  assert.equal((await main.default.fetch(post(LINE), env(db))).status, 204, "the handler is the counter's");
+  assert.equal(rows(db).length, 1);
+});
+
 test("languages come from the list of ISO 639, not from the runtime: one code a language", () => {
   for (const l of ["bo", "ce", "cv", "ba", "ks", "sat", "dz", "iu", "kl", "nv", "se", "kw", "os"]) {
     assert.ok(parse(JSON.stringify({ ...LINE, l })), `${l} — missing from Cloudflare's Intl data, kept here`);
   }
-  for (const [given, kept] of [["iw", "he"], ["in", "id"], ["ji", "yi"], ["sh", "sr"], ["heb", "he"], ["rus", "ru"], ["deu", "de"], ["ger", "de"]]) {
+  for (const [given, kept] of [["iw", "he"], ["in", "id"], ["ji", "yi"], ["hbs", "sh"], ["heb", "he"], ["rus", "ru"], ["deu", "de"], ["ger", "de"]]) {
     assert.equal(parse(JSON.stringify({ ...LINE, l: given })).language, kept, given);
   }
   assert.equal(parse(JSON.stringify({ ...LINE, l: "fil" })).language, "fil", "no two-letter code: three letters kept");
+  for (const l of ["yue", "yue-HK", "ckb", "cmn"]) assert.ok(parse(JSON.stringify({ ...LINE, l })), `${l} — ISO 639-3`);
+  for (const l of ["und", "zxx", "mul", "mis"]) assert.equal(parse(JSON.stringify({ ...LINE, l })), null, `${l} — no language`);
   for (const l of ["qq", "qzx", "xx", "zz"]) assert.equal(parse(JSON.stringify({ ...LINE, l })), null, l);
   for (const kept of ALIASES.values()) assert.ok(LANGUAGES.has(kept), kept);
   assert.equal(parse(JSON.stringify({ ...LINE, c: "XK" })), null, "a code outside ISO 3166-1 is not counted — said in README");
