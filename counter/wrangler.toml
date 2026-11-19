@@ -1,0 +1,21 @@
+# The installation counter (memory-engine, docs/DESIGN_PHASE3.md §5a, «The counter»).
+name = "memory-engine-counter"
+main = "src/worker.js"
+compatibility_date = "2026-11-01"
+
+# Workers Logs are on for a new Worker and keep each request three days on the free plan:
+# off here, so nothing of a request is kept but the count.
+[observability]
+enabled = false
+
+[[d1_databases]]
+binding = "DB"
+database_name = "memory-engine-counter"
+database_id = "set-at-deploy"   # the id `wrangler d1 create memory-engine-counter` prints
+
+[vars]
+# The one page that may send a line: the installation page on GitHub Pages.
+ALLOWED_ORIGIN = "https://garik98129.github.io"
+
+# STATS_KEY — a secret (`wrangler secret put STATS_KEY`), never in this file: the owner's link
+# to the numbers carries it.
