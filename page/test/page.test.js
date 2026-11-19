@@ -5,7 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { DATA } from "../data.js";
-import { T, LANGS, UNKNOWN } from "../i18n.js";
+import { T, LANGS, UNKNOWN, PLACES } from "../i18n.js";
 import { refusal, part, firstMessage, fieldText, lastLine, lastWords, MARK_RE, nameOk, mixedWords, marker, line, doneAnswers, length } from "../build.js";
 import { parse, PLATFORMS, handle } from "../../counter/src/counter.js";
 import { COUNTRIES } from "../../counter/src/countries.js";
@@ -38,6 +38,19 @@ test("every refusal has its words, and every platform's «not known yet» line i
     for (const code of ["ru", "he"]) assert.ok(UNKNOWN[row.unknown][code], `${k} ${code}`);
     assert.ok(T.en.notion[row.notion] && (row.schedule === "paid" || T.en.schedule[row.schedule]), k);
   }
+});
+
+test("every place the text goes is a path through the menus in Russian and Hebrew", () => {
+  for (const [k, row] of Object.entries(DATA.platforms)) {
+    for (const words of [row.field, row.field_all].filter(Boolean)) {
+      assert.ok(PLACES[words], `${k}: «${words}» has no path in i18n.js`);
+      for (const code of ["ru", "he"]) {
+        assert.ok(PLACES[words][code], `${k} ${code}`);
+        assert.ok(PLACES[words][code].includes(code === "he" ? " ← " : " → "), `${k} ${code}: a path, step by step`);
+      }
+    }
+  }
+  assert.match(source("app.js"), /t === T\.en \? words : PLACES\[words\]/, "English keeps the release's words");
 });
 
 test("the page's lists are the counter's: its platforms, its countries, languages it keeps", () => {
@@ -152,6 +165,35 @@ test("the page sends as the counter asks: POST, keepalive, an ordinary CORS requ
   assert.match(go, /const sendIt = asked && !sentOnce;/, "one line from this page, however often she presses");
   assert.ok(go.indexOf("send(line(") < go.indexOf("await marker("), "the fingerprints never hold the line back");
   assert.equal((source("done.js").match(/send\(line\(/g) || []).length, 1, "one place sends on «it worked», on her press");
+  // Tolik's reading of #4: a change of language drew «it worked?» again with live buttons — a second line could go.
+  const done = source("done.js");
+  assert.match(done, /^let ended = null;$/m, "her answer is kept outside a render");
+  assert.match(done, /disabled: !a \|\| ended !== null/, "drawn again, the buttons stay off once she has answered");
+  assert.ok(done.indexOf("if (ended !== null) return;") < done.indexOf("send(line("), "a press after an answer sends nothing");
+});
+
+test("the page says what the counter does: the day is the counter's, and nothing reaches the author without her press", () => {
+  for (const code of LANGS) {
+    for (const words of [T[code].privacy[1], T[code].done_text]) {
+      assert.ok(!/, and the day\.|, и день\.|, והיום\./.test(words), `${code}: the line holds no day — the counter adds it`);
+    }
+  }
+  assert.ok(T.en.privacy[1].includes("the day is the counter's own — the day the line reaches it"));
+  assert.ok(T.en.done_text.includes("Nothing reaches the author unless you press the button"),
+    "opening the page sends its address to GitHub: «nothing is sent» would say more than is true");
+});
+
+test("in Hebrew a run of Latin words is an isolate; a full stop goes in only before «»»", () => {
+  const app = source("app.js");
+  assert.match(app, /node\.textContent = document\.documentElement\.dir === "rtl" \? isolate\(v\) : v;/);
+  assert.ok(!/pre\.textContent = isolate/.test(app), "what she copies stays as it is");
+  // app.js needs a browser to load; the rule itself is read from its source and run here
+  const rule = new RegExp(app.match(/const LATIN_RUN = \/(.+)\/g;/)[1], "g");
+  assert.match(app, /m\.length <= 24 \? m\.replaceAll\(" ", "\\u00a0"\) : m/, "a short run does not wrap");
+  const iso = (s) => s.replace(rule, (m) => `\u2068${m.length <= 24 ? m.replaceAll(" ", "\u00a0") : m}\u2069`);
+  assert.equal(iso("«TEXT MARK 2.» — השאירו"), "«\u2068TEXT\u00a0MARK\u00a02.\u2069» — השאירו");
+  assert.equal(iso("אפליקציית ChatGPT ← «New project» ←"), "אפליקציית \u2068ChatGPT\u2069 ← «\u2068New\u00a0project\u2069» ←");
+  assert.equal(iso("ב-Garik98129/memory-engine-releases."), "ב-\u2068Garik98129/memory-engine-releases\u2069.");
 });
 
 test("both buttons look the same: one class, one size", () => {
