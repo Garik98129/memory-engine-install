@@ -5,6 +5,7 @@ import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
 import { handle, parse, CEILING, BODY_MAX, KEY_MIN } from "../src/worker.js";
 import { COUNTRIES } from "../src/countries.js";
+import { LANGUAGES, ALIASES } from "../src/languages.js";
 
 const ORIGIN = "https://garik98129.github.io";
 const KEY = "a-key-of-the-owner-0123456789abcdef";
@@ -26,6 +27,19 @@ function d1() {
         async all() { return { results: statement.all(...args).map((row) => ({ ...row })) }; },
       };
       return bound;
+    },
+    // D1's batch: one transaction, statements in order, all rolled back when one fails.
+    async batch(statements) {
+      db.exec("BEGIN");
+      try {
+        const results = [];
+        for (const statement of statements) results.push(await statement.run());
+        db.exec("COMMIT");
+        return results;
+      } catch (error) {
+        db.exec("ROLLBACK");
+        throw error;
+      }
     },
   };
 }
@@ -162,6 +176,13 @@ test("the day's total and its counts agree, line by line", async () => {
   assert.equal(total(db, "2026-11-19"), 4);
 });
 
+test("a failure inside the count rolls the day's total back: the two never part", async () => {
+  const db = d1();
+  db.raw.exec("DROP TABLE counts");
+  for (let i = 0; i < 3; i++) assert.equal((await handle(post(LINE), env(db), NOW)).status, 503);
+  assert.equal(total(db, "2026-11-19"), 0, "no ceiling spent on lines never counted");
+});
+
 test("the base out of reach answers 503, and the page is told so with its CORS", async () => {
   const broken = { prepare() { throw new Error("D1_ERROR: daily limit"); } };
   const response = await handle(post(LINE), env(broken), NOW);
@@ -175,6 +196,15 @@ test("the day is the UTC date, whatever the hour", async () => {
   await handle(post(LINE), env(db), new Date("2026-11-19T00:00:00Z"));
   await handle(post(LINE), env(db), new Date("2026-11-19T23:59:59.999Z"));
   assert.deepEqual(rows(db).map((row) => [row.day, row.n]), [["2026-11-19", 2]]);
+});
+
+test("a key a link cannot carry as it is opens nothing; a hex key does", async () => {
+  const db = d1();
+  const plus = "abc+def/ghi" + "x".repeat(KEY_MIN);
+  const ask = (key, secret) => handle(new Request(`https://counter.example/stats?key=${encodeURIComponent(key)}`), env(db, { STATS_KEY: secret }), NOW);
+  assert.equal((await ask(plus, plus)).status, 403, "a key with + / # % is refused even when it matches");
+  const hex = "0123456789abcdef".repeat(4);
+  assert.equal((await ask(hex, hex)).status, 200, "openssl rand -hex 32 makes such a key");
 });
 
 test("the numbers need the owner's key, and a short key opens nothing", async () => {
@@ -194,6 +224,19 @@ test("the numbers need the owner's key, and a short key opens nothing", async ()
   assert.equal(all.headers.get("Cache-Control"), "no-store");
   assert.deepEqual((await all.json()).map((row) => [row.day, row.event, row.n]), [["2026-11-19", "start", 1], ["2026-11-21", "done", 1]]);
   assert.deepEqual((await (await ask(`?key=${KEY}&since=2026-11-20`)).json()).map((row) => row.day), ["2026-11-21"]);
+});
+
+test("languages come from the list of ISO 639, not from the runtime: one code a language", () => {
+  for (const l of ["bo", "ce", "cv", "ba", "ks", "sat", "dz", "iu", "kl", "nv", "se", "kw", "os"]) {
+    assert.ok(parse(JSON.stringify({ ...LINE, l })), `${l} — missing from Cloudflare's Intl data, kept here`);
+  }
+  for (const [given, kept] of [["iw", "he"], ["in", "id"], ["ji", "yi"], ["sh", "sr"], ["heb", "he"], ["rus", "ru"], ["deu", "de"], ["ger", "de"]]) {
+    assert.equal(parse(JSON.stringify({ ...LINE, l: given })).language, kept, given);
+  }
+  assert.equal(parse(JSON.stringify({ ...LINE, l: "fil" })).language, "fil", "no two-letter code: three letters kept");
+  for (const l of ["qq", "qzx", "xx", "zz"]) assert.equal(parse(JSON.stringify({ ...LINE, l })), null, l);
+  for (const kept of ALIASES.values()) assert.ok(LANGUAGES.has(kept), kept);
+  assert.equal(parse(JSON.stringify({ ...LINE, c: "XK" })), null, "a code outside ISO 3166-1 is not counted — said in README");
 });
 
 test("parse knows the engine's language codes and keeps their primary code; countries are ISO 3166-1", () => {

@@ -13,13 +13,21 @@ numbers are the owner's alone, behind his key. Workers Logs and traces are off (
 
 **What it takes.** `POST /e` with the installation page's `Origin`, a body of at most 256 bytes of UTF-8,
 read no further: `{"e": "start", "p": "chatgpt", "l": "ru", "c": "IL", "t": 0}` — exactly those five
-fields, each a value it knows: an installable platform, a language code whose primary part names a
-language, a country of ISO 3166-1 (`src/countries.js`, tzdata's `iso3166.tab`); anything else → 400,
+fields, each a value it knows: an installable platform, a language code whose primary part is in ISO 639
+(`src/languages.js`, from the Library of Congress list, one code a language: `iw` and `heb` are kept as
+`he`), a country of ISO 3166-1 (`src/countries.js`, tzdata's `iso3166.tab` — the engine takes any two
+letters, so a code outside it, such as `XK`, is not counted); anything else → 400,
 another page's browser → 403, past 5 000 events a day → 429, the base out of reach → 503. `Origin` keeps
 other pages out, not a script, which sets any header: a script can fill a day's ceiling, or the account's
 100 000 requests a day — the count then stops for the day, and an installation never waits on it.
 `GET /stats?key=…[&since=YYYY-MM-DD]` gives the owner the rows; a key shorter than 32 characters, or a
-wrong one → 403. The key is 32 random characters or more, a Worker secret.
+wrong one → 403. The key is a Worker secret of 32 or more letters, digits, `_` or `-` — a key with `+`,
+`/`, `#` or `%` would not survive a link and opens nothing: make it with `openssl rand -hex 32`.
+
+**What the page must do.** Send the line with `fetch(…, {method: "POST", keepalive: true})` as an
+ordinary CORS request — not `no-cors` or `sendBeacon`, and with no `no-referrer` policy, either of which
+can make the browser send `Origin: null`, which is refused. Build the texts first and never wait on the
+answer: a 4xx or 5xx changes nothing for her.
 
 **Tests.** `npm test` (Node 22: `node:sqlite` runs the same SQL as D1).
 

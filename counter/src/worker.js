@@ -8,19 +8,22 @@
 // (wrangler.toml); Cloudflare's live view can still show a request to whoever watches at that moment.
 
 import { COUNTRIES } from "./countries.js";
+import { LANGUAGES, ALIASES } from "./languages.js";
 
 export const EVENTS = new Set(["start", "done"]);
 export const PLATFORMS = new Set(["chatgpt", "claude", "grok"]);   // engine/platforms.toml, installable rows
 const LANGUAGE = /^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/;              // engine/checks/config_check.py
 const LANGUAGE_MAX = 10;                                           // engine/setup/setup.py
-const LANGUAGES = new Intl.DisplayNames(["en"], { type: "language", fallback: "none" });
 const FIELDS = ["e", "p", "l", "c", "t"];
 export const CEILING = 5000;     // events a day; past it the day counts no more
 export const BODY_MAX = 256;     // bytes: a line is far shorter
 export const KEY_MIN = 32;       // characters of the owner's key, or the numbers stay shut
+const KEY = /^[A-Za-z0-9_-]+$/;  // a key a link carries as it is: no + # % & = or space
 
 // One line, or null when it is not one this counter knows. Her language is kept by its primary code
-// alone, and only when it names a language; her country only when it is one of ISO 3166-1.
+// alone, one code a language (ISO 639, src/languages.js); her country only when it is one of ISO
+// 3166-1 (src/countries.js) — the engine itself takes any two letters, so a code outside the list
+// (XK) is not counted.
 export function parse(text) {
   let data;
   try {
@@ -34,8 +37,9 @@ export function parse(text) {
   const { e, p, l, c, t } = data;
   if (!EVENTS.has(e) || !PLATFORMS.has(p)) return null;
   if (typeof l !== "string" || l.length > LANGUAGE_MAX || !LANGUAGE.test(l)) return null;
-  const language = l.split("-")[0];
-  if (LANGUAGES.of(language) === undefined) return null;
+  const primary = l.split("-")[0];
+  const language = ALIASES.get(primary) ?? primary;
+  if (!LANGUAGES.has(language)) return null;
   if (typeof c !== "string" || !COUNTRIES.has(c)) return null;
   if (t !== 0 && t !== 1) return null;
   return { event: e, platform: p, language, country: c, test: t };
@@ -47,7 +51,7 @@ export function day(now) {
 
 // Equal or not, in a time that tells nothing of either string: both are hashed first.
 async function same(a, b) {
-  if (typeof a !== "string" || typeof b !== "string" || a.length === 0 || b.length < KEY_MIN) return false;
+  if (typeof a !== "string" || typeof b !== "string" || a.length === 0 || b.length < KEY_MIN || !KEY.test(b)) return false;
   const encode = (s) => new TextEncoder().encode(s);
   const [x, y] = await Promise.all([crypto.subtle.digest("SHA-256", encode(a)), crypto.subtle.digest("SHA-256", encode(b))]);
   const u = new Uint8Array(x);
@@ -66,22 +70,23 @@ function cors(origin) {
   };
 }
 
-// The day's total grows by one only below the ceiling, in one statement, and the line is counted only
-// when it did: one row read and written a day's total, past the ceiling no more.
+// One transaction (D1's batch): the line is counted and the day's total grows, both only below the
+// ceiling, or neither — a failure of either rolls both back. Past the ceiling, one row is read.
 async function count(db, line, today) {
-  const step = await db
-    .prepare("INSERT INTO days (day, total) VALUES (?, 1) ON CONFLICT (day) DO UPDATE SET total = total + 1 WHERE total < ?")
-    .bind(today, CEILING)
-    .run();
-  if (!(step && step.meta && step.meta.changes > 0)) return false;
-  await db
-    .prepare(
-      "INSERT INTO counts (day, event, platform, language, country, test, n) VALUES (?, ?, ?, ?, ?, ?, 1) " +
-        "ON CONFLICT (day, event, platform, language, country, test) DO UPDATE SET n = n + 1",
-    )
-    .bind(today, line.event, line.platform, line.language, line.country, line.test)
-    .run();
-  return true;
+  const results = await db.batch([
+    db
+      .prepare(
+        "INSERT INTO counts (day, event, platform, language, country, test, n) SELECT ?, ?, ?, ?, ?, ?, 1 " +
+          "WHERE COALESCE((SELECT total FROM days WHERE day = ?), 0) < ? " +
+          "ON CONFLICT (day, event, platform, language, country, test) DO UPDATE SET n = n + 1",
+      )
+      .bind(today, line.event, line.platform, line.language, line.country, line.test, today, CEILING),
+    db
+      .prepare("INSERT INTO days (day, total) VALUES (?, 1) ON CONFLICT (day) DO UPDATE SET total = total + 1 WHERE total < ?")
+      .bind(today, CEILING),
+  ]);
+  const step = results && results[1];
+  return Boolean(step && step.meta && step.meta.changes > 0);
 }
 
 // The body, at most BODY_MAX bytes of UTF-8, read no further than that; null otherwise.
