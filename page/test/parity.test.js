@@ -123,7 +123,7 @@ test("every answer the page's lists can give is one setup takes", () => {
 });
 
 // What becomes of her old instructions: the page's own sentence, and the Issue's it stands for.
-const OLD_OF_THE_PAGE = "Do not put them back into the instructions field you copied them from. After the setup, give them to your AI in a chat: it pulls out of them what is needed and puts it where it belongs in your Notion.";
+const OLD_OF_THE_PAGE = "Do not put them back into the instructions field you copied them from. After the setup, give them to your AI in a chat: it will pick out what is needed on its own and put it where it belongs in your Notion.";
 const OLD_OF_THE_ISSUE = "Do not put them back into this field: after the setup you send them to your AI in a chat.";
 
 // «Later» as the Issue of the full way has it — her copy, its workflow «settings», GitHub's notifications: none of it
