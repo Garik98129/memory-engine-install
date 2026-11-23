@@ -1,4 +1,4 @@
-# The installation counter (memory-engine, docs/DESIGN_PHASE3.md §5a, «The counter»).
+# The setup counter (the engine's docs/DESIGN_PHASE3.md §5a, «The counter»).
 name = "memory-engine-counter"
 main = "src/worker.js"
 compatibility_date = "2026-11-01"

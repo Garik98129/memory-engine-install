@@ -1,4 +1,4 @@
--- The installation counter: counts, and no name or address (memory-engine, docs/DESIGN_PHASE3.md §5a).
+-- The setup counter: counts, and no name or address (memory-engine, docs/DESIGN_PHASE3.md §5a).
 CREATE TABLE IF NOT EXISTS counts (
   day      TEXT    NOT NULL,              -- UTC date, YYYY-MM-DD: never a time finer than the day
   event    TEXT    NOT NULL,              -- start | done

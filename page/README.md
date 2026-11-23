@@ -50,8 +50,11 @@ address marks a run as a test (`t: 1`, counted apart): the owner's own runs carr
 numbers it means «marked as a test», not «the owner's run». Both pages load nothing but their own files and may
 connect to the counter alone (a Content-Security-Policy in each).
 
-**Its English words** follow the Issue of the full way: the parity test holds them to the release's own `setup.issue`,
-sentence for sentence, so a release that rewords the Issue fails until the three languages follow. Three places
+**Its English words** follow the Issue of the full way: the parity test holds them to the release's own `setup.issue`
+both ways — every sentence the page shows after «Build» is in the Issue, and nothing is left of the Issue once the
+page's sentences and the places that differ on purpose are taken out — so a release that rewords the Issue, or adds a
+sentence to it, fails until the English follows. Russian and Hebrew are not held by a test: they follow the English by
+hand, read by a second reader. Three places
 differ on purpose: the end of the check of the connections (on this way she has no repository to keep from her AI; an
 empty one, with its link, where GitHub asks her to pick one), the nightly copy's (it can
 be turned on only on the full way) and «Later» (a change of settings comes back to this page). Where the text carries
@@ -76,8 +79,13 @@ These three — C4 not ported, the language list, the country list — are where
 
 **Publishing.** GitHub Pages, «Deploy from a branch», `main`, `/ (root)`, with the custom domain `setup.grafyla.com`
 (the file `CNAME`; a CNAME record in the owner's DNS leads to `grafyla.github.io`): the page is at `https://setup.grafyla.com/page/`, the page «it worked» at `…/page/done.html` —
-the address the rules of v0.1.15 give her AI (INSTALL-12), and the origin the counter takes lines from
-(`counter/wrangler.toml`). What `main` holds is what people get: `data.js` is v0.1.15's, written again by `write.py`
+the address the rules of v0.1.15 give her AI (INSTALL-12), and the origin `counter/wrangler.toml` names. The counter
+takes lines from that origin only once it is deployed with that file: until then it refuses them (403), and the page,
+which never waits for the answer, still says the line was sent. «Enforce HTTPS» is on: the plain http address leads to
+https, and without https the page has no fingerprints and the counter would refuse its origin. What `main` holds is
+what people get — at once, so two things come before a merge here: the release the page names is tagged in
+`grafyla/releases`, and the branch `stable` there is on a release whose index that text can read (the text she pastes
+sends her AI to `rules-index.md` at `stable`; with no such branch her AI says the rules are unavailable): `data.js` is v0.1.15's, written again by `write.py`
 with each release the page follows. `.nojekyll` keeps GitHub from building the folder. Until 23.11.2026 the page's
 address was `https://garik98129.github.io/memory-engine-install/page/`; GitHub Pages does not lead from an old address
 to a new one.

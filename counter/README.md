@@ -1,14 +1,14 @@
-# The installation counter
+# The setup counter
 
 A small Worker on Cloudflare with a D1 base (memory-engine, `docs/DESIGN_PHASE3.md` §5a, «The counter»).
-It counts installations people choose to report, and nothing of a person.
+It counts setups people choose to report, and nothing of a person.
 
 **What it keeps.** Two tables (`schema.sql`). `counts`: the UTC day, the event (`start` — she pressed
-«Build and tell the author» on the installation page; `done` — she pressed «tell the author it worked» on
-the page her AI's last message of installation links to), her AI, her language's primary code (`pt` for
+«Build and tell the author» on the setup page; `done` — she pressed «tell the author it worked» on
+the page her AI's last message of setup links to), her AI, her language's primary code (`pt` for
 `pt-BR`) and her country as she answered them, a mark «test» — anyone can set it, so it says «marked as a test», not «the owner's run» —, and a count. `days`:
 each day's total, held below the ceiling. No name, no address, no header, no cookie, no time finer than
-the day. Still, a row of one may point to one person for someone who knows who installed that day: the
+the day. Still, a row of one may point to one person for someone who knows who set her AI up that day: the
 numbers are the owner's alone, behind his key. Workers Logs and traces are off (`wrangler.toml`).
 
 **What it takes.** `POST /e` with the `Origin` of the setup page's own address (`https://setup.grafyla.com` — every page
@@ -21,7 +21,7 @@ language: `iw` and `heb` are kept as `he`), a country of ISO 3166-1 (`src/countr
 letters, so a code outside it, such as `XK`, is not counted); anything else → 400,
 a browser on another site → 403, past 5 000 events a day → 429, the base out of reach → 503. `Origin` keeps
 other sites' pages out, not a script, which sets any header: a script can fill a day's ceiling, or the account's
-100 000 requests a day — the count then stops for the day, and an installation never waits on it.
+100 000 requests a day — the count then stops for the day, and a setup never waits on it.
 `GET /stats?key=…[&since=YYYY-MM-DD]` gives the owner the rows; a key shorter than 32 characters, or a
 wrong one → 403. The key is a Worker secret of 32 or more letters, digits, `_` or `-` — a key with `+`,
 `/`, `#` or `%` would not survive a link and opens nothing: make it with `openssl rand -hex 32`.
