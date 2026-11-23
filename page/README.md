@@ -1,12 +1,12 @@
-# The installation page
+# The setup page
 
-The way without a copy (memory-engine, `docs/DESIGN_PHASE3.md` §5a): one public page that builds, in the browser of
+The way without a copy (the engine's `docs/DESIGN_PHASE3.md` §5a): one public page that builds, in the browser of
 her phone, what the Issue of the full way gives — the one text to paste, where it goes, the connections, the first
 message with her part, what works on her AI — from her seven answers. English, Russian and Hebrew. Nothing to copy,
 no sign-in, nothing kept.
 
 **Files.**
-- `index.html`, `main.js`, `app.js`, `style.css` — the page: the question what she comes for (her first installation, a change of
+- `index.html`, `main.js`, `app.js`, `style.css` — the page: the question what she comes for (her first setup, a change of
   her settings, another AI), the seven answers from lists — her AI, her language, up to three other languages, her
   country, her time zone, the grammar — and her name typed; two buttons of the same size and look, «Build and tell
   the author» and «Build without it»; a change of settings has one, «Build», and sends nothing.
@@ -14,19 +14,24 @@ no sign-in, nothing kept.
   the fingerprints of `field_issue.marker` — of the text, and of her part without its outer line breaks, as
   `setup_run.open_issue` gives them — kept in the page as comments, unseen; the counter's line. Pure: the page
   and the tests import it.
-- `i18n.js` — the page's own words in three languages. What she pastes and sends stays the engine's English. Where the
-  text goes (`field`, `field_all` of the platform table) is said in Russian and Hebrew as a path through the menus
-  (`PLACES`), the buttons named as the screen shows them: ChatGPT in the browser by the owner's own screens (Safari on
-  an iPhone, Russian interface, 19.11.2026) — his name at the foot of the side menu, «Персонализация», «Пользовательские
-  инструкции», the row ChatGPT, «Edit»; a project — «Проекты», «+», then «Project settings» (help.openai.com, read
-  19.11.2026). Hebrew names the English buttons; Claude's and Grok's apps are said in words. English keeps the release's words, held to the Issue. In Hebrew each
-  run of Latin words is an isolate (FSI … PDI, `app.js`, `isolate`), a short one with its spaces unbroken, so a button's
-  name or «TEXT MARK 2.» keeps its quotes and arrows in a right-to-left line; what she copies is left as it is.
-- `done.html`, `done.js` — the page «it worked»: her AI's last message of installation links to it (INSTALL-12, from
-  v0.1.14), and her AI never opens it itself: `done.html?p=<her AI>&l=<her language>&c=<her country>`. One line goes only
+- `i18n.js` — the page's own words in three languages; Russian and Hebrew say «настройка», «הגדרה», the words of the
+  site's «Get started» (`grafyla/site`). What she pastes and sends stays the engine's English. Where the text goes
+  (`field` of the platform table — one place on every platform from v0.1.15, the field for every chat) is said in
+  Russian and Hebrew as a path through the menus (`PLACES`), the buttons named as the screen shows them: ChatGPT in the
+  browser by the owner's own screens (Safari on an iPhone, Russian interface, 19.11.2026) — his name at the foot of the
+  side menu, «Персонализация», «Пользовательские инструкции», the row ChatGPT, «Edit»; Claude by the English names of
+  Anthropic's help («Settings», «Your Claude», «Instructions», read 19.11.2026) in both — its interface in Russian or
+  Hebrew was not seen; Hebrew names ChatGPT's English buttons; Grok's app is said in words. English keeps the release's
+  words, held to the Issue. A link in a sentence is written `[words](address)` and drawn by `app.js` (`rich`): the
+  words as text, the address https only — three of them, GitHub's and Notion's sign-up and GitHub's «new repository».
+  In Hebrew each run of Latin words is an isolate (FSI … PDI, `app.js`, `isolate`), a short one with its spaces
+  unbroken, so a button's name or «TEXT MARK 4.» keeps its quotes and arrows in a right-to-left line; what she copies
+  is left as it is.
+- `done.html`, `done.js` — the page «it worked»: her AI's last message of setup links to it (INSTALL-12, from
+  v0.1.14; at this address from v0.1.15), and her AI never opens it itself: `done.html?p=<her AI>&l=<her language>&c=<her country>`. One line goes only
   when she presses «Tell the author it worked», once: her answer outlives a change of language (`ended`).
 - `data.js` — written by `write.py` from a published release; never edited by hand.
-- `write.py` — writes `data.js`: `python3.12 page/write.py --release <checkout of Garik98129/memory-engine-releases at a tag>`.
+- `write.py` — writes `data.js`: `python3.12 page/write.py --release <checkout of grafyla/releases at a tag>`.
   It imports that release's `engine.setup.setup` and takes from it the one text, the installable rows of the platform
   table (with the line `setup` writes for each), the grammar lines, the messages, the limits; from the Python that runs
   it — the Unicode tables `setup.name_ok` and C5 read, and the time zones `setup` accepts on that machine (without
@@ -46,8 +51,9 @@ numbers it means «marked as a test», not «the owner's run». Both pages load 
 connect to the counter alone (a Content-Security-Policy in each).
 
 **Its English words** follow the Issue of the full way: the parity test holds them to the release's own `setup.issue`,
-sentence for sentence, so a release that rewords the Issue fails until the three languages follow. Three sentences
-differ on purpose: step 2's last (on this way she has no repository to keep from her AI), the nightly copy's (it can
+sentence for sentence, so a release that rewords the Issue fails until the three languages follow. Three places
+differ on purpose: the end of the check of the connections (on this way she has no repository to keep from her AI; an
+empty one, with its link, where GitHub asks her to pick one), the nightly copy's (it can
 be turned on only on the full way) and «Later» (a change of settings comes back to this page). Where the text carries
 its mark (`TEXT MARK 2.`, from v0.1.14), the page asks her to keep that last line, as the Issue of that release does;
 a text without it — v0.1.13 — ends with the words that release's Issue named.
@@ -68,17 +74,21 @@ These three — C4 not ported, the language list, the country list — are where
   first message and message after a change of settings; and every list value through `setup.build`. CI runs it
   (`.github/workflows/test.yml`, job `parity`).
 
-**Publishing** — by the owner, after the release that carries the text's mark (`v0.1.14` or later, DESIGN_PHASE3 §5a,
-«The order»), with `data.js` written again from it — `data.js` is v0.1.14's: GitHub Pages, «Deploy from a branch», `main`, `/ (root)`. The page is
-then at `https://garik98129.github.io/memory-engine-install/page/`, the page «it worked» at `…/page/done.html` — the
-counter takes lines from that origin (`counter/wrangler.toml`). `.nojekyll` keeps GitHub from building the folder.
+**Publishing.** GitHub Pages, «Deploy from a branch», `main`, `/ (root)`, with the custom domain `setup.grafyla.com`
+(the file `CNAME`; a CNAME record in the owner's DNS leads to `grafyla.github.io`): the page is at `https://setup.grafyla.com/page/`, the page «it worked» at `…/page/done.html` —
+the address the rules of v0.1.15 give her AI (INSTALL-12), and the origin the counter takes lines from
+(`counter/wrangler.toml`). What `main` holds is what people get: `data.js` is v0.1.15's, written again by `write.py`
+with each release the page follows. `.nojekyll` keeps GitHub from building the folder. Until 23.11.2026 the page's
+address was `https://garik98129.github.io/memory-engine-install/page/`; GitHub Pages does not lead from an old address
+to a new one.
 
 ---
 
-**Страница установки.** Путь без личной копии: страница прямо в браузере телефона собирает из семи ответов то же, что
-даёт Issue полного пути, — общий текст для вставки, первое сообщение с личной частью, подключения и что работает на
-выбранном ИИ. Три языка: русский, английский, иврит. Ничего не хранит. Одну строку в счётчик отправляет только по
-нажатию «Собрать и сообщить автору», после того как тексты собраны; день к строке ставит сам счётчик. Тексты сверяются
-с движком байт в байт тестом `test:parity`. По-русски и на иврите место для текста показано путём по меню со стрелками,
-кнопки ChatGPT — так, как они написаны на экране (по скриншотам владельца с chatgpt.com в Safari, русский интерфейс). Публикует владелец: GitHub
-Pages, ветка `main`, корень; данные уже собраны из выпуска `v0.1.14`.
+**Страница настройки.** Путь без личной копии: страница прямо в браузере телефона собирает из семи ответов то же, что
+даёт Issue полного пути, — общий текст для вставки, первое сообщение с личной частью, проверку подключений и что
+работает на выбранном ИИ. Три языка: русский, английский, иврит. Ничего не хранит. Одну строку в счётчик отправляет
+только по нажатию «Собрать и сообщить автору», после того как тексты собраны; день к строке ставит сам счётчик. Тексты
+сверяются с движком байт в байт тестом `test:parity`. По-русски и на иврите место для текста показано путём по меню со
+стрелками: кнопки ChatGPT — так, как они написаны на экране (по скриншотам владельца с chatgpt.com в Safari, русский
+интерфейс), кнопки Claude — английскими названиями из справки Anthropic. Страница опубликована на GitHub Pages по
+адресу `https://setup.grafyla.com/page/`; данные собраны из выпуска `v0.1.15`.

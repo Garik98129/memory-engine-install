@@ -17,10 +17,11 @@ database_name = "memory-engine-counter"
 database_id = "d9664fde-8e3a-4303-b5d1-082ce387aad1"   # the id `wrangler d1 create memory-engine-counter` prints
 
 [vars]
-# The origin whose browsers may send a line: the owner's GitHub Pages — any page under it, the
-# installation page and every other one there, not that page alone. It keeps other sites' pages out,
-# not a script, which can set any Origin.
-ALLOWED_ORIGIN = "https://garik98129.github.io"
+# The origin whose browsers may send a line: the setup page's own address, setup.grafyla.com — every
+# page served there, which is this repository's alone (until 23.11.2026: https://garik98129.github.io,
+# the owner's GitHub Pages, any page under it). It keeps other sites' pages out, not a script, which
+# can set any Origin. A change here reaches the counter only with a deployment.
+ALLOWED_ORIGIN = "https://setup.grafyla.com"
 
 # STATS_KEY — a secret of at least 32 random characters (`wrangler secret put STATS_KEY`), never in
 # this file: the owner's link to the numbers carries it.

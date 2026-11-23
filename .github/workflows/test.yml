@@ -47,7 +47,7 @@ jobs:
         run: node -e 'import("./page/data.js").then((m) => console.log("tag=" + m.DATA.release))' >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
-          repository: Garik98129/memory-engine-releases
+          repository: grafyla/releases
           ref: ${{ steps.release.outputs.tag }}
           path: release
           persist-credentials: false

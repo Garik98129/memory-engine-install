@@ -11,8 +11,9 @@ each day's total, held below the ceiling. No name, no address, no header, no coo
 the day. Still, a row of one may point to one person for someone who knows who installed that day: the
 numbers are the owner's alone, behind his key. Workers Logs and traces are off (`wrangler.toml`).
 
-**What it takes.** `POST /e` with the `Origin` of the owner's GitHub Pages (`https://garik98129.github.io` — any page there,
-not the installation page alone), a body of at most 256 bytes of UTF-8,
+**What it takes.** `POST /e` with the `Origin` of the setup page's own address (`https://setup.grafyla.com` — every page
+served there, which is this repository's alone; `wrangler.toml`, and a change of it reaches the counter only with a
+deployment), a body of at most 256 bytes of UTF-8,
 read no further: `{"e": "start", "p": "chatgpt", "l": "ru", "c": "IL", "t": 0}` — exactly those five
 fields, each a value it knows: an installable platform, a language code whose primary part is in ISO 639
 (`src/languages.js`, from SIL's ISO 639-3 table, without `und`, `zxx`, `mul`, `mis`; one code a

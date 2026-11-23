@@ -70,7 +70,7 @@ function python(args) {
 }
 
 test("the release checkout is the one the page's data was written from", () => {
-  assert.ok(RELEASE, "RELEASE_DIR: a checkout of memory-engine-releases at the page's release tag");
+  assert.ok(RELEASE, "RELEASE_DIR: a checkout of grafyla/releases at the page's release tag");
   const manifest = JSON.parse(readFileSync(join(RELEASE, "release-manifest.json"), "utf-8"));
   assert.equal(manifest.release, DATA.release);
   assert.equal(manifest.source, DATA.source);
@@ -124,8 +124,9 @@ test("every answer the page's lists can give is one setup takes", () => {
 
 // The page's English words of the Issue (i18n.js) against the release's own `setup.issue` for the same answers:
 // a release that rewords the Issue fails here until the page's three languages follow it. Three of the page's
-// sentences differ on purpose, and are not held: step 2's last (her own repositories are not needed on this way), the
-// nightly copy's (it can be turned on only on the full way), and «Later» (a change of settings comes back here).
+// places differ on purpose, and are not held: the end of the check of the connections (her own repositories are not
+// needed on this way; an empty one, with its link), the nightly copy's (it can be turned on only on the full way), and
+// «Later» (a change of settings comes back here).
 test("the page's English words of the Issue are the release's, sentence for sentence", () => {
   const field = fieldText();
   const marked = MARK_RE.test(lastLine(field));
@@ -137,13 +138,16 @@ test("the page's English words of the Issue are the release's, sentence for sent
   const en = T.en;
   sets.forEach(([row, a], k) => {
     const issue = out.answers[k].issue.replaceAll("**", "").replaceAll("`", "");     // Markdown aside: the page shows plain text
-    const where = row.field_all ? en.where_two(row.field, row.field_all) : en.where_one(row.field);
+    const where = en.where_one(row.field);
     const schedule = row.schedule === "paid" ? en.schedule.paid(row.plan) : en.schedule[row.schedule];
     const held = [
-      en.three_steps, where, en.paste(lastLine(field), lastWords(field), length(field), marked), en.step3, en.after,
-      en.after2, en.old, en.notion[row.notion], schedule, `What works on ${row.title}.`, en.step2(DATA.manifests).split(" No access to your own")[0],
-      "No daily task is set up at installation yet: a later release brings them. The nightly copy of your Notion is off",
+      en.two_texts, en.check_h, en.check(DATA.manifests).split(" No access to your own")[0],
+      en.step1_h, `${en.step1} ${where}`, en.paste(lastLine(field), lastWords(field), length(field), marked),
+      en.step2_h, en.step2, en.after, en.after2, en.old, en.notion[row.notion], schedule, `What works on ${row.title}.`,
+      en.no_daily.replace(/\.$/, ""),
     ];
+    assert.ok(en.no_daily.startsWith("No daily task is set up at setup yet"), "the sentence held is the one meant");
+    assert.ok(en.check(DATA.manifests).includes(" No access to your own"), "the check's end is the page's own, and is there");
     if (row.unknown) held.push(en.unknown(row.unknown));
     if (row.plan !== "any") held.push(en.need_plan(row.plan));
     for (const words of held) assert.ok(issue.includes(words), `${a.platform}: «${words.slice(0, 80)}…» is not in setup.issue`);

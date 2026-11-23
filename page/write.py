@@ -1,6 +1,6 @@
-"""Write page/data.js — what the installation page holds — from a published release of the engine.
+"""Write page/data.js — what the setup page holds — from a published release of the engine.
 
-    python3.12 page/write.py --release <checkout of Garik98129/memory-engine-releases at a tag>
+    python3.12 page/write.py --release <checkout of grafyla/releases at a tag>
 
 memory-engine, docs/DESIGN_PHASE3.md §5a: the page is written from a published release, as the template
 is — the one text, the rows of the platform table, the lines the user's part is built from, the grammar
@@ -189,7 +189,7 @@ def _loads(zone: str) -> bool:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--release", type=Path, required=True,
-                    help="a checkout of Garik98129/memory-engine-releases at a release tag")
+                    help="a checkout of grafyla/releases at a release tag")
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--check", action="store_true", help="compare with --out instead of writing it")
     args = ap.parse_args(argv)

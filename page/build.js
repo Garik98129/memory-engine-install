@@ -1,4 +1,4 @@
-// What the installation page builds from her answers — the user's part, the first message, the one text — as the
+// What the setup page builds from her answers — the user's part, the first message, the one text — as the
 // engine's `setup.build` and `setup.first_message` do (memory-engine, engine/setup/setup.py; docs/DESIGN_PHASE3.md
 // §5a). A second implementation of those rules, in another language: page/test/parity.py holds it to the
 // first, byte for byte, on a set of answers. Pure: no page, no network — the page (app.js) and the tests import it.

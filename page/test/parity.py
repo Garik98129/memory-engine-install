@@ -1,7 +1,7 @@
 """The engine's side of the page's parity test (page/test/parity.test.js): what `setup` builds from the same
 answers, from the release the page's data was written from.
 
-    python3.12 page/test/parity.py --release <checkout of memory-engine-releases at that tag> --answers in.json
+    python3.12 page/test/parity.py --release <checkout of grafyla/releases at that tag> --answers in.json
 
 Prints JSON: for each set of answers, whether `setup.build` takes it and, if so, the user's part and the
 messages `setup.first_message` makes of it; for each name, whether `setup` takes it as a name. With
