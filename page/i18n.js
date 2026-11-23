@@ -32,14 +32,15 @@ export const UNKNOWN = {
 // buttons named as the screen shows them. ChatGPT in the browser — by the owner's own screens (chatgpt.com in Safari on
 // an iPhone, Russian interface, 19.11.2026): his name at the foot of the side menu → «Персонализация» → «Пользовательские
 // инструкции», the row ChatGPT → «Edit»; Personalization there is an item of that menu, not a page of «Настройки». In
-// Hebrew the interface's own words were not seen, so its paths name the English ones. Claude — the English names of
+// Hebrew the interface's own words were not seen, so its paths name the English ones. The ChatGPT path ends with the save button —
+// «Сохранить», «Save» — after the text is pasted: on the owner's test, 23.11.2026, it was the step easy to miss. Claude — the English names of
 // Anthropic's help («Settings», «Your Claude», «Instructions», read 19.11.2026): its interface in Russian or Hebrew was
 // not seen, so no button is guessed in either. Grok's app — in words. English keeps the release's words: the parity test
 // holds them to the Issue. A release that changes a place breaks page/test/page.test.js until it is here.
 export const PLACES = {
   "chatgpt.com in your browser: the menu under your name, Personalization": {
-    ru: "chatgpt.com в браузере → ваше имя внизу бокового меню → «Персонализация» → «Пользовательские инструкции», строка ChatGPT → «Edit»",
-    he: "chatgpt.com בדפדפן ← השם שלכם בתחתית התפריט הצדדי ← «Personalization» ← «Custom instructions», השורה ChatGPT ← «Edit»",
+    ru: "chatgpt.com в браузере → ваше имя внизу бокового меню → «Персонализация» → «Пользовательские инструкции», строка ChatGPT → «Edit» → вставьте текст → «Сохранить»",
+    he: "chatgpt.com בדפדפן ← השם שלכם בתחתית התפריט הצדדי ← «Personalization» ← «Custom instructions», השורה ChatGPT ← «Edit» ← הדביקו את הטקסט ← «Save»",
   },
   "Claude: Settings, Your Claude, Instructions": {
     ru: "Claude → настройки («Settings») → «Your Claude» → «Instructions»",
