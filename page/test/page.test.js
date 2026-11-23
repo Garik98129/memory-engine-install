@@ -76,7 +76,7 @@ test("the page says «setup» in every language, and names the repositories as t
 test("a link in the page's words is an https address of GitHub or Notion, the same in every language", () => {
   const links = (s) => [...s.matchAll(/\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g)].map((m) => m[2]);
   const en = [...T.en.need.flatMap(links), ...links(T.en.check("m"))];
-  assert.deepEqual(en, ["https://github.com/signup", "https://www.notion.so/signup", "https://github.com/new"]);
+  assert.deepEqual(en, ["https://github.com/signup", "https://www.notion.so/signup", "https://github.com/new?name=empty&visibility=private"]);
   for (const code of LANGS) {
     assert.deepEqual([...T[code].need.flatMap(links), ...links(T[code].check("m"))], en, code);
     for (const [key, value] of Object.entries(T[code])) {
