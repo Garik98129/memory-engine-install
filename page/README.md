@@ -54,9 +54,12 @@ connect to the counter alone (a Content-Security-Policy in each).
 both ways — every sentence the page shows after «Build» is in the Issue, and nothing is left of the Issue once the
 page's sentences and the places that differ on purpose are taken out — so a release that rewords the Issue, or adds a
 sentence to it, fails until the English follows. Russian and Hebrew are not held by a test: they follow the English by
-hand, read by a second reader. Three places
+hand, read by a second reader. Four places
 differ on purpose: the end of the check of the connections (on this way she has no repository to keep from her AI; an
-empty one, with its link, where GitHub asks her to pick one), the nightly copy's (it can
+empty one, with its link, where GitHub asks her to pick one), what becomes of her old instructions (the owner's own
+words, 23.11.2026: not back into the field she copied them from — after the setup she gives them to her AI in a chat,
+and it puts what is needed into her Notion; the Issue says «Do not put them back into this field: after the setup you
+send them to your AI in a chat», and the test reads that sentence in its place), the nightly copy's (it can
 be turned on only on the full way) and «Later» (a change of settings comes back to this page). Where the text carries
 its mark (`TEXT MARK 2.`, from v0.1.14), the page asks her to keep that last line, as the Issue of that release does;
 a text without it — v0.1.13 — ends with the words that release's Issue named.

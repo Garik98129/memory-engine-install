@@ -2,7 +2,8 @@
 // English, Russian or Hebrew, as the template's README is»). What she pastes and sends — the one text, the first
 // message, her part — is the engine's own and stays English in every language: her AI answers her in hers.
 // The English words follow the Issue of the full way (engine/setup/setup.py, `issue`); the Hebrew wants a native
-// reader's eye before the page goes to anybody. Russian and Hebrew say «настройка», «הגדרה» — the words of the site's
+// reader's eye before the page goes to anybody. One sentence of step 1 is the owner's own in all three (23.11.2026):
+// her old instructions do not go back into the field — she gives them to her AI in a chat. Russian and Hebrew say «настройка», «הגדרה» — the words of the site's
 // «Get started» (grafyla/site, src/texts.py), which the owner approved; a link in a sentence is written
 // [words](address) and drawn by app.js (`rich`).
 
@@ -114,7 +115,7 @@ export const T = {
     step1_h: "1. The instructions — not into a chat.",
     step1: "This text goes into your AI's settings, into the field for standing instructions.",
     where_one: (f) => `Open ${f}.`,
-    paste: (last, words, n, marked) => `The text below takes that place alone: put it in place of whatever stands there — exactly as it is — and save. If you wrote instructions of your own there, copy them out first — into a notes app on your phone, for one. Do not put them back into this field: after the setup you send them to your AI in a chat. Check that its last line came in too: ${marked ? `it is «${last}» — keep it: your AI reads it to know its text is whole and current. The text` : `it ends «${words}» It`} is the same for everybody: new rules do not change it, and neither does a change of your settings. It is ${n} characters long, and nothing else goes beside it. It works in all your chats: in each new one your AI looks at your Notion before its first answer.`,
+    paste: (last, words, n, marked) => `The text below takes that place alone: put it in place of whatever stands there — exactly as it is — and save. If you wrote instructions of your own there, copy them out first — into a notes app on your phone, for one. Do not put them back into the instructions field you copied them from. After the setup, give them to your AI in a chat: it pulls out of them what is needed and puts it where it belongs in your Notion. Check that its last line came in too: ${marked ? `it is «${last}» — keep it: your AI reads it to know its text is whole and current. The text` : `it ends «${words}» It`} is the same for everybody: new rules do not change it, and neither does a change of your settings. It is ${n} characters long, and nothing else goes beside it. It works in all your chats: in each new one your AI looks at your Notion before its first answer.`,
     copy: "Copy",
     copied: "Copied",
     step2_h: "2. The first message — into a chat.",
@@ -206,7 +207,7 @@ export const T = {
     step1_h: "1. Инструкции — не в чат.",
     step1: "Этот текст вставляется в настройки вашего ИИ, в поле для постоянных инструкций.",
     where_one: (f) => `Откройте: ${f}.`,
-    paste: (last, words, n, marked) => `Текст ниже встаёт на это место один: замените им всё, что там стоит, — ровно как он есть, — и сохраните. Если вы писали там свои инструкции, сначала скопируйте их — например, в приложение заметок на телефоне. Обратно в это поле их возвращать не нужно: после настройки вы отправите их ИИ в чат. Проверьте, что вошла и его последняя строка: ${marked ? `«${last}» — не удаляйте её: по ней ИИ узнаёт, что текст целый и свежий.` : `текст кончается словами «${words}».`} Текст одинаковый для всех: новые правила его не меняют, смена ваших настроек тоже. В нём ${n} знаков, и рядом с ним ничего больше не встаёт. Он работает во всех ваших чатах: в каждом новом ИИ заглядывает в ваш Notion перед первым ответом.`,
+    paste: (last, words, n, marked) => `Текст ниже встаёт на это место один: замените им всё, что там стоит, — ровно как он есть, — и сохраните. Если вы писали там свои инструкции, сначала скопируйте их — например, в приложение заметок на телефоне. Не возвращайте их в поле инструкций, откуда скопировали. После настройки дайте их своему ИИ в чате — он сам вытащит из них что надо и положит куда надо в вашем Notion. Проверьте, что вошла и его последняя строка: ${marked ? `«${last}» — не удаляйте её: по ней ИИ узнаёт, что текст целый и свежий.` : `текст кончается словами «${words}».`} Текст одинаковый для всех: новые правила его не меняют, смена ваших настроек тоже. В нём ${n} знаков, и рядом с ним ничего больше не встаёт. Он работает во всех ваших чатах: в каждом новом ИИ заглядывает в ваш Notion перед первым ответом.`,
     copy: "Скопировать",
     copied: "Скопировано",
     step2_h: "2. Первое сообщение — в чат.",
@@ -298,7 +299,7 @@ export const T = {
     step1_h: "1. ההוראות — לא לצ'אט.",
     step1: "את הטקסט הזה מדביקים בהגדרות של ה-AI שלכם, בשדה של ההוראות הקבועות.",
     where_one: (f) => `פתחו: ${f}.`,
-    paste: (last, words, n, marked) => `הטקסט שלמטה תופס את המקום הזה לבדו: שימו אותו במקום כל מה שכתוב שם — בדיוק כמו שהוא — ושמרו. אם כתבתם שם הוראות משלכם, העתיקו אותן קודם — למשל לאפליקציית הפתקים בטלפון. אין צורך להחזיר אותן לשדה הזה: אחרי ההגדרה תשלחו אותן ל-AI בצ'אט. בדקו שגם השורה האחרונה שלו נכנסה: ${marked ? `«${last}» — השאירו אותה: לפיה ה-AI יודע שהטקסט שלם ועדכני.` : `הטקסט מסתיים במילים «${words}».`} הטקסט זהה לכולם: כללים חדשים לא משנים אותו, וגם שינוי ההגדרות שלכם לא. יש בו ${n} תווים, ולצידו לא שמים שום דבר אחר. הוא פועל בכל השיחות שלכם: בכל שיחה חדשה ה-AI בודק ב-Notion שלכם לפני התשובה הראשונה שלו.`,
+    paste: (last, words, n, marked) => `הטקסט שלמטה תופס את המקום הזה לבדו: שימו אותו במקום כל מה שכתוב שם — בדיוק כמו שהוא — ושמרו. אם כתבתם שם הוראות משלכם, העתיקו אותן קודם — למשל לאפליקציית הפתקים בטלפון. אל תחזירו אותן לשדה ההוראות שממנו העתקתם אותן. אחרי ההגדרה תנו אותן ל-AI שלכם בצ'אט — הוא כבר יוציא מהן את מה שצריך וישים אותו במקום הנכון ב-Notion שלכם. בדקו שגם השורה האחרונה שלו נכנסה: ${marked ? `«${last}» — השאירו אותה: לפיה ה-AI יודע שהטקסט שלם ועדכני.` : `הטקסט מסתיים במילים «${words}».`} הטקסט זהה לכולם: כללים חדשים לא משנים אותו, וגם שינוי ההגדרות שלכם לא. יש בו ${n} תווים, ולצידו לא שמים שום דבר אחר. הוא פועל בכל השיחות שלכם: בכל שיחה חדשה ה-AI בודק ב-Notion שלכם לפני התשובה הראשונה שלו.`,
     copy: "העתקה",
     copied: "הועתק",
     step2_h: "2. ההודעה הראשונה — לצ'אט.",

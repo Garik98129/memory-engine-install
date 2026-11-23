@@ -122,6 +122,10 @@ test("every answer the page's lists can give is one setup takes", () => {
   assert.deepEqual(out.refused, []);
 });
 
+// What becomes of her old instructions: the page's own sentence, and the Issue's it stands for.
+const OLD_OF_THE_PAGE = "Do not put them back into the instructions field you copied them from. After the setup, give them to your AI in a chat: it pulls out of them what is needed and puts it where it belongs in your Notion.";
+const OLD_OF_THE_ISSUE = "Do not put them back into this field: after the setup you send them to your AI in a chat.";
+
 // «Later» as the Issue of the full way has it — her copy, its workflow «settings», GitHub's notifications: none of it
 // is on this way, so the page has its own (`later` in i18n.js). Kept here word for word, so that a release that
 // rewords it fails and the page's own is read again.
@@ -135,10 +139,12 @@ const LATER_OF_THE_ISSUE = "Later. The rules your AI reads are brought up to dat
   + "copy.";
 
 // The page's English words of the Issue (i18n.js) against the release's own `setup.issue` for the same answers:
-// a release that rewords the Issue fails here until the page's three languages follow it. Three of the page's
+// a release that rewords the Issue fails here until the page's three languages follow it. Four of the page's
 // places differ on purpose, and are not held: the end of the check of the connections (her own repositories are not
-// needed on this way; an empty one, with its link), the nightly copy's (it can be turned on only on the full way), and
-// «Later» (a change of settings comes back here).
+// needed on this way; an empty one, with its link), what becomes of her old instructions (the owner's own words,
+// 23.11.2026: not back into the field she copied them from — to her AI in a chat, which puts what is needed into her
+// Notion; the Issue says it shorter, and is read in its place here), the nightly copy's (it can be turned on only on
+// the full way), and «Later» (a change of settings comes back here).
 test("the page's English words of the Issue are the release's, sentence for sentence", () => {
   const field = fieldText();
   const marked = MARK_RE.test(lastLine(field));
@@ -154,11 +160,12 @@ test("the page's English words of the Issue are the release's, sentence for sent
     const schedule = row.schedule === "paid" ? en.schedule.paid(row.plan) : en.schedule[row.schedule];
     const held = [
       en.two_texts, en.check_h, en.check(DATA.manifests).split(" No access to your own")[0],
-      en.step1_h, `${en.step1} ${where}`, en.paste(lastLine(field), lastWords(field), length(field), marked),
+      en.step1_h, `${en.step1} ${where}`, en.paste(lastLine(field), lastWords(field), length(field), marked).replace(OLD_OF_THE_PAGE, OLD_OF_THE_ISSUE),
       en.step2_h, en.step2, en.after, en.after2, en.old, en.notion[row.notion], schedule, en.works_h(row.title),
       en.no_daily.replace(/\.$/, ""),
     ];
     assert.ok(en.no_daily.startsWith("No daily task is set up at setup yet"), "the sentence held is the one meant");
+    assert.equal(en.paste(lastLine(field), lastWords(field), length(field), marked).split(OLD_OF_THE_PAGE).length, 2, "the page's own sentence on her old instructions is there, once");
     assert.ok(en.check(DATA.manifests).includes(" No access to your own"), "the check's end is the page's own, and is there");
     if (row.unknown) held.push(en.unknown(row.unknown));
     if (row.plan !== "any") held.push(en.need_plan(row.plan));
