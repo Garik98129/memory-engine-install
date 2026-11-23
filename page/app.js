@@ -1,4 +1,4 @@
-// The installation page in the browser (memory-engine, docs/DESIGN_PHASE3.md §5a). It builds the texts from her answers
+// The setup page in the browser (the engine's docs/DESIGN_PHASE3.md §5a). It builds the texts from her answers
 // with build.js and shows them; it sends one line to the counter only when she presses «Build and tell the author»,
 // after the texts are built, and never waits on the answer (counter/README.md, «What the page must do»).
 
@@ -31,10 +31,33 @@ export function uiLanguage() {
 const LATIN_RUN = /[A-Za-z0-9](?:[A-Za-z0-9 ,:/_.-]*[A-Za-z0-9])?(?:\.(?=»))?/g;
 export const isolate = (s) => s.replace(LATIN_RUN, (m) => `\u2068${m.length <= 24 ? m.replaceAll(" ", "\u00a0") : m}\u2069`);
 
+// A sentence of the page's own words with a link in it — «[Sign up for GitHub](https://github.com/signup)» — as text
+// and links: the words go in as text, never as markup, and a link opens only an https address the page's own words
+// name (i18n.js). In a right-to-left page each piece is isolated by itself, so an address is never taken for words.
+const LINK = /\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g;
+export function rich(text) {
+  const shown = (s) => (document.documentElement.dir === "rtl" ? isolate(s) : s);
+  const out = [];
+  let at = 0;
+  for (const m of text.matchAll(LINK)) {
+    if (m.index > at) out.push(shown(text.slice(at, m.index)));
+    const a = document.createElement("a");
+    a.href = m[2];
+    a.rel = "noopener noreferrer";
+    a.target = "_blank";
+    a.textContent = shown(m[1]);
+    out.push(a);
+    at = m.index + m[0].length;
+  }
+  if (at < text.length) out.push(shown(text.slice(at)));
+  return out;
+}
+
 export function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
     if (k === "text") node.textContent = document.documentElement.dir === "rtl" ? isolate(v) : v;
+    else if (k === "rich") node.append(...rich(v));
     else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
     else if (v !== false && v !== null && v !== undefined) node.setAttribute(k, v === true ? "" : v);
   }
@@ -221,7 +244,7 @@ export function render(code) {
     el("h1", { text: t.title }),
     el("p", { text: t.intro }),
     el("section", { class: "privacy" }, el("h2", { text: t.privacy_h }), t.privacy.map((x) => el("p", { text: x }))),
-    el("section", {}, el("h2", { text: t.need_h }), el("ul", {}, t.need.map((x) => el("li", { text: x })))),
+    el("section", {}, el("h2", { text: t.need_h }), el("ul", {}, t.need.map((x) => el("li", { rich: x })))),
     el("section", {},
       el("h2", { text: t.purpose_q }), purposes,
       el("h2", { text: t.form_h }),
@@ -244,21 +267,23 @@ function installOutput(t, a, field, p) {
   const row = DATA.platforms[a.platform];
   // English keeps the release's own words (the parity test holds them to the Issue); the others go by the menus.
   const place = (words) => (t === T.en ? words : PLACES[words]?.[langOf(t)] || words);
-  const where = row.field_all ? t.where_two(place(row.field), place(row.field_all)) : t.where_one(place(row.field));
+  // One place on every platform from v0.1.15 — the field for every chat; a release that brings a second place back
+  // (`field_all`) fails page/test/page.test.js until the page has words for the choice again.
+  const where = t.where_one(place(row.field));
   const unknown = row.unknown ? t.unknown(t === T.en ? row.unknown : (UNKNOWN[row.unknown]?.[langOf(t)] || row.unknown)) : "";
   const schedule = row.schedule === "paid" ? t.schedule.paid(row.plan) : t.schedule[row.schedule];
   return [
     el("h2", { text: t.out_h }),
     row.plan === "any" ? null : el("p", { class: "plan", text: t.need_plan(row.plan) }),
-    el("p", { text: t.three_steps }),
+    el("p", { text: t.two_texts }),
+    el("h3", { text: t.check_h }),
+    el("p", { rich: t.check(DATA.manifests) }),
     el("h3", { text: t.step1_h }),
-    el("p", { text: where }),
+    el("p", { text: `${t.step1} ${where}` }),
     el("p", { text: t.paste(lastLine(field), lastWords(field), length(field), MARK_RE.test(lastLine(field))) }),
     copyBox(field, t),
     el("h3", { text: t.step2_h }),
-    el("p", { text: t.step2(DATA.manifests) }),
-    el("h3", { text: t.step3_h }),
-    el("p", { text: t.step3 }),
+    el("p", { text: t.step2 }),
     copyBox(firstMessage(p), t),
     el("p", { text: t.after }),
     el("p", { text: t.after2 }),

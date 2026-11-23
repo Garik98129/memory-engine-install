@@ -1,4 +1,4 @@
-/* The installation page: one column, large type, a phone first. Light and dark from the phone's own setting. */
+/* The setup page: one column, large type, a phone first. Light and dark from the phone's own setting. */
 :root { --bg: #ffffff; --fg: #1d1d1f; --muted: #5f6368; --line: #d0d4d9; --box: #f4f6f8; --accent: #1f5fbf; --error: #b3261e; }
 @media (prefers-color-scheme: dark) {
   :root { --bg: #121417; --fg: #e8eaed; --muted: #a6adb4; --line: #3a4048; --box: #1d2126; --accent: #8ab4f8; --error: #f2b8b5; }
@@ -30,4 +30,5 @@ pre { white-space: pre-wrap; word-break: break-word; background: var(--box); bor
 button.copy { position: absolute; top: 8px; inset-inline-end: 8px; font: inherit; font-size: 0.9rem; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--accent); background: var(--bg); color: var(--accent); }
 .plan { font-weight: 600; }
 .sent { color: var(--muted); font-size: 0.9rem; }
+a { color: var(--accent); }
 footer { margin-top: 2.5rem; border-top: 1px solid var(--line); }

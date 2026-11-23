@@ -1,4 +1,4 @@
-// The page «it worked» (memory-engine, docs/DESIGN_PHASE3.md §5a): her AI's last message of installation links here
+// The page «it worked» (the engine's docs/DESIGN_PHASE3.md §5a): her AI's last message of setup links here
 // (INSTALL-12, a rules' PR) — her AI never opens the link itself. The link carries her AI, her language and her
 // country as the map holds them: done.html?p=chatgpt&l=ru&c=IL. One line goes to the counter only when she presses.
 
@@ -9,7 +9,7 @@ import { line, doneAnswers } from "./build.js";
 
 const params = new URLSearchParams(location.search);
 // What she chose here — «sent» or «skipped» — kept outside a render: a change of language draws the page again, and
-// her answer stands, so a second press cannot send a second line (as `sentOnce` on the installation page).
+// her answer stands, so a second press cannot send a second line (as `sentOnce` on the setup page).
 let ended = null;
 
 function render(code) {

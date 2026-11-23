@@ -40,9 +40,10 @@ test("every refusal has its words, and every platform's «not known yet» line i
   }
 });
 
-test("every place the text goes is a path through the menus in Russian and Hebrew", () => {
+test("every place the text goes is a path through the menus in Russian and Hebrew — one place a platform", () => {
   for (const [k, row] of Object.entries(DATA.platforms)) {
-    for (const words of [row.field, row.field_all].filter(Boolean)) {
+    assert.equal(row.field_all, "", `${k}: a second place for the text — the page has no words for a choice (v0.1.15: one place, every chat)`);
+    for (const words of [row.field]) {
       assert.ok(PLACES[words], `${k}: «${words}» has no path in i18n.js`);
       for (const code of ["ru", "he"]) {
         assert.ok(PLACES[words][code], `${k} ${code}`);
@@ -51,6 +52,98 @@ test("every place the text goes is a path through the menus in Russian and Hebre
     }
   }
   assert.match(source("app.js"), /t === T\.en \? words : PLACES\[words\]/, "English keeps the release's words");
+  assert.deepEqual(Object.keys(PLACES).sort(), Object.values(DATA.platforms).map((row) => row.field).sort(),
+    "no path is kept for a place no platform of the release has");
+});
+
+// Every string the page can show from a group of its words: plain ones, the two shapes a sentence built from values
+// takes, lists and groups.
+const all = (v) => (typeof v === "string" ? [v] : typeof v === "function" ? [v("x", "y", 1, true), v("x", "y", 1, false)]
+  : Array.isArray(v) ? v.flatMap(all) : v && typeof v === "object" ? Object.values(v).flatMap(all) : []);
+
+test("the page says «setup» in every language, and names the repositories as they are called now", () => {
+  // «install» in any form, but in the one sentence that means it: there is nothing to download or install
+  const old = { en: /install/i, ru: /установ/i, he: /התקנ|להתקין/ };
+  const meant = { en: "nothing to download or install", ru: "", he: "לא צריך להוריד או להתקין" };
+  const project = { en: /project/i, ru: /проект/i, he: /פרויקט/ };
+  for (const code of LANGS) {
+    assert.ok(!meant[code] || T[code].intro.includes(meant[code]), `${code}: the sentence set aside is the intro's`);
+    const shown = [...all(T[code]), ...Object.values(UNKNOWN).map((g) => g[code] || ""), ...Object.values(PLACES).map((g) => g[code] || "")];
+    for (const words of shown) {
+      const rest = meant[code] ? words.replace(meant[code], "") : words;
+      assert.ok(!old[code].test(rest), `${code}: «${words.slice(0, 60)}…» still says installation`);
+      assert.ok(!project[code].test(words), `${code}: «${words.slice(0, 60)}…» names a project — the text has one place, the field for every chat`);
+      assert.ok(!/Garik98129|memory-engine|memory engine|движ[ко]к? памяти|מנוע הזיכרון/i.test(words), `${code}: «${words.slice(0, 60)}…» names the old place`);
+    }
+    assert.ok(T[code].privacy[3].includes(DATA.manifests), `${code}: the rules are public in ${DATA.manifests}`);
+    assert.ok(T[code].footer("v0").includes("grafyla/setup"), `${code}: the page's own code`);
+  }
+  for (const page of ["index.html", "done.html"]) assert.ok(!/<title>[^<]*install/i.test(source(page)), page);
+});
+
+const LINK_IN_WORDS = /\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g;
+
+test("a link in the page's words is an https address of GitHub or Notion, the same in every language, and only where the page draws links", () => {
+  const links = (s) => [...s.matchAll(LINK_IN_WORDS)].map((m) => m[2]);
+  const en = [...T.en.need.flatMap(links), ...links(T.en.check("m"))];
+  assert.deepEqual(en, ["https://github.com/signup", "https://www.notion.so/signup", "https://github.com/new?name=empty&visibility=private"]);
+  for (const code of LANGS) {
+    assert.deepEqual([...T[code].need.flatMap(links), ...links(T[code].check("m"))], en, code);
+    const { need, check, ...plain } = T[code];
+    for (const words of [...all(plain), ...Object.values(UNKNOWN).map((g) => g[code] || ""), ...Object.values(PLACES).map((g) => g[code] || "")]) {
+      assert.ok(!/\]\(/.test(words), `${code}: «${words.slice(0, 60)}…» has a link where the page draws plain text`);
+    }
+  }
+  const app = source("app.js");
+  assert.match(app, /t\.need\.map\(\(x\) => el\("li", \{ rich: x \}\)\)/);
+  assert.match(app, /el\("p", \{ rich: t\.check\(DATA\.manifests\) \}\)/);
+  assert.equal((app.match(/\brich: /g) || []).length, 2, "two places draw links: the list «Before you start» and the check of the connections");
+});
+
+test("a link is drawn as its words and an https address; everything else stays text, and nothing is dropped", async () => {
+  // app.js needs a browser to load: the two things it reads at once are stood in for, and `rich` is run as it is
+  globalThis.location ??= { search: "" };
+  const doc = { documentElement: { dir: "ltr" }, createElement: (tag) => ({ tag }) };
+  globalThis.document = doc;
+  const { rich } = await import("../app.js");
+  const text = (pieces) => pieces.map((x) => (typeof x === "string" ? x : x.textContent)).join("");
+  const got = rich("a [x y](https://e.example/p?a=1&b=2) b");
+  assert.deepEqual(got, ["a ", { tag: "a", href: "https://e.example/p?a=1&b=2", rel: "noopener noreferrer", target: "_blank", textContent: "x y" }, " b"]);
+  for (const words of ["[x](javascript:alert(1))", "[x](http://e.example/)", "[x](data:text/html,x)", "<b>bold</b> <a href=x>y</a>", "[x] (https://e.example/)"]) {
+    assert.deepEqual(rich(words), [words], `«${words}» stays text`);
+  }
+  assert.deepEqual(rich("[x](https://e.example/)"), [{ tag: "a", href: "https://e.example/", rel: "noopener noreferrer", target: "_blank", textContent: "x" }]);
+  assert.deepEqual(rich(""), []);
+  const bare = (s) => s.replace(/[⁨⁩]/g, "").replaceAll(" ", " ");
+  for (const code of LANGS) {
+    doc.documentElement.dir = code === "he" ? "rtl" : "ltr";
+    for (const words of [...T[code].need, T[code].check(DATA.manifests)]) {
+      const pieces = rich(words);
+      assert.equal(bare(text(pieces)), words.replace(LINK_IN_WORDS, "$1"), `${code}: every word is drawn, before, between and after the links`);
+      for (const x of pieces) if (typeof x !== "string") assert.match(x.href, /^https:\/\/(github\.com|www\.notion\.so)\//, `${code}: ${x.href}`);
+    }
+  }
+  doc.documentElement.dir = "rtl";
+  const [before, link, after] = rich("ל-GitHub [להירשם ל-GitHub](https://github.com/signup) כאן");
+  assert.equal(before, "ל-⁨GitHub⁩ ");
+  assert.equal(link.textContent, "להירשם ל-⁨GitHub⁩", "a link's words are isolated by themselves");
+  assert.equal(link.href, "https://github.com/signup", "an address is never taken for words");
+  assert.equal(after, " כאן");
+  doc.documentElement.dir = "ltr";
+});
+
+test("the page shows what she gets in the order of the Issue: the check, the instructions, the first message", () => {
+  const app = source("app.js");
+  const out = app.slice(app.indexOf("function installOutput("), app.indexOf("function settingsOutput("));
+  const order = ["t.out_h", "t.need_plan(", "t.two_texts", "t.check_h", "t.check(DATA.manifests)", "t.step1_h", "`${t.step1} ${where}`",
+    "t.paste(", "copyBox(field, t)", "t.step2_h", "t.step2 }", "copyBox(firstMessage(p), t)", "t.after }", "t.after2 }", "t.old }",
+    "t.works_h(", "t.no_daily", "t.later_h", "t.later }"];
+  let at = out.indexOf("return [");
+  for (const piece of order) {
+    const next = out.indexOf(piece, at);
+    assert.ok(next > at, `«${piece}» is not there, or not after the piece before it`);
+    at = next;
+  }
 });
 
 test("the page's lists are the counter's: its platforms, its countries, languages it keeps", () => {
@@ -82,9 +175,9 @@ test("the line the page sends is one the counter takes, for every AI and languag
 
 test("the page's line goes through the counter's own handler from the page's origin", async () => {
   const db = { prepare: () => ({ bind: () => ({}) }), batch: async () => [{}, { meta: { changes: 1 } }] };
-  const request = new Request("https://counter.example/e", { method: "POST", headers: { Origin: "https://garik98129.github.io" },
+  const request = new Request("https://counter.example/e", { method: "POST", headers: { Origin: "https://setup.grafyla.com" },
     body: line("start", A) });
-  const response = await handle(request, { DB: db, ALLOWED_ORIGIN: "https://garik98129.github.io" });
+  const response = await handle(request, { DB: db, ALLOWED_ORIGIN: "https://setup.grafyla.com" });
   assert.equal(response.status, 204);
 });
 
@@ -193,7 +286,7 @@ test("in Hebrew a run of Latin words is an isolate; a full stop goes in only bef
   const iso = (s) => s.replace(rule, (m) => `\u2068${m.length <= 24 ? m.replaceAll(" ", "\u00a0") : m}\u2069`);
   assert.equal(iso("«TEXT MARK 2.» — השאירו"), "«\u2068TEXT\u00a0MARK\u00a02.\u2069» — השאירו");
   assert.equal(iso("אפליקציית ChatGPT ← «New project» ←"), "אפליקציית \u2068ChatGPT\u2069 ← «\u2068New\u00a0project\u2069» ←");
-  assert.equal(iso("ב-Garik98129/memory-engine-releases."), "ב-\u2068Garik98129/memory-engine-releases\u2069.");
+  assert.equal(iso("ב-grafyla/releases."), "ב-\u2068grafyla/releases\u2069.");
 });
 
 test("both buttons look the same: one class, one size", () => {

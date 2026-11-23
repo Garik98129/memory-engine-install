@@ -8,7 +8,7 @@ import { COUNTRIES } from "../src/countries.js";
 import { LANGUAGES, ALIASES } from "../src/languages.js";
 import * as main from "../src/worker.js";
 
-const ORIGIN = "https://garik98129.github.io";
+const ORIGIN = "https://setup.grafyla.com";
 const KEY = "a-key-of-the-owner-0123456789abcdef";
 const NOW = new Date("2026-11-19T23:59:59Z");
 const LINE = { e: "start", p: "chatgpt", l: "ru", c: "IL", t: 0 };
@@ -136,7 +136,7 @@ test("a body that is no short UTF-8 line is refused, and read no further than it
 });
 
 test("a browser on another site may not send a line; a script that sets the page's Origin can — said in DESIGN", async () => {
-  for (const origin of ["https://evil.example", "null", "https://garik98129.github.io.evil.example"]) {
+  for (const origin of ["https://evil.example", "null", "https://setup.grafyla.com.evil.example"]) {
     const db = d1();
     assert.equal((await handle(post(LINE, { Origin: origin }), env(db), NOW)).status, 403, origin);
     assert.deepEqual(rows(db), []);
