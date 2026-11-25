@@ -141,7 +141,7 @@ const LATER_OF_THE_ISSUE = "Later. The rules your AI reads are brought up to dat
 // The page's English words of the Issue (i18n.js) against the release's own `setup.issue` for the same answers:
 // a release that rewords the Issue fails here until the page's three languages follow it. Four of the page's
 // places differ on purpose, and are not held: the end of the check of the connections (her own repositories are not
-// needed on this way; an empty one, with its link), what becomes of her old instructions (the owner's own words,
+// needed on this way, and those already connected stay as they are), what becomes of her old instructions (the owner's own words,
 // 23.11.2026: not back into the field she copied them from — to her AI in a chat, which puts what is needed into her
 // Notion; the Issue says it shorter, and is read in its place here), the nightly copy's (it can be turned on only on
 // the full way), and «Later» (a change of settings comes back here).
