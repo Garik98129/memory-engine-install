@@ -256,7 +256,7 @@ test("the page sends as the counter asks: POST, keepalive, an ordinary CORS requ
   const go = app.slice(app.indexOf("const go = (tell)"), app.indexOf("tellBtn.addEventListener"));
   assert.ok(go.indexOf("installOutput(") < go.indexOf("send(line("), "the texts are built before the line is sent");
   assert.ok(!/await[^;]*send\(/.test(go), "nothing waits on the counter");
-  assert.equal((app.match(/send\(line\(/g) || []).length, 1, "one place sends, behind «Build and tell the author»");
+  assert.equal((app.match(/send\(line\(/g) || []).length, 1, "one place sends, behind «Build and tell Grafyla's creator»");
   assert.match(go, /const sendIt = asked && !sentOnce;/, "one line from this page, however often she presses");
   assert.ok(go.indexOf("send(line(") < go.indexOf("await marker("), "the fingerprints never hold the line back");
   assert.equal((source("done.js").match(/send\(line\(/g) || []).length, 1, "one place sends on «it worked», on her press");
@@ -267,15 +267,22 @@ test("the page sends as the counter asks: POST, keepalive, an ordinary CORS requ
   assert.ok(done.indexOf("if (ended !== null) return;") < done.indexOf("send(line("), "a press after an answer sends nothing");
 });
 
-test("the page says what the counter does: the day is the counter's, and nothing reaches the author without her press", () => {
+test("the page says what the counter does: the day is the counter's, and nothing reaches the creator without her press", () => {
   for (const code of LANGS) {
     for (const words of [T[code].privacy[1], T[code].done_text]) {
       assert.ok(!/, and the day\.|, и день\.|, והיום\./.test(words), `${code}: the line holds no day — the counter adds it`);
     }
   }
-  assert.ok(T.en.privacy[1].includes("the day is the counter's own — the day the line reaches it"));
-  assert.ok(T.en.done_text.includes("Nothing reaches the author unless you press the button"),
+  assert.ok(T.en.privacy[1].includes("the day is set by the counter of Grafyla's creator — the day the line reaches it"));
+  assert.ok(T.en.done_text.includes("Nothing reaches the creator unless you press the button"),
     "opening the page sends its address to GitHub: «nothing is sent» would say more than is true");
+  // What GitHub saw is the visitor's own address, not the page's (the owner's review, 25.11.2026).
+  assert.ok(T.en.done_text.includes("saw your IP address when you opened it"));
+  assert.ok(T.ru.done_text.includes("увидел ваш IP-адрес, когда вы её открыли"));
+  assert.ok(T.he.done_text.includes("ראה את כתובת ה-IP שלכם כשפתחתם אותו"));
+  for (const code of LANGS) {
+    assert.ok(!/saw its address|увидел её адрес|את הכתובת שלו/.test(T[code].done_text), `${code}: GitHub saw her address`);
+  }
 });
 
 test("in Hebrew a run of Latin words is an isolate; a full stop goes in only before «»»", () => {

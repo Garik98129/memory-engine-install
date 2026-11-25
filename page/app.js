@@ -1,5 +1,5 @@
 // The setup page in the browser (the engine's docs/DESIGN_PHASE3.md §5a). It builds the texts from her answers
-// with build.js and shows them; it sends one line to the counter only when she presses «Build and tell the author»,
+// with build.js and shows them; it sends one line to the counter only when she presses «Build and tell Grafyla's creator»,
 // after the texts are built, and never waits on the answer (counter/README.md, «What the page must do»).
 
 import { DATA } from "./data.js";

@@ -9,7 +9,7 @@ no sign-in, nothing kept.
 - `index.html`, `main.js`, `app.js`, `style.css` — the page: the question what she comes for (her first setup, a change of
   her settings, another AI), the seven answers from lists — her AI, her language, up to three other languages, her
   country, her time zone, the grammar — and her name typed; two buttons of the same size and look, «Build and tell
-  the author» and «Build without it»; a change of settings has one, «Build», and sends nothing.
+  Grafyla's creator» and «Build without sending»; a change of settings has one, «Build», and sends nothing.
 - `build.js` — what she gets, built from her answers: `setup.build`'s user's part, `setup.first_message`, the one text,
   the fingerprints of `field_issue.marker` — of the text, and of her part without its outer line breaks, as
   `setup_run.open_issue` gives them — kept in the page as comments, unseen; the counter's line. Pure: the page
@@ -29,7 +29,7 @@ no sign-in, nothing kept.
   is left as it is.
 - `done.html`, `done.js` — the page «it worked»: her AI's last message of setup links to it (INSTALL-12, from
   v0.1.14; at this address from v0.1.15), and her AI never opens it itself: `done.html?p=<her AI>&l=<her language>&c=<her country>`. One line goes only
-  when she presses «Tell the author it worked», once: her answer outlives a change of language (`ended`).
+  when she presses «Tell Grafyla's creator it worked», once: her answer outlives a change of language (`ended`).
 - `data.js` — written by `write.py` from a published release; never edited by hand.
 - `write.py` — writes `data.js`: `python3.12 page/write.py --release <checkout of grafyla/releases at a tag>`.
   It imports that release's `engine.setup.setup` and takes from it the one text, the installable rows of the platform
@@ -41,7 +41,7 @@ no sign-in, nothing kept.
   `--check` compares `data.js` with what the release writes.
 
 **The line it sends** (counter/README.md): `{"e": "start", "p": …, "l": …, "c": …, "t": 0}` — only from a press of
-«Build and tell the author», after the texts are built and shown, by `fetch(…, {method: "POST", keepalive: true})` as an
+«Build and tell Grafyla's creator», after the texts are built and shown, by `fetch(…, {method: "POST", keepalive: true})` as an
 ordinary CORS request, never waited on; one line from the page, however often she presses. The line has no day: the
 counter puts the day, in UTC, on which it takes the line, and the pages say so. Opening «it worked» from her AI's link
 hands GitHub that link, with her AI, language and country in it, as any visit does: the page says «nothing reaches the
@@ -98,7 +98,7 @@ to a new one.
 **Страница настройки.** Путь без личной копии: страница прямо в браузере телефона собирает из семи ответов то же, что
 даёт Issue полного пути, — общий текст для вставки, первое сообщение с личной частью, проверку подключений и что
 работает на выбранном ИИ. Три языка: русский, английский, иврит. Ничего не хранит. Одну строку в счётчик отправляет
-только по нажатию «Собрать и сообщить автору», после того как тексты собраны; день к строке ставит сам счётчик. Тексты
+только по нажатию «Собрать и сообщить создателю Grafyla», после того как тексты собраны; день к строке ставит сам счётчик. Тексты
 сверяются с движком байт в байт тестом `test:parity`. По-русски и на иврите место для текста показано путём по меню со
 стрелками: кнопки ChatGPT — так, как они написаны на экране (по скриншотам владельца с chatgpt.com в Safari, русский
 интерфейс), кнопки Claude — английскими названиями из справки Anthropic. Страница опубликована на GitHub Pages по
