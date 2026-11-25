@@ -45,7 +45,7 @@ no sign-in, nothing kept.
 ordinary CORS request, never waited on; one line from the page, however often she presses. The line has no day: the
 counter puts the day, in UTC, on which it takes the line, and the pages say so. Opening «it worked» from her AI's link
 hands GitHub that link, with her AI, language and country in it, as any visit does: the page says «nothing reaches the
-author unless you press», not «nothing is sent». `?test=1` on the page's
+creator unless you press», not «nothing is sent». `?test=1` on the page's
 address marks a run as a test (`t: 1`, counted apart): the owner's own runs carry it, and anyone can set it, so in the
 numbers it means «marked as a test», not «the owner's run». Both pages load nothing but their own files and may
 connect to the counter alone (a Content-Security-Policy in each).
