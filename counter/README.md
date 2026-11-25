@@ -4,7 +4,7 @@ A small Worker on Cloudflare with a D1 base (memory-engine, `docs/DESIGN_PHASE3.
 It counts setups people choose to report, and nothing of a person.
 
 **What it keeps.** Two tables (`schema.sql`). `counts`: the UTC day, the event (`start` — she pressed
-«Build and tell the author» on the setup page; `done` — she pressed «tell the author it worked» on
+«Build and tell Grafyla's creator» on the setup page; `done` — she pressed «Tell Grafyla's creator it worked» on
 the page her AI's last message of setup links to), her AI, her language's primary code (`pt` for
 `pt-BR`) and her country as she answered them, a mark «test» — anyone can set it, so it says «marked as a test», not «the owner's run» —, and a count. `days`:
 each day's total, held below the ceiling. No name, no address, no header, no cookie, no time finer than
@@ -54,7 +54,7 @@ in `counter/` on `main`.
 ---
 
 **Счётчик настроек.** Маленький сервер на Cloudflare. Считает настройки, о которых человек сам решил
-сообщить, и ничего о самом человеке: день, событие («начал» — нажал «собрать и сообщить автору»;
+сообщить, и ничего о самом человеке: день, событие («начал» — нажал «собрать и сообщить создателю Grafyla»;
 «получилось» — нажал кнопку на странице, на которую в конце настройки ссылается его ИИ), ИИ, язык и
 страна из его ответов (у языка — только основной код), пометка «тест» (её может поставить кто угодно — это не «прогон владельца») и число. Без IP, без cookies, без времени точнее дня,
 журналы и трассировки выключены. Строка с числом 1 может указать на одного человека тому, кто знает,
