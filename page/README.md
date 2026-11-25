@@ -25,7 +25,7 @@ no sign-in, nothing kept.
   words, held to the Issue. A link in a sentence is written `[words](address)` and drawn by `app.js` (`rich`): the
   words as text, the address https only — three of them, GitHub's and Notion's sign-up and GitHub's «new repository».
   In Hebrew each run of Latin words is an isolate (FSI … PDI, `app.js`, `isolate`), a short one with its spaces
-  unbroken, so a button's name or «TEXT MARK 4.» keeps its quotes and arrows in a right-to-left line; what she copies
+  unbroken, so a button's name or «TEXT MARK 5.» keeps its quotes and arrows in a right-to-left line; what she copies
   is left as it is.
 - `done.html`, `done.js` — the page «it worked»: her AI's last message of setup links to it (INSTALL-12, from
   v0.1.14; at this address from v0.1.15), and her AI never opens it itself: `done.html?p=<her AI>&l=<her language>&c=<her country>`. One line goes only
@@ -59,7 +59,7 @@ differ on purpose: the end of the check of the connections (on this way she has 
 empty one, with its link, where GitHub asks her to pick one), what becomes of her old instructions (the owner's own
 words, 23.11.2026: not back into the field she copied them from — after the setup she gives them to her AI in a chat,
 and it puts what is needed into her Notion; the Issue says «Do not put them back into this field: after the setup you
-send them to your AI in a chat», and the test reads that sentence in its place), the nightly copy's (it can
+send them to your AI in a chat.», and the test reads that sentence in its place), the nightly copy's (it can
 be turned on only on the full way) and «Later» (a change of settings comes back to this page). Where the text carries
 its mark (`TEXT MARK 2.`, from v0.1.14), the page asks her to keep that last line, as the Issue of that release does;
 a text without it — v0.1.13 — ends with the words that release's Issue named.
@@ -82,13 +82,13 @@ These three — C4 not ported, the language list, the country list — are where
 
 **Publishing.** GitHub Pages, «Deploy from a branch», `main`, `/ (root)`, with the custom domain `setup.grafyla.com`
 (the file `CNAME`; a CNAME record in the owner's DNS leads to `grafyla.github.io`): the page is at `https://setup.grafyla.com/page/`, the page «it worked» at `…/page/done.html` —
-the address the rules of v0.1.15 give her AI (INSTALL-12), and the origin `counter/wrangler.toml` names. The counter
+the address the rules give her AI from v0.1.15 (INSTALL-12), and the origin `counter/wrangler.toml` names. The counter
 takes lines from that origin only once it is deployed with that file: until then it refuses them (403), and the page,
 which never waits for the answer, still says the line was sent. «Enforce HTTPS» is on: the plain http address leads to
 https, and without https the page has no fingerprints and the counter would refuse its origin. What `main` holds is
 what people get — at once, so two things come before a merge here: the release the page names is tagged in
 `grafyla/releases`, and the branch `stable` there is on a release whose index that text can read (the text she pastes
-sends her AI to `rules-index.md` at `stable`; with no such branch her AI says the rules are unavailable): `data.js` is v0.1.15's, written again by `write.py`
+sends her AI to `rules-index.md` at `stable`; with no such branch her AI says the rules are unavailable): `data.js` is v0.1.16's, written again by `write.py`
 with each release the page follows. `.nojekyll` keeps GitHub from building the folder. Until 23.11.2026 the page's
 address was `https://garik98129.github.io/memory-engine-install/page/`; GitHub Pages does not lead from an old address
 to a new one.
@@ -102,4 +102,4 @@ to a new one.
 сверяются с движком байт в байт тестом `test:parity`. По-русски и на иврите место для текста показано путём по меню со
 стрелками: кнопки ChatGPT — так, как они написаны на экране (по скриншотам владельца с chatgpt.com в Safari, русский
 интерфейс), кнопки Claude — английскими названиями из справки Anthropic. Страница опубликована на GitHub Pages по
-адресу `https://setup.grafyla.com/page/`; данные собраны из выпуска `v0.1.15`.
+адресу `https://setup.grafyla.com/page/`; данные собраны из выпуска `v0.1.16`.
