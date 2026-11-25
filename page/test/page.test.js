@@ -86,7 +86,9 @@ const LINK_IN_WORDS = /\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g;
 test("a link in the page's words is an https address of GitHub or Notion, the same in every language, and only where the page draws links", () => {
   const links = (s) => [...s.matchAll(LINK_IN_WORDS)].map((m) => m[2]);
   const en = [...T.en.need.flatMap(links), ...links(T.en.check("m"))];
-  assert.deepEqual(en, ["https://github.com/signup", "https://www.notion.so/signup", "https://github.com/new?name=empty&visibility=private"]);
+  assert.deepEqual(en, ["https://github.com/signup", "https://www.notion.so/signup"]);
+  // No «create an empty repository» link: the owner, 25.11.2026 — it confused more than it helped.
+  for (const code of LANGS) assert.ok(!T[code].check("m").includes("github.com/new"), code);
   for (const code of LANGS) {
     assert.deepEqual([...T[code].need.flatMap(links), ...links(T[code].check("m"))], en, code);
     const { need, check, ...plain } = T[code];
