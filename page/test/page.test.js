@@ -183,7 +183,9 @@ test("the page's line goes through the counter's own handler from the page's ori
 
 test("her part has her answers in setup's lines; the messages lead with the release's words", () => {
   const p = part(A);
-  assert.ok(p.startsWith("PERSON PART — Марина (v2).\n"));
+  assert.ok(p.startsWith("PERSON PART — Марина (v3).\n"));
+  assert.ok(p.includes("; no map read, or no form of address chosen there → the formal «you» where the user's " +
+    "language has one. "));
   assert.ok(p.includes("Language codes — the user's: ru; work: en, he.\n"));
   assert.ok(p.includes(`${DATA.grammar.female}\n`));
   assert.ok(p.endsWith("Trusted contact: none.\n"));

@@ -116,8 +116,9 @@ export function part(a, d = DATA) {
   if (why) throw new Error(`refused: ${why}`);
   const row = d.platforms[a.platform];
   return (
-    `PERSON PART — ${a.name} (v2).\n` +
-    `The user's name: ${a.name}; address the user as the map's «How we talk» says. ${d.grammar[a.gender]}\n` +
+    `PERSON PART — ${a.name} (v3).\n` +
+    `The user's name: ${a.name}; address the user as the map's «How we talk» says; no map read, or no form of ` +
+    `address chosen there → the formal «you» where the user's language has one. ${d.grammar[a.gender]}\n` +
     `Language codes — the user's: ${a.language}; work: ${a.work_languages.join(", ") || "none"}.\n` +
     `The user's time zone: ${a.timezone}.\n` +
     `The user's country: ${a.country}. Its emergency number — name it from what you know; not sure → ` +
