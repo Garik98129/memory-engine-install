@@ -156,8 +156,9 @@ export function render(code) {
   const region = names(code, "region");
   const byName = (a, b) => a[1].localeCompare(b[1], code);
 
-  const platformSel = select("platform", Object.entries(DATA.platforms).map(([k, row]) =>
-    [k, `${row.title} — ${t.plan(row.plan)}${row.status === "beta" ? ` · ${t.beta}` : ""}`]), "—");
+  // The menu names the AI and nothing else (the owner's word, 26.11.2026): a plan beside it reads as the one she must
+  // have, and «Before you start» says the minimum once, above.
+  const platformSel = select("platform", Object.entries(DATA.platforms).map(([k, row]) => [k, row.title]), "—");
   const languages = DATA.languages.map((c) => [c, `${lang.of(c)} (${c})`]).sort(byName);
   const languageSel = select("language", languages, "—");
   languageSel.value = DATA.languages.includes(code) ? code : "";

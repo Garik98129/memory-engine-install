@@ -317,6 +317,18 @@ test("the words a setup needs stay: not back into the field, the last line, Noti
   }
 });
 
+// The menu names the AI only (the owner's word, 26.11.2026); the minimum plan is said once, under «Before you start».
+test("the AI menu shows the AI's name only; «Before you start» names each one's minimum plan", () => {
+  const app = source("app.js");
+  assert.match(app, /select\("platform", Object\.entries\(DATA\.platforms\)\.map\(\(\[k, row\]\) => \[k, row\.title\]\), "—"\)/);
+  for (const code of LANGS) {
+    assert.ok(!("plan" in T[code]) && !("beta" in T[code]), `${code}: no plan or beta words for the menu`);
+    for (const row of Object.values(DATA.platforms)) {
+      assert.ok(T[code].need[0].includes(row.title) && T[code].need[0].includes(row.plan), `${code}: «${row.title}» and its ${row.plan} in «Before you start»`);
+    }
+  }
+});
+
 // The page is for a setup, not for how the system works (the owner's word, 26.11.2026): no word of IP addresses,
 // Cloudflare, cookies or the e-mail a user dictates, and no section of what the page does and does not.
 test("the page says nothing a setup does not need: no IP, Cloudflare, cookies or dictated e-mail", () => {
