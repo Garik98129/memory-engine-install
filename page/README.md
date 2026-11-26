@@ -54,8 +54,9 @@ connect to the counter alone (a Content-Security-Policy in each).
 Grafyla works, what is seen by whom — GitHub, Cloudflare, the counter — and what each platform can do are the site's.
 Until 26.11.2026 the English followed the Issue of the full way sentence for sentence; that way is set aside, and the
 page no longer follows it. What is held, byte for byte, is what she pastes and sends: the text of step 1, her part and
-the two messages (`test:parity`). Beside each button that sends, the page says what the one line holds; a platform in
-beta keeps its one line of what is not known yet. Russian and Hebrew are read by a second reader; Hebrew still waits
+the two messages (`test:parity`). Beside each button that sends, the page says what the one line holds. Which platform is in
+beta, and what is not known yet, is the site's too: the page is written once for every platform, and its AI menu
+names the AI only — the minimum plan is said once, under «Before you start». Russian and Hebrew are read by a second reader; Hebrew still waits
 for a native speaker. Where the text carries its mark (`TEXT MARK 2.`, from v0.1.14), the page asks her to keep that
 last line; a text without it — v0.1.13 — ends with the words that release's Issue named.
 
@@ -107,5 +108,6 @@ to a new one.
 26.11.2026): скопировав текст, человек уходит в свой ИИ и может не вернуться, поэтому всё, что нужно прочесть, стоит
 до окошка, к которому относится, а после последнего окошка ничего нет. И только то, что нужно для настройки (слово
 владельца 26.11.2026): как устроена Grafyla, кто что видит (GitHub, Cloudflare, счётчик) и что умеет каждая платформа —
-на сайте; у кнопок, которые отправляют строку, сказано, что в ней. Пояснения страницы — свои, к тексту полного пути
+на сайте; у кнопок, которые отправляют строку, сказано, что в ней. Бета и что ещё не проверено — тоже на сайте: страница
+пишется один раз для всех ИИ, в меню — только название ИИ, минимальный тариф — один раз, в «Перед началом». Пояснения страницы — свои, к тексту полного пути
 они больше не привязаны; байт в байт сверяются только тексты для вставки и отправки.

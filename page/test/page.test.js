@@ -5,7 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { DATA } from "../data.js";
-import { T, LANGS, UNKNOWN, PLACES } from "../i18n.js";
+import { T, LANGS, PLACES } from "../i18n.js";
 import { refusal, part, firstMessage, fieldText, lastLine, lastWords, MARK_RE, nameOk, mixedWords, marker, line, doneAnswers, length } from "../build.js";
 import { parse, PLATFORMS, handle } from "../../counter/src/counter.js";
 import { COUNTRIES } from "../../counter/src/countries.js";
@@ -28,15 +28,10 @@ test("every word of the page is there in all three languages, of the same kind",
   }
 });
 
-test("every refusal has its words, and every platform's «not known yet» line is translated", () => {
+test("every refusal has its words", () => {
   const keys = ["platform", "language", "country", "timezone", "name", "name_mixed", "gender", "work_many",
     "work_language", "work_twice", "work_own"];
   for (const code of LANGS) for (const key of keys) assert.ok(T[code].err[key], `${code}.err.${key}`);
-  for (const [k, row] of Object.entries(DATA.platforms)) {
-    if (!row.unknown) continue;
-    assert.ok(UNKNOWN[row.unknown], `${k}: «${row.unknown}» has no translation in i18n.js`);
-    for (const code of ["ru", "he"]) assert.ok(UNKNOWN[row.unknown][code], `${k} ${code}`);
-  }
 });
 
 test("every place the text goes is a path through the menus in Russian and Hebrew — one place a platform", () => {
@@ -67,7 +62,7 @@ test("the page says «setup» in every language, and names the repositories as t
   const project = { en: /project/i, ru: /проект/i, he: /פרויקט/ };
   for (const code of LANGS) {
     assert.ok(!meant[code] || T[code].intro.includes(meant[code]), `${code}: the sentence set aside is the intro's`);
-    const shown = [...all(T[code]), ...Object.values(UNKNOWN).map((g) => g[code] || ""), ...Object.values(PLACES).map((g) => g[code] || "")];
+    const shown = [...all(T[code]), ...Object.values(PLACES).map((g) => g[code] || "")];
     for (const words of shown) {
       const rest = meant[code] ? words.replace(meant[code], "") : words;
       assert.ok(!old[code].test(rest), `${code}: «${words.slice(0, 60)}…» still says installation`);
@@ -90,7 +85,7 @@ test("a link in the page's words is an https address of GitHub or Notion, the sa
   for (const code of LANGS) {
     assert.deepEqual([...T[code].need.flatMap(links), ...links(T[code].check("m"))], en, code);
     const { need, check, ...plain } = T[code];
-    for (const words of [...all(plain), ...Object.values(UNKNOWN).map((g) => g[code] || ""), ...Object.values(PLACES).map((g) => g[code] || "")]) {
+    for (const words of [...all(plain), ...Object.values(PLACES).map((g) => g[code] || "")]) {
       assert.ok(!/\]\(/.test(words), `${code}: «${words.slice(0, 60)}…» has a link where the page draws plain text`);
     }
   }
@@ -137,7 +132,7 @@ test("a link is drawn as its words and an https address; everything else stays t
 test("the page shows what she gets with nothing after the last box: what comes later, the check, the instructions, the first message", () => {
   const app = source("app.js");
   const out = app.slice(app.indexOf("function installOutput("), app.indexOf("function settingsOutput("));
-  const order = ["t.out_h", "t.need_plan(", "text: unknown", "t.later_h", "t.later }", "t.two_texts", "t.check_h",
+  const order = ["t.out_h", "t.need_plan(", "t.later_h", "t.later }", "t.two_texts", "t.check_h",
     "t.check(DATA.manifests)", "t.step1_h", "`${t.step1} ${where}`", "t.paste(", "copyBox(field, t)", "t.step2_h", "t.after }",
     "t.old }", "t.step2 }", "copyBox(firstMessage(p), t)"];
   let at = out.indexOf("return [");
@@ -318,11 +313,15 @@ test("the words a setup needs stay: not back into the field, the last line, Noti
 });
 
 // The menu names the AI only (the owner's word, 26.11.2026); the minimum plan is said once, under «Before you start».
-test("the AI menu shows the AI's name only; «Before you start» names each one's minimum plan", () => {
+// Which platform is in beta, and what is not known yet, is the site's (the owner's word, 26.11.2026): the page is
+// written once for every platform.
+test("the AI menu shows the AI's name only, the page says nothing of beta; «Before you start» names each one's minimum plan", () => {
   const app = source("app.js");
+  assert.ok(!/row\.(unknown|status)/.test(app), "the page reads no platform's beta status or «not known yet»");
   assert.match(app, /select\("platform", Object\.entries\(DATA\.platforms\)\.map\(\(\[k, row\]\) => \[k, row\.title\]\), "—"\)/);
   for (const code of LANGS) {
-    assert.ok(!("plan" in T[code]) && !("beta" in T[code]), `${code}: no plan or beta words for the menu`);
+    assert.ok(!("plan" in T[code]) && !("beta" in T[code]) && !("unknown" in T[code]), `${code}: no plan, beta or «not known yet» words`);
+    for (const words of all(T[code])) assert.ok(!/\bbeta\b|бет[аеуы]|בטא/i.test(words), `${code}: «${words.slice(0, 60)}…» speaks of beta`);
     for (const row of Object.values(DATA.platforms)) {
       assert.ok(T[code].need[0].includes(row.title) && T[code].need[0].includes(row.plan), `${code}: «${row.title}» and its ${row.plan} in «Before you start»`);
     }
