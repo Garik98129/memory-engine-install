@@ -276,10 +276,8 @@ function installOutput(t, a, field, p) {
   // (the owner's word, 26.11.2026); so is which platform is in beta. The page is written once for every platform.
   return [
     el("h2", { text: t.out_h }),
-    row.plan === "any" ? null : el("p", { class: "plan", text: t.need_plan(row.plan) }),
-    el("h3", { text: t.later_h }),
-    el("p", { text: t.later }),
     el("p", { text: t.two_texts }),
+    t.english ? el("p", { text: t.english }) : null,
     el("h3", { text: t.check_h }),
     el("p", { rich: t.check(DATA.manifests) }),
     el("h3", { text: t.step1_h }),

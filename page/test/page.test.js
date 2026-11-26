@@ -69,7 +69,7 @@ test("the page says «setup» in every language, and names the repositories as t
       assert.ok(!project[code].test(words), `${code}: «${words.slice(0, 60)}…» names a project — the text has one place, the field for every chat`);
       assert.ok(!/Garik98129|memory-engine|memory engine|движ[ко]к? памяти|מנוע הזיכרון/i.test(words), `${code}: «${words.slice(0, 60)}…» names the old place`);
     }
-    assert.ok(T[code].footer("v0").includes("grafyla/setup"), `${code}: the page's own code`);
+    assert.ok(T[code].footer("v0.0.0").includes("v0.0.0") && !T[code].footer("v0.0.0").includes("grafyla/setup"), `${code}: the footer names the release only`);
   }
   for (const page of ["index.html", "done.html"]) assert.ok(!/<title>[^<]*install/i.test(source(page)), page);
 });
@@ -129,10 +129,10 @@ test("a link is drawn as its words and an https address; everything else stays t
 
 // Not the Issue's order on purpose (the owner's word, 26.11.2026): once she has copied a text she goes to her AI and may
 // not come back, so whatever she is to read comes before the box it is about, and nothing comes after the last box.
-test("the page shows what she gets with nothing after the last box: what comes later, the check, the instructions, the first message", () => {
+test("the page shows what she gets with nothing after the last box: the two texts, the check, the instructions, the first message", () => {
   const app = source("app.js");
   const out = app.slice(app.indexOf("function installOutput("), app.indexOf("function settingsOutput("));
-  const order = ["t.out_h", "t.need_plan(", "t.later_h", "t.later }", "t.two_texts", "t.check_h",
+  const order = ["t.out_h", "t.two_texts", "t.english", "t.check_h",
     "t.check(DATA.manifests)", "t.step1_h", "`${t.step1} ${where}`", "t.paste(", "copyBox(field, t)", "t.step2_h", "t.after }",
     "t.old }", "t.step2 }", "copyBox(firstMessage(p), t)"];
   let at = out.indexOf("return [");
@@ -147,10 +147,13 @@ test("the page shows what she gets with nothing after the last box: what comes l
 });
 
 // What the page says of the text of step 1 is said where that text is still below, in every language.
-test("«later» opens the page, so it names the text by its step, not as «above»", () => {
-  for (const code of ["en", "ru", "he"]) {
-    assert.ok(!/text above|Текст выше|הטקסט שלמעלה/.test(T[code].later), `${code}: «later» still says «above»`);
-  }
+// The owner, 26.11.2026: the plan once, under «Before you start»; no «Later»; the texts' English said once, in the
+// reader's language — an English page says nothing of it.
+test("after «Build»: no plan, no «Later», and one line on the texts being English — not on the English page", () => {
+  for (const code of LANGS) for (const key of ["need_plan", "later", "later_h"]) assert.ok(!(key in T[code]), `${code}.${key}`);
+  assert.equal(T.en.english, "");
+  assert.ok(T.ru.english.includes("на английском") && T.ru.english.includes("на вашем языке"));
+  assert.ok(T.he.english.includes("באנגלית") && T.he.english.includes("בשפה שלכם"));
 });
 
 test("the page's lists are the counter's: its platforms, its countries, languages it keeps", () => {

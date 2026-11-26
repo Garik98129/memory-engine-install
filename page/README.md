@@ -62,8 +62,8 @@ last line; a text without it — v0.1.13 — ends with the words that release's 
 
 **Its order** is not the Issue's, on purpose (the owner's word, 26.11.2026): once she has copied a text she goes to her
 AI and may not come back, so whatever she is to read comes before the box it is about, and nothing after the last box.
-What comes later opens the output; under «2.» what the AI does from there and her old instructions come before
-«Send your AI…» and the first message's box. `page/test/page.test.js` holds the order and that
+The output opens with the two texts and, in Russian and Hebrew, one line that they are in English on purpose; under
+«2.» what the AI does from there and her old instructions come before «Send your AI…» and the first message's box. `page/test/page.test.js` holds the order and that
 nothing follows the last box. The message after a change of settings keeps its one line after the box: its lead ends
 with a colon on the box, and that line asks nothing of her.
 
