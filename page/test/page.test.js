@@ -345,6 +345,14 @@ test("step 1 says, for every AI: the instructions field, not a chat, and save �
   assert.ok(claude.ru.includes("«Профиль» → «Инструкции»") && claude.ru.includes("✓"), "Claude, ru: the owner's screens");
   assert.ok(claude.en.includes("Profile → Instructions") && claude.en.includes("✓"), "Claude, en: the same steps");
   assert.ok(claude.he.includes("הפרופיל ← ההוראות") && claude.he.includes("✓"), "Claude, he: the same steps");
+  // Grok — the owner's screens of the iPhone app, 26.11.2026: every AI is saved, by «Save» or the ✓.
+  const grok = PLACES["Grok app: the instructions field"];
+  assert.ok(grok.ru.includes("«Персонализировать Grok» → «Инструкции»") && grok.ru.includes("✓"), "Grok, ru: the owner's screens");
+  assert.ok(grok.en.includes("Personalize Grok → Instructions") && grok.en.includes("✓"), "Grok, en: the same steps");
+  assert.ok(grok.he.includes("התאמה אישית של Grok ← ההוראות") && grok.he.includes("✓"), "Grok, he: the same steps");
+  for (const [words, path] of Object.entries(PLACES)) {
+    for (const code of LANGS) assert.ok(/Save|Сохранить|✓/.test(path[code]), `${words}, ${code}: the path ends with saving`);
+  }
   const lead = { en: "Where it is: ", ru: "Где это поле: ", he: "איפה השדה: " };
   for (const code of LANGS) assert.ok(T[code].where_one("X").startsWith(lead[code]), `${code}: the path is a hint`);
   // The line that the texts are English: in Russian and Hebrew only, and drawn only when there is one.

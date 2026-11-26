@@ -19,7 +19,9 @@ export const RTL = new Set(["he"]);
 // «Сохранить», «Save» — after the text is pasted: on the owner's test, 23.11.2026, it was the step easy to miss. Claude — by the owner's own screens
 // (the iPhone app, Russian interface, 26.11.2026): the account's icon at the foot of the side menu → «Настройки» →
 // «Профиль» → «Инструкции», saved with the ✓ at the top; its Hebrew interface was not seen, so Hebrew names the steps
-// in plain words. Grok's app — in words. English goes by the same menus, in the
+// in plain words. Grok — by the owner's own screens (the iPhone app, Russian interface, 26.11.2026): the gear at the foot
+// of the side menu → «Настройки» → «Персонализировать Grok» → «Инструкции», saved with the ✓ at the top; Hebrew in plain
+// words. English goes by the same menus, in the
 // interface's English names. A release that changes a place breaks page/test/page.test.js until it is here.
 export const PLACES = {
   "chatgpt.com in your browser: the menu under your name, Personalization": {
@@ -33,9 +35,9 @@ export const PLACES = {
     he: "אפליקציית Claude ← סמל החשבון שלכם בתחתית התפריט הצדדי ← ההגדרות ← הפרופיל ← ההוראות ← הדביקו את הטקסט ← סימן ✓ בראש המסך",
   },
   "Grok app: the instructions field": {
-    en: "the Grok app → the instructions field",
-    ru: "приложение Grok → поле инструкций",
-    he: "אפליקציית Grok ← שדה ההוראות",
+    en: "the Grok app → the gear ⚙ at the foot of the side menu → Settings → Personalize Grok → Instructions → paste the text → the ✓ at the top",
+    ru: "приложение Grok → шестерёнка ⚙ внизу бокового меню → «Настройки» → «Персонализировать Grok» → «Инструкции» → вставьте текст → галочка ✓ вверху",
+    he: "אפליקציית Grok ← גלגל השיניים ⚙ בתחתית התפריט הצדדי ← ההגדרות ← התאמה אישית של Grok ← ההוראות ← הדביקו את הטקסט ← סימן ✓ בראש המסך",
   },
 };
 
