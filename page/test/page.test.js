@@ -350,6 +350,11 @@ test("step 1 says, for every AI: the instructions field, not a chat, and save �
   assert.ok(claude.ru.includes("«Профиль» → «Инструкции»") && claude.ru.includes("✓"), "Claude, ru: the owner's screens");
   assert.ok(claude.en.includes("Profile → Instructions") && claude.en.includes("✓"), "Claude, en: the same steps");
   assert.ok(claude.he.includes("הפרופיל ← ההוראות") && claude.he.includes("✓"), "Claude, he: the same steps");
+  // ChatGPT — the owner's screen of 26.11.2026: two rows under «Пользовательские инструкции», «ChatGPT» and «Codex», each
+  // with its own button, «Редактировать» in Russian: the path names the row and warns off the other.
+  const chatgpt = PLACES["chatgpt.com in your browser: the menu under your name, Personalization"];
+  assert.ok(chatgpt.ru.includes("строка «ChatGPT», не «Codex» → её кнопка «Редактировать»"), "ChatGPT, ru: the owner's screen");
+  assert.ok(chatgpt.en.includes("the row «ChatGPT», not «Codex»") && chatgpt.he.includes("השורה «ChatGPT», לא «Codex»"), "ChatGPT, en/he: the same row");
   // Grok — the owner's screens of the iPhone app, 26.11.2026: every AI is saved, by «Save» or the ✓.
   const grok = PLACES["Grok app: the instructions field"];
   assert.ok(grok.ru.includes("«Персонализировать Grok» → «Инструкции»") && grok.ru.includes("✓"), "Grok, ru: the owner's screens");
