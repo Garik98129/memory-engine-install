@@ -10,8 +10,7 @@ import { mkdtempSync, writeFileSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DATA } from "../data.js";
-import { part, firstMessage, fieldText, nameOk, mixedWords, length, refusal, marker, lastLine, lastWords, MARK_RE } from "../build.js";
-import { T } from "../i18n.js";
+import { part, firstMessage, fieldText, nameOk, mixedWords, length, refusal, marker } from "../build.js";
 
 const RELEASE = process.env.RELEASE_DIR;
 const PYTHON = process.env.PYTHON || "python3";
@@ -122,64 +121,6 @@ test("every answer the page's lists can give is one setup takes", () => {
   assert.deepEqual(out.refused, []);
 });
 
-// What becomes of her old instructions: the page's own sentence, and the Issue's it stands for.
-const OLD_OF_THE_PAGE = "Do not put them back into the instructions field you copied them from. After the setup, give them to your AI in a chat: it will pick out what is needed on its own and put it where it belongs in your Notion.";
-const OLD_OF_THE_ISSUE = "Do not put them back into this field: after the setup you send them to your AI in a chat.";
-
-// «Later» as the Issue of the full way has it — her copy, its workflow «settings», GitHub's notifications: none of it
-// is on this way, so the page has its own (`later` in i18n.js). Kept here word for word, so that a release that
-// rewords it fails and the page's own is read again.
-const LATER_OF_THE_ISSUE = "Later. The rules your AI reads are brought up to date by themselves, usually about a week after a "
-  + "release: you paste nothing for that. To change a setting — your language, your time zone, your name — "
-  + "run the workflow «settings» in this repository: it gives you one message to send to your AI; change "
-  + "your AI itself there, and it gives you the two texts for the new one. The text "
-  + "above changes only if its core ever does — a rare thing: your copy then opens a new page like this one, "
-  + "and GitHub tells you, by e-mail — in GitHub's notification settings — or on your phone — in the GitHub "
-  + "app: Profile, the gear, Notifications, «Direct mentions». With neither, the page still waits in your "
-  + "copy.";
-
-// The page's English words of the Issue (i18n.js) against the release's own `setup.issue` for the same answers:
-// a release that rewords the Issue fails here until the page's three languages follow it. Four of the page's
-// places differ on purpose, and are not held: the end of the check of the connections (her own repositories are not
-// needed on this way, and those already connected stay as they are), what becomes of her old instructions (the owner's own words,
-// 23.11.2026: not back into the field she copied them from — to her AI in a chat, which puts what is needed into her
-// Notion; the Issue says it shorter, and is read in its place here), the nightly copy's (it can be turned on only on
-// the full way), and «Later» (a change of settings comes back here).
-test("the page's English words of the Issue are the release's, sentence for sentence", () => {
-  const field = fieldText();
-  const marked = MARK_RE.test(lastLine(field));
-  const sets = Object.entries(DATA.platforms).map(([platform, row]) => [row, { platform, language: "en",
-    work_languages: [], country: "DE", timezone: "Europe/Berlin", name: "Anna", gender: "female" }]);
-  const dir = mkdtempSync(join(tmpdir(), "parity-"));
-  writeFileSync(join(dir, "in.json"), JSON.stringify({ answers: sets.map(([, a]) => a), names: [] }));
-  const out = python(["--answers", join(dir, "in.json")]);
-  const en = T.en;
-  sets.forEach(([row, a], k) => {
-    const issue = out.answers[k].issue.replaceAll("**", "").replaceAll("`", "");     // Markdown aside: the page shows plain text
-    const where = en.where_one(row.field);
-    const schedule = row.schedule === "paid" ? en.schedule.paid(row.plan) : en.schedule[row.schedule];
-    const held = [
-      en.two_texts, en.check_h, en.check(DATA.manifests).split(" No access to your own")[0],
-      en.step1_h, `${en.step1} ${where}`, en.paste(lastLine(field), lastWords(field), length(field), marked).replace(OLD_OF_THE_PAGE, OLD_OF_THE_ISSUE),
-      en.step2_h, en.step2, en.after, en.after2, en.old, en.notion[row.notion], schedule, en.works_h(row.title),
-      en.no_daily.replace(/\.$/, ""),
-    ];
-    assert.ok(en.no_daily.startsWith("No daily task is set up at setup yet"), "the sentence held is the one meant");
-    assert.equal(en.paste(lastLine(field), lastWords(field), length(field), marked).split(OLD_OF_THE_PAGE).length, 2, "the page's own sentence on her old instructions is there, once");
-    assert.ok(en.check(DATA.manifests).includes(" No access to your own"), "the check's end is the page's own, and is there");
-    if (row.unknown) held.push(en.unknown(row.unknown));
-    if (row.plan !== "any") held.push(en.need_plan(row.plan));
-    for (const words of held) assert.ok(issue.includes(words), `${a.platform}: «${words.slice(0, 80)}…» is not in setup.issue`);
-    // The other way round: what the Issue says and the page does not. With the page's sentences, the two texts and
-    // the places that differ on purpose taken out, nothing is left — a sentence a release adds to the Issue fails here.
-    const plain = (s) => s.replaceAll("**", "").replaceAll("`", "");
-    const p = out.answers[k].part;
-    const only = [`# ${en.out_h} — ${row.title}`, " Do not give it this repository of yours.", "; it can be turned on later.", LATER_OF_THE_ISSUE];
-    let rest = issue;
-    for (const words of [plain(field), plain(firstMessage(p)), ...only, ...held]) {
-      assert.ok(rest.includes(words), `${a.platform}: «${words.slice(0, 80)}…» is not in setup.issue, or twice in what the page holds`);
-      rest = rest.replace(words, "");
-    }
-    assert.equal(rest.trim().replace(/\s+/g, " "), "", `${a.platform}: setup.issue says what the page does not`);
-  });
-});
+// The page's own explanations — the sentences around the two texts — are not held to the Issue of the full way
+// any more (the owner's word, 26.11.2026: that way is set aside, and the page says only what a setup needs). What
+// is held, byte for byte, is what she pastes and sends: the text of step 1, her part and the two messages, above.

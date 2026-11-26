@@ -50,24 +50,19 @@ address marks a run as a test (`t: 1`, counted apart): the owner's own runs carr
 numbers it means «marked as a test», not «the owner's run». Both pages load nothing but their own files and may
 connect to the counter alone (a Content-Security-Policy in each).
 
-**Its English words** follow the Issue of the full way: the parity test holds them to the release's own `setup.issue`
-both ways — every sentence the page shows after «Build» is in the Issue, and nothing is left of the Issue once the
-page's sentences and the places that differ on purpose are taken out — so a release that rewords the Issue, or adds a
-sentence to it, fails until the English follows. Russian and Hebrew are not held by a test: they follow the English by
-hand, read by a second reader. Four places
-differ on purpose: the end of the check of the connections (on this way she has no repository to keep from her AI; her
-repositories already connected stay as they are), what becomes of her old instructions (the owner's own
-words, 23.11.2026: not back into the field she copied them from — after the setup she gives them to her AI in a chat,
-and it puts what is needed into her Notion; the Issue says «Do not put them back into this field: after the setup you
-send them to your AI in a chat.», and the test reads that sentence in its place), the nightly copy's (it can
-be turned on only on the full way) and «Later» (a change of settings comes back to this page). Where the text carries
-its mark (`TEXT MARK 2.`, from v0.1.14), the page asks her to keep that last line, as the Issue of that release does;
-a text without it — v0.1.13 — ends with the words that release's Issue named.
+**Its words** are its own, in three languages, and only what a setup needs (the owner's word, 26.11.2026): how
+Grafyla works, what is seen by whom — GitHub, Cloudflare, the counter — and what each platform can do are the site's.
+Until 26.11.2026 the English followed the Issue of the full way sentence for sentence; that way is set aside, and the
+page no longer follows it. What is held, byte for byte, is what she pastes and sends: the text of step 1, her part and
+the two messages (`test:parity`). Beside each button that sends, the page says what the one line holds; a platform in
+beta keeps its one line of what is not known yet. Russian and Hebrew are read by a second reader; Hebrew still waits
+for a native speaker. Where the text carries its mark (`TEXT MARK 2.`, from v0.1.14), the page asks her to keep that
+last line; a text without it — v0.1.13 — ends with the words that release's Issue named.
 
 **Its order** is not the Issue's, on purpose (the owner's word, 26.11.2026): once she has copied a text she goes to her
 AI and may not come back, so whatever she is to read comes before the box it is about, and nothing after the last box.
-What works on her AI and what comes later open the output; under «2.» the AI's answer, its questions and her old
-instructions come before «Send your AI…» and the first message's box. `page/test/page.test.js` holds the order and that
+What comes later opens the output; under «2.» what the AI does from there and her old instructions come before
+«Send your AI…» and the first message's box. `page/test/page.test.js` holds the order and that
 nothing follows the last box. The message after a change of settings keeps its one line after the box: its lead ends
 with a colon on the box, and that line asks nothing of her.
 
@@ -103,12 +98,14 @@ to a new one.
 ---
 
 **Страница настройки.** Путь без личной копии: страница прямо в браузере телефона собирает из семи ответов то же, что
-даёт Issue полного пути, — общий текст для вставки, первое сообщение с личной частью, проверку подключений и что
-работает на выбранном ИИ. Три языка: русский, английский, иврит. Ничего не хранит. Одну строку в счётчик отправляет
+даёт Issue полного пути, — общий текст для вставки, первое сообщение с личной частью и проверку подключений. Три языка: русский, английский, иврит. Ничего не хранит. Одну строку в счётчик отправляет
 только по нажатию «Собрать и сообщить создателю Grafyla», после того как тексты собраны; день к строке ставит сам счётчик. Тексты
 сверяются с движком байт в байт тестом `test:parity`. По-русски и на иврите место для текста показано путём по меню со
 стрелками: кнопки ChatGPT — так, как они написаны на экране (по скриншотам владельца с chatgpt.com в Safari, русский
 интерфейс), кнопки Claude — английскими названиями из справки Anthropic. Страница опубликована на GitHub Pages по
 адресу `https://setup.grafyla.com/page/`; данные собраны из выпуска `v0.1.16`. Порядок блоков — не как в Issue (слово владельца
 26.11.2026): скопировав текст, человек уходит в свой ИИ и может не вернуться, поэтому всё, что нужно прочесть, стоит
-до окошка, к которому относится, а после последнего окошка ничего нет.
+до окошка, к которому относится, а после последнего окошка ничего нет. И только то, что нужно для настройки (слово
+владельца 26.11.2026): как устроена Grafyla, кто что видит (GitHub, Cloudflare, счётчик) и что умеет каждая платформа —
+на сайте; у кнопок, которые отправляют строку, сказано, что в ней. Пояснения страницы — свои, к тексту полного пути
+они больше не привязаны; байт в байт сверяются только тексты для вставки и отправки.
