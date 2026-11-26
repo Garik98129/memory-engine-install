@@ -3,7 +3,7 @@
 // after the texts are built, and never waits on the answer (counter/README.md, «What the page must do»).
 
 import { DATA } from "./data.js";
-import { T, LANGS, RTL, UNKNOWN, PLACES } from "./i18n.js";
+import { T, LANGS, RTL, PLACES } from "./i18n.js";
 import { refusal, part, firstMessage, fieldText, lastLine, lastWords, MARK_RE, length, marker, line } from "./build.js";
 
 export const COUNTER = "https://memory-engine-counter.memory-engine.workers.dev/e";
@@ -156,8 +156,9 @@ export function render(code) {
   const region = names(code, "region");
   const byName = (a, b) => a[1].localeCompare(b[1], code);
 
-  const platformSel = select("platform", Object.entries(DATA.platforms).map(([k, row]) =>
-    [k, `${row.title} — ${t.plan(row.plan)}${row.status === "beta" ? ` · ${t.beta}` : ""}`]), "—");
+  // The menu names the AI and nothing else (the owner's word, 26.11.2026): a plan beside it reads as the one she must
+  // have, and «Before you start» says the minimum once, above.
+  const platformSel = select("platform", Object.entries(DATA.platforms).map(([k, row]) => [k, row.title]), "—");
   const languages = DATA.languages.map((c) => [c, `${lang.of(c)} (${c})`]).sort(byName);
   const languageSel = select("language", languages, "—");
   languageSel.value = DATA.languages.includes(code) ? code : "";
@@ -264,23 +265,20 @@ export function render(code) {
 
 function installOutput(t, a, field, p) {
   const row = DATA.platforms[a.platform];
-  // English names the place in the release's own words; the others go by the menus.
-  const place = (words) => (t === T.en ? words : PLACES[words]?.[langOf(t)] || words);
+  // Every language goes by the menus, the same steps (Tolik's note on #14: English kept the release's words, and so a
+  // path the others no longer had).
+  const place = (words) => PLACES[words]?.[langOf(t)] || words;
   // One place on every platform from v0.1.15 — the field for every chat; a release that brings a second place back
   // (`field_all`) fails page/test/page.test.js until the page has words for the choice again.
   const where = t.where_one(place(row.field));
-  const unknown = row.unknown ? t.unknown(t === T.en ? row.unknown : (UNKNOWN[row.unknown]?.[langOf(t)] || row.unknown)) : "";
   // Everything she is to read comes before the box it is about, and nothing after the last box: once she has
   // copied a text she goes to her AI and may not come back to this page (the owner's word, 26.11.2026). And only what
   // she needs to set it up: how the system works, what is seen by whom and what each platform can do are the site's
-  // (the owner's word, 26.11.2026); a platform in beta keeps its one line of what is not known yet.
+  // (the owner's word, 26.11.2026); so is which platform is in beta. The page is written once for every platform.
   return [
     el("h2", { text: t.out_h }),
-    row.plan === "any" ? null : el("p", { class: "plan", text: t.need_plan(row.plan) }),
-    unknown ? el("p", { text: unknown }) : null,
-    el("h3", { text: t.later_h }),
-    el("p", { text: t.later }),
     el("p", { text: t.two_texts }),
+    t.english ? el("p", { text: t.english }) : null,
     el("h3", { text: t.check_h }),
     el("p", { rich: t.check(DATA.manifests) }),
     el("h3", { text: t.step1_h }),

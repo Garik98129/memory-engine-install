@@ -5,7 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { DATA } from "../data.js";
-import { T, LANGS, UNKNOWN, PLACES } from "../i18n.js";
+import { T, LANGS, PLACES } from "../i18n.js";
 import { refusal, part, firstMessage, fieldText, lastLine, lastWords, MARK_RE, nameOk, mixedWords, marker, line, doneAnswers, length } from "../build.js";
 import { parse, PLATFORMS, handle } from "../../counter/src/counter.js";
 import { COUNTRIES } from "../../counter/src/countries.js";
@@ -28,15 +28,10 @@ test("every word of the page is there in all three languages, of the same kind",
   }
 });
 
-test("every refusal has its words, and every platform's «not known yet» line is translated", () => {
+test("every refusal has its words", () => {
   const keys = ["platform", "language", "country", "timezone", "name", "name_mixed", "gender", "work_many",
     "work_language", "work_twice", "work_own"];
   for (const code of LANGS) for (const key of keys) assert.ok(T[code].err[key], `${code}.err.${key}`);
-  for (const [k, row] of Object.entries(DATA.platforms)) {
-    if (!row.unknown) continue;
-    assert.ok(UNKNOWN[row.unknown], `${k}: «${row.unknown}» has no translation in i18n.js`);
-    for (const code of ["ru", "he"]) assert.ok(UNKNOWN[row.unknown][code], `${k} ${code}`);
-  }
 });
 
 test("every place the text goes is a path through the menus in Russian and Hebrew — one place a platform", () => {
@@ -44,13 +39,14 @@ test("every place the text goes is a path through the menus in Russian and Hebre
     assert.equal(row.field_all, "", `${k}: a second place for the text — the page has no words for a choice (v0.1.15: one place, every chat)`);
     for (const words of [row.field]) {
       assert.ok(PLACES[words], `${k}: «${words}» has no path in i18n.js`);
-      for (const code of ["ru", "he"]) {
+      for (const code of LANGS) {
         assert.ok(PLACES[words][code], `${k} ${code}`);
         assert.ok(PLACES[words][code].includes(code === "he" ? " ← " : " → "), `${k} ${code}: a path, step by step`);
       }
     }
   }
-  assert.match(source("app.js"), /t === T\.en \? words : PLACES\[words\]/, "English keeps the release's words");
+  assert.match(source("app.js"), /const place = \(words\) => PLACES\[words\]\?\.\[langOf\(t\)\] \|\| words;/,
+    "every language goes by the menus, English too");
   assert.deepEqual(Object.keys(PLACES).sort(), Object.values(DATA.platforms).map((row) => row.field).sort(),
     "no path is kept for a place no platform of the release has");
 });
@@ -67,14 +63,14 @@ test("the page says «setup» in every language, and names the repositories as t
   const project = { en: /project/i, ru: /проект/i, he: /פרויקט/ };
   for (const code of LANGS) {
     assert.ok(!meant[code] || T[code].intro.includes(meant[code]), `${code}: the sentence set aside is the intro's`);
-    const shown = [...all(T[code]), ...Object.values(UNKNOWN).map((g) => g[code] || ""), ...Object.values(PLACES).map((g) => g[code] || "")];
+    const shown = [...all(T[code]), ...Object.values(PLACES).map((g) => g[code] || "")];
     for (const words of shown) {
       const rest = meant[code] ? words.replace(meant[code], "") : words;
       assert.ok(!old[code].test(rest), `${code}: «${words.slice(0, 60)}…» still says installation`);
       assert.ok(!project[code].test(words), `${code}: «${words.slice(0, 60)}…» names a project — the text has one place, the field for every chat`);
       assert.ok(!/Garik98129|memory-engine|memory engine|движ[ко]к? памяти|מנוע הזיכרון/i.test(words), `${code}: «${words.slice(0, 60)}…» names the old place`);
     }
-    assert.ok(T[code].footer("v0").includes("grafyla/setup"), `${code}: the page's own code`);
+    assert.ok(T[code].footer("v0.0.0").includes("v0.0.0") && !T[code].footer("v0.0.0").includes("grafyla/setup"), `${code}: the footer names the release only`);
   }
   for (const page of ["index.html", "done.html"]) assert.ok(!/<title>[^<]*install/i.test(source(page)), page);
 });
@@ -90,7 +86,7 @@ test("a link in the page's words is an https address of GitHub or Notion, the sa
   for (const code of LANGS) {
     assert.deepEqual([...T[code].need.flatMap(links), ...links(T[code].check("m"))], en, code);
     const { need, check, ...plain } = T[code];
-    for (const words of [...all(plain), ...Object.values(UNKNOWN).map((g) => g[code] || ""), ...Object.values(PLACES).map((g) => g[code] || "")]) {
+    for (const words of [...all(plain), ...Object.values(PLACES).map((g) => g[code] || "")]) {
       assert.ok(!/\]\(/.test(words), `${code}: «${words.slice(0, 60)}…» has a link where the page draws plain text`);
     }
   }
@@ -134,10 +130,10 @@ test("a link is drawn as its words and an https address; everything else stays t
 
 // Not the Issue's order on purpose (the owner's word, 26.11.2026): once she has copied a text she goes to her AI and may
 // not come back, so whatever she is to read comes before the box it is about, and nothing comes after the last box.
-test("the page shows what she gets with nothing after the last box: what comes later, the check, the instructions, the first message", () => {
+test("the page shows what she gets with nothing after the last box: the two texts, the check, the instructions, the first message", () => {
   const app = source("app.js");
   const out = app.slice(app.indexOf("function installOutput("), app.indexOf("function settingsOutput("));
-  const order = ["t.out_h", "t.need_plan(", "text: unknown", "t.later_h", "t.later }", "t.two_texts", "t.check_h",
+  const order = ["t.out_h", "t.two_texts", "t.english", "t.check_h",
     "t.check(DATA.manifests)", "t.step1_h", "`${t.step1} ${where}`", "t.paste(", "copyBox(field, t)", "t.step2_h", "t.after }",
     "t.old }", "t.step2 }", "copyBox(firstMessage(p), t)"];
   let at = out.indexOf("return [");
@@ -152,10 +148,13 @@ test("the page shows what she gets with nothing after the last box: what comes l
 });
 
 // What the page says of the text of step 1 is said where that text is still below, in every language.
-test("«later» opens the page, so it names the text by its step, not as «above»", () => {
-  for (const code of ["en", "ru", "he"]) {
-    assert.ok(!/text above|Текст выше|הטקסט שלמעלה/.test(T[code].later), `${code}: «later» still says «above»`);
-  }
+// The owner, 26.11.2026: the plan once, under «Before you start»; no «Later»; the texts' English said once, in the
+// reader's language — an English page says nothing of it.
+test("after «Build»: no plan, no «Later», and one line on the texts being English — not on the English page", () => {
+  for (const code of LANGS) for (const key of ["need_plan", "later", "later_h"]) assert.ok(!(key in T[code]), `${code}.${key}`);
+  assert.equal(T.en.english, "");
+  assert.ok(T.ru.english.includes("на английском") && T.ru.english.includes("на вашем языке"));
+  assert.ok(T.he.english.includes("באנגלית") && T.he.english.includes("בשפה שלכם"));
 });
 
 test("the page's lists are the counter's: its platforms, its countries, languages it keeps", () => {
@@ -315,6 +314,49 @@ test("the words a setup needs stay: not back into the field, the last line, Noti
     assert.ok(shown.paste.includes("«LAST»"), `${code}: the last line itself is quoted`);
     assert.ok(T[code].paste("LAST", "WORDS", 1, false).includes("«WORDS»"), `${code}: a text without its mark — its last words`);
   }
+});
+
+// The menu names the AI only (the owner's word, 26.11.2026); the minimum plan is said once, under «Before you start».
+// Which platform is in beta, and what is not known yet, is the site's (the owner's word, 26.11.2026): the page is
+// written once for every platform.
+test("the AI menu shows the AI's name only, the page says nothing of beta; «Before you start» names each one's minimum plan", () => {
+  const app = source("app.js");
+  assert.ok(!/row\.(unknown|status)/.test(app), "the page reads no platform's beta status or «not known yet»");
+  assert.match(app, /select\("platform", Object\.entries\(DATA\.platforms\)\.map\(\(\[k, row\]\) => \[k, row\.title\]\), "—"\)/);
+  for (const code of LANGS) {
+    assert.ok(!("plan" in T[code]) && !("beta" in T[code]) && !("unknown" in T[code]), `${code}: no plan, beta or «not known yet» words`);
+    for (const words of all(T[code])) assert.ok(!/\bbeta\b|бет[аеуы]|בטא/i.test(words), `${code}: «${words.slice(0, 60)}…» speaks of beta`);
+    for (const row of Object.values(DATA.platforms)) {
+      assert.ok(T[code].need[0].includes(row.title) && T[code].need[0].includes(row.plan), `${code}: «${row.title}» and its ${row.plan} in «Before you start»`);
+    }
+  }
+});
+
+// Where the text goes, for every AI (the owner's word, 26.11.2026): the field for standing instructions, not a chat,
+// and saved — by «Save» or the ✓ at the top; the path for the chosen AI is a hint under it.
+test("step 1 says, for every AI: the instructions field, not a chat, and save — with «Save» or the ✓", () => {
+  const notChat = { en: "not into a chat", ru: "не в чат", he: "לא בצ'אט" };
+  const save = { en: ["be sure to save", "✓"], ru: ["обязательно сохраните", "✓"], he: ["והקפידו לשמור", "✓"] };
+  for (const code of LANGS) {
+    assert.ok(T[code].step1.includes(notChat[code]), `${code}: not a chat`);
+    for (const w of save[code]) assert.ok(T[code].paste("L", "W", 1, true).includes(w), `${code}: «${w}»`);
+  }
+  const claude = PLACES["Claude: Settings, Your Claude, Instructions"];
+  assert.ok(claude.ru.includes("«Профиль» → «Инструкции»") && claude.ru.includes("✓"), "Claude, ru: the owner's screens");
+  assert.ok(claude.en.includes("Profile → Instructions") && claude.en.includes("✓"), "Claude, en: the same steps");
+  assert.ok(claude.he.includes("הפרופיל ← ההוראות") && claude.he.includes("✓"), "Claude, he: the same steps");
+  // Grok — the owner's screens of the iPhone app, 26.11.2026: every AI is saved, by «Save» or the ✓.
+  const grok = PLACES["Grok app: the instructions field"];
+  assert.ok(grok.ru.includes("«Персонализировать Grok» → «Инструкции»") && grok.ru.includes("✓"), "Grok, ru: the owner's screens");
+  assert.ok(grok.en.includes("Personalize Grok → Instructions") && grok.en.includes("✓"), "Grok, en: the same steps");
+  assert.ok(grok.he.includes("התאמה אישית של Grok ← ההוראות") && grok.he.includes("✓"), "Grok, he: the same steps");
+  for (const [words, path] of Object.entries(PLACES)) {
+    for (const code of LANGS) assert.ok(/Save|Сохранить|✓/.test(path[code]), `${words}, ${code}: the path ends with saving`);
+  }
+  const lead = { en: "Where it is: ", ru: "Где это поле: ", he: "איפה השדה: " };
+  for (const code of LANGS) assert.ok(T[code].where_one("X").startsWith(lead[code]), `${code}: the path is a hint`);
+  // The line that the texts are English: in Russian and Hebrew only, and drawn only when there is one.
+  assert.match(source("app.js"), /t\.english \? el\("p", \{ text: t\.english \}\) : null/);
 });
 
 // The page is for a setup, not for how the system works (the owner's word, 26.11.2026): no word of IP addresses,

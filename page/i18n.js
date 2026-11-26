@@ -10,45 +10,34 @@
 export const LANGS = ["en", "ru", "he"];
 export const RTL = new Set(["he"]);
 
-// A platform's «unknown» line in the release (engine/platforms.toml) → its words in each language. A release that
-// changes the line breaks page/test/page.test.js until it is translated here.
-export const UNKNOWN = {
-  "how it keeps to its rules day to day: so far it has been tried in one test setup": {
-    ru: "как он держится своих правил изо дня в день: пока его опробовали в одной тестовой настройке",
-    he: "איך הוא שומר על הכללים שלו ביום-יום: עד עכשיו הוא נבדק בהגדרת ניסיון אחת",
-  },
-  "whether its chat finds and reads the rules by itself, as it must: not tried yet on Claude": {
-    ru: "находит ли и читает ли его чат правила сам, как должен: на Claude это ещё не проверяли",
-    he: "האם הצ'אט שלו מוצא וקורא את הכללים בעצמו — והוא חייב לעשות את זה: ב-Claude זה עוד לא נבדק",
-  },
-  "whether its chat finds and reads the rules by itself, as it must: not tried yet on Grok": {
-    ru: "находит ли и читает ли его чат правила сам, как должен: на Grok это ещё не проверяли",
-    he: "האם הצ'אט שלו מוצא וקורא את הכללים בעצמו — והוא חייב לעשות את זה: ב-Grok זה עוד לא נבדק",
-  },
-};
-
 // Where the text goes (engine/platforms.toml, `field`; `field_all` where a release has a second place — none has one
 // from v0.1.15: one place on every platform, the field for every chat) → a path through the menus in each language, the
 // buttons named as the screen shows them. ChatGPT in the browser — by the owner's own screens (chatgpt.com in Safari on
 // an iPhone, Russian interface, 19.11.2026): his name at the foot of the side menu → «Персонализация» → «Пользовательские
 // инструкции», the row ChatGPT → «Edit»; Personalization there is an item of that menu, not a page of «Настройки». In
 // Hebrew the interface's own words were not seen, so its paths name the English ones. The ChatGPT path ends with the save button —
-// «Сохранить», «Save» — after the text is pasted: on the owner's test, 23.11.2026, it was the step easy to miss. Claude — the English names of
-// Anthropic's help («Settings», «Your Claude», «Instructions», read 19.11.2026): its interface in Russian or Hebrew was
-// not seen, so no button is guessed in either. Grok's app — in words. English keeps the release's words: the parity test
-// holds them to the Issue. A release that changes a place breaks page/test/page.test.js until it is here.
+// «Сохранить», «Save» — after the text is pasted: on the owner's test, 23.11.2026, it was the step easy to miss. Claude — by the owner's own screens
+// (the iPhone app, Russian interface, 26.11.2026): the account's icon at the foot of the side menu → «Настройки» →
+// «Профиль» → «Инструкции», saved with the ✓ at the top; its Hebrew interface was not seen, so Hebrew names the steps
+// in plain words. Grok — by the owner's own screens (the iPhone app, Russian interface, 26.11.2026): the gear at the foot
+// of the side menu → «Настройки» → «Персонализировать Grok» → «Инструкции», saved with the ✓ at the top; Hebrew in plain
+// words. English goes by the same menus, in the
+// interface's English names. A release that changes a place breaks page/test/page.test.js until it is here.
 export const PLACES = {
   "chatgpt.com in your browser: the menu under your name, Personalization": {
+    en: "chatgpt.com in your browser → your name at the foot of the side menu → «Personalization» → «Custom instructions», the ChatGPT row → «Edit» → paste the text → «Save»",
     ru: "chatgpt.com в браузере → ваше имя внизу бокового меню → «Персонализация» → «Пользовательские инструкции», строка ChatGPT → «Edit» → вставьте текст → «Сохранить»",
     he: "chatgpt.com בדפדפן ← השם שלכם בתחתית התפריט הצדדי ← «Personalization» ← «Custom instructions», בשורה של ChatGPT ← «Edit» ← הדביקו את הטקסט ← «Save»",
   },
   "Claude: Settings, Your Claude, Instructions": {
-    ru: "Claude → настройки («Settings») → «Your Claude» → «Instructions»",
-    he: "Claude ← ההגדרות («Settings») ← «Your Claude» ← «Instructions»",
+    en: "the Claude app → your account's icon at the foot of the side menu → Settings → Profile → Instructions → paste the text → the ✓ at the top",
+    ru: "приложение Claude → значок вашего аккаунта внизу бокового меню → «Настройки» → «Профиль» → «Инструкции» → вставьте текст → галочка ✓ вверху",
+    he: "אפליקציית Claude ← סמל החשבון שלכם בתחתית התפריט הצדדי ← ההגדרות ← הפרופיל ← ההוראות ← הדביקו את הטקסט ← סימן ✓ בראש המסך",
   },
   "Grok app: the instructions field": {
-    ru: "приложение Grok → поле инструкций",
-    he: "אפליקציית Grok ← שדה ההוראות",
+    en: "the Grok app → the gear ⚙ at the foot of the side menu → Settings → Personalize Grok → Instructions → paste the text → the ✓ at the top",
+    ru: "приложение Grok → шестерёнка ⚙ внизу бокового меню → «Настройки» → «Персонализировать Grok» → «Инструкции» → вставьте текст → галочка ✓ вверху",
+    he: "אפליקציית Grok ← גלגל השיניים ⚙ בתחתית התפריט הצדדי ← ההגדרות ← התאמה אישית של Grok ← ההוראות ← הדביקו את הטקסט ← סימן ✓ בראש המסך",
   },
 };
 
@@ -61,7 +50,7 @@ export const T = {
     need: [
       "Your AI: ChatGPT (the Plus plan or higher), Claude (the Pro plan or higher) or Grok (the Plus plan or higher).",
       "GitHub and Notion accounts — created and connected to your AI, in its settings, in the connections section. Free ones are enough. Not yet? Do that first: [Sign up for GitHub](https://github.com/signup) · [Sign up for Notion](https://www.notion.so/signup).",
-      "One device: open this page and your AI on the same phone or computer — then the texts are simply copied and pasted.",
+      "Open this page on the same phone or computer where you use your AI — then you simply copy the texts and paste them.",
       "Optional: Google with mail and calendar, connected to your AI too.",
     ],
     purpose_q: "What do you come for?",
@@ -80,8 +69,6 @@ export const T = {
     q_gender: "For the grammar of your language",
     gender_female: "a woman — feminine forms",
     gender_male: "a man — masculine forms",
-    beta: "beta",
-    plan: (p) => (p === "any" ? "any plan" : `the ${p} plan`),
     build_tell: "Build and tell Grafyla's creator",
     build_only: "Build without sending",
     build: "Build",
@@ -102,29 +89,26 @@ export const T = {
     },
     out_h: "Your assistant's instructions",
     out_settings_h: "One message to send",
-    need_plan: (p) => `You need the ${p} plan or higher.`,
     two_texts: "Two texts, and they go to different places.",
+    english: "",
     check_h: "First, check the connections.",
     check: (m) => `In your AI's settings, Notion and GitHub must be connected — and Google, if you want your mail and calendar. No access to your own repositories is needed for this: if they are already connected, nothing needs to change.`,
     step1_h: "1. The instructions — not into a chat.",
-    step1: "This text goes into your AI's settings, into the field for standing instructions.",
-    where_one: (f) => `Open ${f}.`,
-    paste: (last, words, n, marked) => `The text below takes that place alone: put it in place of whatever stands there — exactly as it is — and save. If you wrote instructions of your own there, copy them out first — into a notes app on your phone, for one. Do not put them back into the instructions field you copied them from; what to do with them is said in step 2. Check that its last line came in too: ${marked ? `«${last}» — keep it.` : `it ends «${words}»`}`,
+    step1: "This text goes into your AI's settings, into the field for standing instructions — not into a chat.",
+    where_one: (f) => `Where it is: ${f}.`,
+    paste: (last, words, n, marked) => `The text below takes that place alone: put it in place of whatever stands there — exactly as it is — and be sure to save, with «Save» or the ✓ at the top: without that the text does not stay. If you wrote instructions of your own there, copy them out first — into a notes app on your phone, for one. Do not put them back into the instructions field you copied them from; what to do with them is said in step 2. Check that its last line came in too: ${marked ? `«${last}» — keep it.` : `it ends «${words}»`}`,
     copy: "Copy",
     copied: "Copied",
     step2_h: "2. The first message — into a chat.",
     step2: "Send your AI, in a new conversation:",
     after: "From here your AI leads the setup itself: it shows a plan, asks one «yes?» for the whole plan and asks a few questions — skip any. If it says it cannot see your Notion, check the connection and send the same message again. If it stops halfway, send it again.",
     old: "Your old instructions, if you copied any: once your AI has finished, send them to it as an ordinary message in a chat, with the words «My old instructions — keep in my Notion what is worth keeping», in your language. It moves what is worth keeping into your Notion and tells you what it recorded, or that nothing needed keeping.",
-    unknown: (u) => `In beta — not known yet: ${u}.`,
-    later_h: "Later.",
-    later: "To change your name, language or time zone later, come back to this page and choose «A change of my settings»; for a new AI — «Another AI for me».",
     settings_lead: "Send your AI this, in a new conversation. It puts the lines on your map in place of the old ones:",
     settings_after: "Until you send it, your AI goes on with what it was told of you before. Your assistant's instructions do not change: there is nothing to paste.",
     sent: (s) => `Sent to Grafyla's creator — this page does not wait for an answer: ${s}.`,
     sent_before: "The line for Grafyla's creator has gone from this page already: it goes once.",
     not_sent: "Nothing was sent.",
-    footer: (r) => `Written from release ${r} of Grafyla. The page's code is public: grafyla/setup.`,
+    footer: (r) => `Written from release ${r} of Grafyla.`,
     done_title: "It worked?",
     done_text: "If your AI has just finished your setup, you can tell Grafyla's creator it worked: one line — your AI, your language and your country, with no name. Nothing reaches the creator unless you press the button.",
     done_tell: "Tell Grafyla's creator it worked",
@@ -141,7 +125,7 @@ export const T = {
     need: [
       "Ваш ИИ: ChatGPT (тариф Plus или выше), Claude (тариф Pro или выше) или Grok (тариф Plus или выше).",
       "Учётные записи на GitHub и в Notion — заведены и подключены к вашему ИИ, в его настройках, в разделе подключений. Бесплатных достаточно. Ещё нет? Сначала сделайте это: [Зарегистрироваться на GitHub](https://github.com/signup) · [Зарегистрироваться в Notion](https://www.notion.so/signup).",
-      "Одно устройство: эту страницу и свой ИИ откройте на одном телефоне или компьютере — тогда тексты просто копируются и вставляются.",
+      "Откройте эту страницу на том же телефоне или компьютере, где у вас ИИ, — тогда тексты можно просто скопировать и вставить.",
       "По желанию — Google с почтой и календарём, тоже подключённый к ИИ.",
     ],
     purpose_q: "Зачем вы пришли?",
@@ -160,8 +144,6 @@ export const T = {
     q_gender: "Для грамматики вашего языка",
     gender_female: "женщина — женский род",
     gender_male: "мужчина — мужской род",
-    beta: "бета",
-    plan: (p) => (p === "any" ? "любой тариф" : `тариф ${p}`),
     build_tell: "Собрать и сообщить создателю Grafyla",
     build_only: "Собрать без отправки",
     build: "Собрать",
@@ -182,29 +164,26 @@ export const T = {
     },
     out_h: "Инструкции вашего помощника",
     out_settings_h: "Одно сообщение для отправки",
-    need_plan: (p) => `Нужен тариф ${p} или выше.`,
     two_texts: "Два текста — и они идут в разные места.",
+    english: "Тексты ниже — на английском, так и задумано: отвечать вам ИИ будет на вашем языке.",
     check_h: "Проверьте подключения.",
     check: (m) => `В настройках вашего ИИ должны быть подключены Notion и GitHub — и Google, если хотите почту и календарь. Ваши собственные репозитории для этого не нужны: если они уже подключены, ничего менять не надо.`,
     step1_h: "1. Инструкции — не в чат.",
-    step1: "Этот текст вставляется в настройки вашего ИИ, в поле для постоянных инструкций.",
-    where_one: (f) => `Откройте: ${f}.`,
-    paste: (last, words, n, marked) => `Текст ниже встаёт на это место один: замените им всё, что там стоит, — ровно как он есть, — и сохраните. Если вы писали там свои инструкции, сначала скопируйте их — например, в приложение заметок на телефоне. Не возвращайте их в поле инструкций, откуда скопировали; что с ними делать, сказано в шаге 2. Проверьте, что вошла и его последняя строка: ${marked ? `«${last}» — не удаляйте её.` : `текст кончается словами «${words}».`}`,
+    step1: "Этот текст вставляется в настройки вашего ИИ, в поле для постоянных инструкций, — не в чат.",
+    where_one: (f) => `Где это поле: ${f}.`,
+    paste: (last, words, n, marked) => `Текст ниже встаёт на это место один: замените им всё, что там стоит, — ровно как он есть, — и обязательно сохраните, кнопкой «Сохранить» или галочкой ✓ вверху: без этого текст не встанет. Если вы писали там свои инструкции, сначала скопируйте их — например, в приложение заметок на телефоне. Не возвращайте их в поле инструкций, откуда скопировали; что с ними делать, сказано в шаге 2. Проверьте, что вошла и его последняя строка: ${marked ? `«${last}» — не удаляйте её.` : `текст кончается словами «${words}».`}`,
     copy: "Скопировать",
     copied: "Скопировано",
     step2_h: "2. Первое сообщение — в чат.",
     step2: "Отправьте своему ИИ в новом разговоре:",
     after: "Дальше настройку ведёт сам ИИ: покажет план, спросит одно «да» на весь план и задаст несколько вопросов — любой можно пропустить. Если он скажет, что не видит ваш Notion, проверьте подключение и отправьте то же сообщение снова. Если он остановится на полпути — отправьте снова.",
     old: "Ваши старые инструкции, если вы их скопировали: когда ИИ закончит, отправьте их ему обычным сообщением в чат со словами «Мои старые инструкции — сохрани в моём Notion то, что стоит сохранить». Он перенесёт нужное в ваш Notion и скажет, что записал, — или что сохранять было нечего.",
-    unknown: (u) => `В бете — пока неизвестно: ${u}.`,
-    later_h: "Со временем.",
-    later: "Чтобы потом поменять имя, язык или часовой пояс, вернитесь на эту страницу и выберите «Поменять мои настройки»; для нового ИИ — «Другой ИИ для меня».",
     settings_lead: "Отправьте своему ИИ это в новом разговоре. Он поставит эти строки на вашу страницу-карту в Notion вместо старых:",
     settings_after: "Пока вы его не отправили, ИИ работает с тем, что знал о вас раньше. Инструкции помощника не меняются: вставлять ничего не нужно.",
     sent: (s) => `Создателю Grafyla отправлено — ответа страница не ждёт: ${s}.`,
     sent_before: "Строка для создателя Grafyla с этой страницы уже ушла: она уходит один раз.",
     not_sent: "Ничего не отправлено.",
-    footer: (r) => `Страница собрана из выпуска ${r} Grafyla. Код страницы открытый: grafyla/setup.`,
+    footer: (r) => `Страница собрана из выпуска ${r} Grafyla.`,
     done_title: "Получилось?",
     done_text: "Если ваш ИИ только что закончил настройку, можно сообщить создателю Grafyla, что всё получилось: одна строка — ваш ИИ, язык и страна, без имени. Создателю ничего не придёт, если вы не нажмёте кнопку.",
     done_tell: "Сообщить создателю Grafyla, что получилось",
@@ -221,7 +200,7 @@ export const T = {
     need: [
       "ה-AI שלכם: ChatGPT (מנוי Plus ומעלה), Claude (מנוי Pro ומעלה) או Grok (מנוי Plus ומעלה).",
       "חשבונות ב-GitHub וב-Notion — שכבר נפתחו וחוברו ל-AI שלכם, בהגדרות שלו, באזור החיבורים. חשבונות חינמיים מספיקים. עוד אין לכם? עשו את זה קודם: [להירשם ל-GitHub](https://github.com/signup) · [להירשם ל-Notion](https://www.notion.so/signup).",
-      "מכשיר אחד: פתחו את הדף הזה ואת ה-AI שלכם באותו טלפון או באותו מחשב — כך פשוט מעתיקים את הטקסטים ומדביקים אותם.",
+      "פתחו את הדף הזה באותו טלפון או מחשב שבו אתם משתמשים ב-AI — כך פשוט מעתיקים את הטקסטים ומדביקים אותם.",
       "לא חובה: חשבון Google עם מייל ויומן, שגם אותו מחברים ל-AI שלכם.",
     ],
     purpose_q: "מה תרצו לעשות?",
@@ -240,8 +219,6 @@ export const T = {
     q_gender: "לשון הפנייה אליכם",
     gender_female: "אישה — לשון נקבה",
     gender_male: "גבר — לשון זכר",
-    beta: "בטא",
-    plan: (p) => (p === "any" ? "כל מנוי" : `מנוי ${p}`),
     build_tell: "להכין ולהודיע ליוצר",
     build_only: "להכין בלי לשלוח",
     build: "להכין",
@@ -262,29 +239,26 @@ export const T = {
     },
     out_h: "ההוראות של העוזר שלכם",
     out_settings_h: "הודעה אחת לשלוח",
-    need_plan: (p) => `צריך מנוי ${p} ומעלה.`,
     two_texts: "שני טקסטים, וכל אחד מהם הולך למקום אחר.",
+    english: "הטקסטים שלמטה באנגלית, וזה בכוונה: ה-AI יענה לכם בשפה שלכם.",
     check_h: "קודם בדקו את החיבורים.",
     check: (m) => `בהגדרות של ה-AI שלכם צריכים להיות מחוברים Notion ו-GitHub — וגם Google, אם אתם רוצים את המייל ואת היומן. המאגרים שלכם לא נחוצים לזה: אם הם כבר מחוברים, אין צורך לשנות כלום.`,
     step1_h: "1. ההוראות — לא לצ'אט.",
-    step1: "את הטקסט הזה מדביקים בהגדרות של ה-AI שלכם, בשדה של ההוראות הקבועות.",
-    where_one: (f) => `פתחו: ${f}.`,
-    paste: (last, words, n, marked) => `הטקסט שלמטה צריך להופיע בשדה לבד, בלי שום דבר אחר: שימו אותו במקום כל מה שכתוב שם — בדיוק כמו שהוא — ושמרו. אם כתבתם שם הוראות משלכם, העתיקו אותן קודם — למשל לאפליקציית הפתקים בטלפון. אל תחזירו אותן לשדה ההוראות שממנו העתקתם; מה לעשות איתן, כתוב בשלב 2. בדקו שגם השורה האחרונה שלו נכנסה: ${marked ? `«${last}» — השאירו אותה.` : `הטקסט מסתיים במילים «${words}».`}`,
+    step1: "את הטקסט הזה מדביקים בהגדרות של ה-AI שלכם, בשדה של ההוראות הקבועות — לא בצ'אט.",
+    where_one: (f) => `איפה השדה: ${f}.`,
+    paste: (last, words, n, marked) => `הטקסט שלמטה צריך להופיע בשדה לבד, בלי שום דבר אחר: שימו אותו במקום כל מה שכתוב שם — בדיוק כמו שהוא — והקפידו לשמור, בכפתור השמירה או בסימן ✓ בראש המסך: בלי זה הטקסט לא נשמר. אם כתבתם שם הוראות משלכם, העתיקו אותן קודם — למשל לאפליקציית הפתקים בטלפון. אל תחזירו אותן לשדה ההוראות שממנו העתקתם; מה לעשות איתן, כתוב בשלב 2. בדקו שגם השורה האחרונה שלו נכנסה: ${marked ? `«${last}» — השאירו אותה.` : `הטקסט מסתיים במילים «${words}».`}`,
     copy: "להעתיק",
     copied: "הועתק",
     step2_h: "2. ההודעה הראשונה — לצ'אט.",
     step2: "שלחו ל-AI שלכם, בשיחה חדשה:",
     after: "מכאן ה-AI מוביל את ההגדרה בעצמו: יראה תוכנית, ישאל «כן?» אחד על כל התוכנית וישאל כמה שאלות — אפשר לדלג על כל אחת. אם הוא אומר שהוא לא רואה את ה-Notion שלכם, בדקו את החיבור ושלחו שוב את אותה הודעה. אם הוא נעצר באמצע, שלחו אותה שוב.",
     old: "ההוראות הישנות שלכם, אם העתקתם אותן: כשה-AI יסיים, שלחו לו אותן כהודעה רגילה בצ'אט, עם המילים «ההוראות הישנות שלי — שמור ב-Notion שלי את מה ששווה לשמור». הוא יעביר ל-Notion שלכם את מה ששווה לשמור ויגיד לכם מה רשם, או שלא היה מה לשמור.",
-    unknown: (u) => `בבטא — עוד לא ידוע: ${u}.`,
-    later_h: "בהמשך.",
-    later: "כדי לשנות אחר כך את השם, השפה או אזור הזמן, חזרו לדף הזה ובחרו «שינוי ההגדרות שלי»; בשביל AI חדש — «הגדרה ל-AI נוסף».",
     settings_lead: "שלחו ל-AI שלכם את זה, בשיחה חדשה. הוא ישים את השורות בדף המפה שלכם ב-Notion במקום השורות הישנות:",
     settings_after: "עד שתשלחו את ההודעה, ה-AI ממשיך עם מה שסיפרו לו עליכם קודם. ההוראות של העוזר לא משתנות: אין מה להדביק.",
     sent: (s) => `נשלח ליוצר — הדף לא מחכה לתשובה: ${s}.`,
     sent_before: "השורה ליוצר כבר נשלחה מהדף הזה: היא נשלחת פעם אחת.",
     not_sent: "לא נשלח כלום.",
-    footer: (r) => `הדף נבנה מגרסה ${r} של Grafyla. הקוד של הדף ציבורי: grafyla/setup.`,
+    footer: (r) => `הדף נבנה מגרסה ${r} של Grafyla.`,
     done_title: "ההגדרה הצליחה?",
     done_text: "אם ה-AI שלכם הרגע סיים את ההגדרה, אפשר להודיע ליוצר של Grafyla שהיא הצליחה: שורה אחת — ה-AI, השפה והמדינה שלכם, בלי שם. שום דבר לא מגיע ליוצר בלי שתלחצו על הכפתור.",
     done_tell: "להודיע ליוצר שההגדרה הצליחה",
