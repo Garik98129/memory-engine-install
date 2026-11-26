@@ -16,9 +16,10 @@ export const RTL = new Set(["he"]);
 // an iPhone, Russian interface, 19.11.2026): his name at the foot of the side menu → «Персонализация» → «Пользовательские
 // инструкции», the row ChatGPT → «Edit»; Personalization there is an item of that menu, not a page of «Настройки». In
 // Hebrew the interface's own words were not seen, so its paths name the English ones. The ChatGPT path ends with the save button —
-// «Сохранить», «Save» — after the text is pasted: on the owner's test, 23.11.2026, it was the step easy to miss. Claude — the English names of
-// Anthropic's help («Settings», «Your Claude», «Instructions», read 19.11.2026): its interface in Russian or Hebrew was
-// not seen, so no button is guessed in either. Grok's app — in words. English keeps the release's words: the parity test
+// «Сохранить», «Save» — after the text is pasted: on the owner's test, 23.11.2026, it was the step easy to miss. Claude — by the owner's own screens
+// (the iPhone app, Russian interface, 26.11.2026): the account's icon at the foot of the side menu → «Настройки» →
+// «Профиль» → «Инструкции», saved with the ✓ at the top; its Hebrew interface was not seen, so Hebrew names the steps
+// in plain words. Grok's app — in words. English keeps the release's words: the parity test
 // holds them to the Issue. A release that changes a place breaks page/test/page.test.js until it is here.
 export const PLACES = {
   "chatgpt.com in your browser: the menu under your name, Personalization": {
@@ -26,8 +27,8 @@ export const PLACES = {
     he: "chatgpt.com בדפדפן ← השם שלכם בתחתית התפריט הצדדי ← «Personalization» ← «Custom instructions», בשורה של ChatGPT ← «Edit» ← הדביקו את הטקסט ← «Save»",
   },
   "Claude: Settings, Your Claude, Instructions": {
-    ru: "Claude → настройки («Settings») → «Your Claude» → «Instructions»",
-    he: "Claude ← ההגדרות («Settings») ← «Your Claude» ← «Instructions»",
+    ru: "приложение Claude → значок вашего аккаунта внизу бокового меню → «Настройки» → «Профиль» → «Инструкции» → вставьте текст → галочка ✓ вверху",
+    he: "אפליקציית Claude ← סמל החשבון שלכם בתחתית התפריט הצדדי ← ההגדרות ← הפרופיל ← ההוראות ← הדביקו את הטקסט ← סימן ✓ בראש המסך",
   },
   "Grok app: the instructions field": {
     ru: "приложение Grok → поле инструкций",
@@ -88,9 +89,9 @@ export const T = {
     check_h: "First, check the connections.",
     check: (m) => `In your AI's settings, Notion and GitHub must be connected — and Google, if you want your mail and calendar. No access to your own repositories is needed for this: if they are already connected, nothing needs to change.`,
     step1_h: "1. The instructions — not into a chat.",
-    step1: "This text goes into your AI's settings, into the field for standing instructions.",
-    where_one: (f) => `Open ${f}.`,
-    paste: (last, words, n, marked) => `The text below takes that place alone: put it in place of whatever stands there — exactly as it is — and save. If you wrote instructions of your own there, copy them out first — into a notes app on your phone, for one. Do not put them back into the instructions field you copied them from; what to do with them is said in step 2. Check that its last line came in too: ${marked ? `«${last}» — keep it.` : `it ends «${words}»`}`,
+    step1: "This text goes into your AI's settings, into the field for standing instructions — not into a chat.",
+    where_one: (f) => `Where it is: ${f}.`,
+    paste: (last, words, n, marked) => `The text below takes that place alone: put it in place of whatever stands there — exactly as it is — and be sure to save, with «Save» or the ✓ at the top: without that the text does not stay. If you wrote instructions of your own there, copy them out first — into a notes app on your phone, for one. Do not put them back into the instructions field you copied them from; what to do with them is said in step 2. Check that its last line came in too: ${marked ? `«${last}» — keep it.` : `it ends «${words}»`}`,
     copy: "Copy",
     copied: "Copied",
     step2_h: "2. The first message — into a chat.",
@@ -163,9 +164,9 @@ export const T = {
     check_h: "Проверьте подключения.",
     check: (m) => `В настройках вашего ИИ должны быть подключены Notion и GitHub — и Google, если хотите почту и календарь. Ваши собственные репозитории для этого не нужны: если они уже подключены, ничего менять не надо.`,
     step1_h: "1. Инструкции — не в чат.",
-    step1: "Этот текст вставляется в настройки вашего ИИ, в поле для постоянных инструкций.",
-    where_one: (f) => `Откройте: ${f}.`,
-    paste: (last, words, n, marked) => `Текст ниже встаёт на это место один: замените им всё, что там стоит, — ровно как он есть, — и сохраните. Если вы писали там свои инструкции, сначала скопируйте их — например, в приложение заметок на телефоне. Не возвращайте их в поле инструкций, откуда скопировали; что с ними делать, сказано в шаге 2. Проверьте, что вошла и его последняя строка: ${marked ? `«${last}» — не удаляйте её.` : `текст кончается словами «${words}».`}`,
+    step1: "Этот текст вставляется в настройки вашего ИИ, в поле для постоянных инструкций, — не в чат.",
+    where_one: (f) => `Где это поле: ${f}.`,
+    paste: (last, words, n, marked) => `Текст ниже встаёт на это место один: замените им всё, что там стоит, — ровно как он есть, — и обязательно сохраните, кнопкой «Сохранить» или галочкой ✓ вверху: без этого текст не встанет. Если вы писали там свои инструкции, сначала скопируйте их — например, в приложение заметок на телефоне. Не возвращайте их в поле инструкций, откуда скопировали; что с ними делать, сказано в шаге 2. Проверьте, что вошла и его последняя строка: ${marked ? `«${last}» — не удаляйте её.` : `текст кончается словами «${words}».`}`,
     copy: "Скопировать",
     copied: "Скопировано",
     step2_h: "2. Первое сообщение — в чат.",
@@ -238,9 +239,9 @@ export const T = {
     check_h: "קודם בדקו את החיבורים.",
     check: (m) => `בהגדרות של ה-AI שלכם צריכים להיות מחוברים Notion ו-GitHub — וגם Google, אם אתם רוצים את המייל ואת היומן. המאגרים שלכם לא נחוצים לזה: אם הם כבר מחוברים, אין צורך לשנות כלום.`,
     step1_h: "1. ההוראות — לא לצ'אט.",
-    step1: "את הטקסט הזה מדביקים בהגדרות של ה-AI שלכם, בשדה של ההוראות הקבועות.",
-    where_one: (f) => `פתחו: ${f}.`,
-    paste: (last, words, n, marked) => `הטקסט שלמטה צריך להופיע בשדה לבד, בלי שום דבר אחר: שימו אותו במקום כל מה שכתוב שם — בדיוק כמו שהוא — ושמרו. אם כתבתם שם הוראות משלכם, העתיקו אותן קודם — למשל לאפליקציית הפתקים בטלפון. אל תחזירו אותן לשדה ההוראות שממנו העתקתם; מה לעשות איתן, כתוב בשלב 2. בדקו שגם השורה האחרונה שלו נכנסה: ${marked ? `«${last}» — השאירו אותה.` : `הטקסט מסתיים במילים «${words}».`}`,
+    step1: "את הטקסט הזה מדביקים בהגדרות של ה-AI שלכם, בשדה של ההוראות הקבועות — לא בצ'אט.",
+    where_one: (f) => `איפה השדה: ${f}.`,
+    paste: (last, words, n, marked) => `הטקסט שלמטה צריך להופיע בשדה לבד, בלי שום דבר אחר: שימו אותו במקום כל מה שכתוב שם — בדיוק כמו שהוא — והקפידו לשמור, בכפתור השמירה או בסימן ✓ בראש המסך: בלי זה הטקסט לא נשמר. אם כתבתם שם הוראות משלכם, העתיקו אותן קודם — למשל לאפליקציית הפתקים בטלפון. אל תחזירו אותן לשדה ההוראות שממנו העתקתם; מה לעשות איתן, כתוב בשלב 2. בדקו שגם השורה האחרונה שלו נכנסה: ${marked ? `«${last}» — השאירו אותה.` : `הטקסט מסתיים במילים «${words}».`}`,
     copy: "להעתיק",
     copied: "הועתק",
     step2_h: "2. ההודעה הראשונה — לצ'אט.",

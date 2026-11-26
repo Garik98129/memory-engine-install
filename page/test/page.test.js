@@ -331,6 +331,19 @@ test("the AI menu shows the AI's name only, the page says nothing of beta; «Bef
   }
 });
 
+// Where the text goes, for every AI (the owner's word, 26.11.2026): the field for standing instructions, not a chat,
+// and saved — by «Save» or the ✓ at the top; the path for the chosen AI is a hint under it.
+test("step 1 says, for every AI: the instructions field, not a chat, and save — with «Save» or the ✓", () => {
+  const notChat = { en: "not into a chat", ru: "не в чат", he: "לא בצ'אט" };
+  const save = { en: ["be sure to save", "✓"], ru: ["обязательно сохраните", "✓"], he: ["והקפידו לשמור", "✓"] };
+  for (const code of LANGS) {
+    assert.ok(T[code].step1.includes(notChat[code]), `${code}: not a chat`);
+    for (const w of save[code]) assert.ok(T[code].paste("L", "W", 1, true).includes(w), `${code}: «${w}»`);
+  }
+  const claude = PLACES["Claude: Settings, Your Claude, Instructions"];
+  assert.ok(claude.ru.includes("«Профиль» → «Инструкции»") && claude.ru.includes("✓"), "Claude, ru: the owner's screens");
+});
+
 // The page is for a setup, not for how the system works (the owner's word, 26.11.2026): no word of IP addresses,
 // Cloudflare, cookies or the e-mail a user dictates, and no section of what the page does and does not.
 test("the page says nothing a setup does not need: no IP, Cloudflare, cookies or dictated e-mail", () => {
