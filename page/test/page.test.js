@@ -134,17 +134,29 @@ test("a link is drawn as its words and an https address; everything else stays t
   doc.documentElement.dir = "ltr";
 });
 
-test("the page shows what she gets in the order of the Issue: the check, the instructions, the first message", () => {
+// Not the Issue's order on purpose (the owner's word, 26.11.2026): once she has copied a text she goes to her AI and may
+// not come back, so whatever she is to read comes before the box it is about, and nothing comes after the last box.
+test("the page shows what she gets with nothing after the last box: what works, the check, the instructions, the first message", () => {
   const app = source("app.js");
   const out = app.slice(app.indexOf("function installOutput("), app.indexOf("function settingsOutput("));
-  const order = ["t.out_h", "t.need_plan(", "t.two_texts", "t.check_h", "t.check(DATA.manifests)", "t.step1_h", "`${t.step1} ${where}`",
-    "t.paste(", "copyBox(field, t)", "t.step2_h", "t.step2 }", "copyBox(firstMessage(p), t)", "t.after }", "t.after2 }", "t.old }",
-    "t.works_h(", "t.no_daily", "t.later_h", "t.later }"];
+  const order = ["t.out_h", "t.need_plan(", "t.works_h(", "t.no_daily", "t.later_h", "t.later }", "t.two_texts", "t.check_h",
+    "t.check(DATA.manifests)", "t.step1_h", "`${t.step1} ${where}`", "t.paste(", "copyBox(field, t)", "t.step2_h", "t.after }",
+    "t.after2 }", "t.old }", "t.step2 }", "copyBox(firstMessage(p), t)"];
   let at = out.indexOf("return [");
   for (const piece of order) {
     const next = out.indexOf(piece, at);
     assert.ok(next > at, `«${piece}» is not there, or not after the piece before it`);
     at = next;
+  }
+  const end = out.indexOf("];", at);
+  assert.equal(out.slice(at + "copyBox(firstMessage(p), t)".length, end).replace(/[\s,]/g, ""), "",
+    "nothing after the first message's box: she may not come back to read it");
+});
+
+// What the page says of the text of step 1 is said where that text is still below, in every language.
+test("«later» opens the page, so it names the text by its step, not as «above»", () => {
+  for (const code of ["en", "ru", "he"]) {
+    assert.ok(!/text above|Текст выше|הטקסט שלמעלה/.test(T[code].later), `${code}: «later» still says «above»`);
   }
 });
 

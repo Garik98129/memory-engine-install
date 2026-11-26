@@ -64,6 +64,13 @@ be turned on only on the full way) and «Later» (a change of settings comes bac
 its mark (`TEXT MARK 2.`, from v0.1.14), the page asks her to keep that last line, as the Issue of that release does;
 a text without it — v0.1.13 — ends with the words that release's Issue named.
 
+**Its order** is not the Issue's, on purpose (the owner's word, 26.11.2026): once she has copied a text she goes to her
+AI and may not come back, so whatever she is to read comes before the box it is about, and nothing after the last box.
+What works on her AI and what comes later open the output; under «2.» the AI's answer, its questions and her old
+instructions come before «Send your AI…» and the first message's box. `page/test/page.test.js` holds the order and that
+nothing follows the last box. The message after a change of settings keeps its one line after the box: its lead ends
+with a colon on the box, and that line asks nothing of her.
+
 **What it does not check, and why.** `setup` also refuses a user's part in which C4 finds a number. The page does not
 port C4's patterns: a name the page takes has no digit, and everything else in the part comes from its lists — the
 parity test runs every list value through `setup.build`, so none is one setup refuses. The page offers its own list of
@@ -102,4 +109,6 @@ to a new one.
 сверяются с движком байт в байт тестом `test:parity`. По-русски и на иврите место для текста показано путём по меню со
 стрелками: кнопки ChatGPT — так, как они написаны на экране (по скриншотам владельца с chatgpt.com в Safari, русский
 интерфейс), кнопки Claude — английскими названиями из справки Anthropic. Страница опубликована на GitHub Pages по
-адресу `https://setup.grafyla.com/page/`; данные собраны из выпуска `v0.1.16`.
+адресу `https://setup.grafyla.com/page/`; данные собраны из выпуска `v0.1.16`. Порядок блоков — не как в Issue (слово владельца
+26.11.2026): скопировав текст, человек уходит в свой ИИ и может не вернуться, поэтому всё, что нужно прочесть, стоит
+до окошка, к которому относится, а после последнего окошка ничего нет.
