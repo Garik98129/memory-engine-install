@@ -265,8 +265,9 @@ export function render(code) {
 
 function installOutput(t, a, field, p) {
   const row = DATA.platforms[a.platform];
-  // English names the place in the release's own words; the others go by the menus.
-  const place = (words) => (t === T.en ? words : PLACES[words]?.[langOf(t)] || words);
+  // Every language goes by the menus, the same steps (Tolik's note on #14: English kept the release's words, and so a
+  // path the others no longer had).
+  const place = (words) => PLACES[words]?.[langOf(t)] || words;
   // One place on every platform from v0.1.15 — the field for every chat; a release that brings a second place back
   // (`field_all`) fails page/test/page.test.js until the page has words for the choice again.
   const where = t.where_one(place(row.field));

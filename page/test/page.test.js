@@ -39,13 +39,14 @@ test("every place the text goes is a path through the menus in Russian and Hebre
     assert.equal(row.field_all, "", `${k}: a second place for the text — the page has no words for a choice (v0.1.15: one place, every chat)`);
     for (const words of [row.field]) {
       assert.ok(PLACES[words], `${k}: «${words}» has no path in i18n.js`);
-      for (const code of ["ru", "he"]) {
+      for (const code of LANGS) {
         assert.ok(PLACES[words][code], `${k} ${code}`);
         assert.ok(PLACES[words][code].includes(code === "he" ? " ← " : " → "), `${k} ${code}: a path, step by step`);
       }
     }
   }
-  assert.match(source("app.js"), /t === T\.en \? words : PLACES\[words\]/, "English keeps the release's words");
+  assert.match(source("app.js"), /const place = \(words\) => PLACES\[words\]\?\.\[langOf\(t\)\] \|\| words;/,
+    "every language goes by the menus, English too");
   assert.deepEqual(Object.keys(PLACES).sort(), Object.values(DATA.platforms).map((row) => row.field).sort(),
     "no path is kept for a place no platform of the release has");
 });
@@ -342,6 +343,12 @@ test("step 1 says, for every AI: the instructions field, not a chat, and save �
   }
   const claude = PLACES["Claude: Settings, Your Claude, Instructions"];
   assert.ok(claude.ru.includes("«Профиль» → «Инструкции»") && claude.ru.includes("✓"), "Claude, ru: the owner's screens");
+  assert.ok(claude.en.includes("Profile → Instructions") && claude.en.includes("✓"), "Claude, en: the same steps");
+  assert.ok(claude.he.includes("הפרופיל ← ההוראות") && claude.he.includes("✓"), "Claude, he: the same steps");
+  const lead = { en: "Where it is: ", ru: "Где это поле: ", he: "איפה השדה: " };
+  for (const code of LANGS) assert.ok(T[code].where_one("X").startsWith(lead[code]), `${code}: the path is a hint`);
+  // The line that the texts are English: in Russian and Hebrew only, and drawn only when there is one.
+  assert.match(source("app.js"), /t\.english \? el\("p", \{ text: t\.english \}\) : null/);
 });
 
 // The page is for a setup, not for how the system works (the owner's word, 26.11.2026): no word of IP addresses,

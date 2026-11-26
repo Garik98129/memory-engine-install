@@ -19,18 +19,21 @@ export const RTL = new Set(["he"]);
 // «Сохранить», «Save» — after the text is pasted: on the owner's test, 23.11.2026, it was the step easy to miss. Claude — by the owner's own screens
 // (the iPhone app, Russian interface, 26.11.2026): the account's icon at the foot of the side menu → «Настройки» →
 // «Профиль» → «Инструкции», saved with the ✓ at the top; its Hebrew interface was not seen, so Hebrew names the steps
-// in plain words. Grok's app — in words. English keeps the release's words: the parity test
-// holds them to the Issue. A release that changes a place breaks page/test/page.test.js until it is here.
+// in plain words. Grok's app — in words. English goes by the same menus, in the
+// interface's English names. A release that changes a place breaks page/test/page.test.js until it is here.
 export const PLACES = {
   "chatgpt.com in your browser: the menu under your name, Personalization": {
+    en: "chatgpt.com in your browser → your name at the foot of the side menu → «Personalization» → «Custom instructions», the ChatGPT row → «Edit» → paste the text → «Save»",
     ru: "chatgpt.com в браузере → ваше имя внизу бокового меню → «Персонализация» → «Пользовательские инструкции», строка ChatGPT → «Edit» → вставьте текст → «Сохранить»",
     he: "chatgpt.com בדפדפן ← השם שלכם בתחתית התפריט הצדדי ← «Personalization» ← «Custom instructions», בשורה של ChatGPT ← «Edit» ← הדביקו את הטקסט ← «Save»",
   },
   "Claude: Settings, Your Claude, Instructions": {
+    en: "the Claude app → your account's icon at the foot of the side menu → Settings → Profile → Instructions → paste the text → the ✓ at the top",
     ru: "приложение Claude → значок вашего аккаунта внизу бокового меню → «Настройки» → «Профиль» → «Инструкции» → вставьте текст → галочка ✓ вверху",
     he: "אפליקציית Claude ← סמל החשבון שלכם בתחתית התפריט הצדדי ← ההגדרות ← הפרופיל ← ההוראות ← הדביקו את הטקסט ← סימן ✓ בראש המסך",
   },
   "Grok app: the instructions field": {
+    en: "the Grok app → the instructions field",
     ru: "приложение Grok → поле инструкций",
     he: "אפליקציית Grok ← שדה ההוראות",
   },
