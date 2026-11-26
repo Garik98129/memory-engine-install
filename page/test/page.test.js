@@ -135,7 +135,7 @@ test("the page shows what she gets with nothing after the last box: the two text
   const out = app.slice(app.indexOf("function installOutput("), app.indexOf("function settingsOutput("));
   const order = ["t.out_h", "t.two_texts", "t.english", "t.check_h",
     "t.check(DATA.manifests)", "t.step1_h", "`${t.step1} ${where}`", "t.paste(", "copyBox(field, t)", "t.step2_h", "t.after }",
-    "t.old }", "t.step2 }", "copyBox(firstMessage(p), t)"];
+    "t.old }", "t.box2 }", "t.step2 }", "copyBox(firstMessage(p), t)"];
   let at = out.indexOf("return [");
   for (const piece of order) {
     const next = out.indexOf(piece, at);
@@ -294,16 +294,16 @@ test("the page says what the line holds beside each button that sends it, and no
 });
 
 // What the cut must not lose (Tolik's note on #13): the words a setup needs, held by their words, not by the call.
-test("the words a setup needs stay: not back into the field, the last line, Notion not seen, stopped halfway, old instructions", () => {
+test("the words a setup needs stay: not back into the field, the last line, Notion not seen, how long, stop and resume, old instructions", () => {
   const need = {
     en: { paste: ["Do not put them back into the instructions field you copied them from", "Check that its last line came in too", "keep it"],
-          after: ["If it says it cannot see your Notion, check the connection and send the same message again", "If it stops halfway, send it again"],
+          after: ["If it says it cannot see your Notion, check the connection and send the same message again", "send your AI the same first message again — it will not ask what you have already answered", "about 20–30 minutes", "you can skip each one"],
           old: ["My old instructions"] },
     ru: { paste: ["Не возвращайте их в поле инструкций, откуда скопировали", "Проверьте, что вошла и его последняя строка", "не удаляйте её"],
-          after: ["не видит ваш Notion, проверьте подключение и отправьте то же сообщение снова", "остановится на полпути — отправьте снова"],
+          after: ["не видит ваш Notion, проверьте подключение и отправьте то же сообщение снова", "отправьте ИИ то же первое сообщение ещё раз — уже отвеченное он не спросит", "примерно 20–30 минут", "каждый можно пропустить"],
           old: ["Мои старые инструкции"] },
     he: { paste: ["אל תחזירו אותן לשדה ההוראות שממנו העתקתם", "בדקו שגם השורה האחרונה שלו נכנסה", "השאירו אותה"],
-          after: ["לא רואה את ה-Notion שלכם, בדקו את החיבור ושלחו שוב את אותה הודעה", "נעצר באמצע, שלחו אותה שוב"],
+          after: ["לא רואה את ה-Notion שלכם, בדקו את החיבור ושלחו שוב את אותה הודעה", "שלחו ל-AI שוב את אותה הודעה ראשונה", "בערך 20–30 דקות", "אפשר לדלג על כל אחת"],
           old: ["ההוראות הישנות שלי"] },
   };
   for (const code of LANGS) {
@@ -312,6 +312,11 @@ test("the words a setup needs stay: not back into the field, the last line, Noti
       for (const w of words) assert.ok(shown[key].includes(w), `${code}.${key}: «${w}» is gone`);
     }
     assert.ok(shown.paste.includes("«LAST»"), `${code}: the last line itself is quoted`);
+    // What the first message holds, said before its box, in the owner's words of 26.11.2026: its service lines name extra
+    // features not in use now — and no «off» or «none» quoted.
+    const box2 = { en: ["service lines", "not in use now"], ru: ["служебных строк", "сейчас не используются"], he: ["שורות שירות", "לא בשימוש כרגע"] };
+    for (const w of box2[code]) assert.ok(T[code].box2.includes(w), `${code}: «${w}»`);
+    assert.ok(!/«off»|«none»/.test(T[code].box2), `${code}: no «off» or «none» quoted`);
     assert.ok(T[code].paste("LAST", "WORDS", 1, false).includes("«WORDS»"), `${code}: a text without its mark — its last words`);
   }
 });
