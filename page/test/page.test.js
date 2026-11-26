@@ -312,8 +312,11 @@ test("the words a setup needs stay: not back into the field, the last line, Noti
       for (const w of words) assert.ok(shown[key].includes(w), `${code}.${key}: «${w}» is gone`);
     }
     assert.ok(shown.paste.includes("«LAST»"), `${code}: the last line itself is quoted`);
-    // What the first message holds, said before its box, so that «off» and «none» raise no question (the owner, 26.11.2026).
-    assert.ok(T[code].box2.includes("«off»") && T[code].box2.includes("«none»"), `${code}: the box's «off» and «none» explained`);
+    // What the first message holds, said before its box, in the owner's words of 26.11.2026: its service lines name extra
+    // features not in use now — and no «off» or «none» quoted.
+    const box2 = { en: ["service lines", "not in use now"], ru: ["служебных строк", "сейчас не используются"], he: ["שורות שירות", "לא בשימוש כרגע"] };
+    for (const w of box2[code]) assert.ok(T[code].box2.includes(w), `${code}: «${w}»`);
+    assert.ok(!/«off»|«none»/.test(T[code].box2), `${code}: no «off» or «none» quoted`);
     assert.ok(T[code].paste("LAST", "WORDS", 1, false).includes("«WORDS»"), `${code}: a text without its mark — its last words`);
   }
 });
