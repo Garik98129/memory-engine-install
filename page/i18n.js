@@ -14,7 +14,8 @@ export const RTL = new Set(["he"]);
 // from v0.1.15: one place on every platform, the field for every chat) → a path through the menus in each language, the
 // buttons named as the screen shows them. ChatGPT in the browser — by the owner's own screens (chatgpt.com in Safari on
 // an iPhone, Russian interface, 19.11.2026): his name at the foot of the side menu → «Персонализация» → «Пользовательские
-// инструкции», the row ChatGPT → «Edit»; Personalization there is an item of that menu, not a page of «Настройки». In
+// инструкции», scrolled down to it, by «ChatGPT» → «Редактировать» (the owner's screen and words, 26.11.2026: no word of the row
+// under it); Personalization there is an item of that menu, not a page of «Настройки». In
 // Hebrew the interface's own words were not seen, so its paths name the English ones. The ChatGPT path ends with the save button —
 // «Сохранить», «Save» — after the text is pasted: on the owner's test, 23.11.2026, it was the step easy to miss. Claude — by the owner's own screens
 // (the iPhone app, Russian interface, 26.11.2026): the account's icon at the foot of the side menu → «Настройки» →
@@ -25,9 +26,9 @@ export const RTL = new Set(["he"]);
 // interface's English names. A release that changes a place breaks page/test/page.test.js until it is here.
 export const PLACES = {
   "chatgpt.com in your browser: the menu under your name, Personalization": {
-    en: "chatgpt.com in your browser → your name at the foot of the side menu → «Personalization» → «Custom instructions», the ChatGPT row → «Edit» → paste the text → «Save»",
-    ru: "chatgpt.com в браузере → ваше имя внизу бокового меню → «Персонализация» → «Пользовательские инструкции», строка ChatGPT → «Edit» → вставьте текст → «Сохранить»",
-    he: "chatgpt.com בדפדפן ← השם שלכם בתחתית התפריט הצדדי ← «Personalization» ← «Custom instructions», בשורה של ChatGPT ← «Edit» ← הדביקו את הטקסט ← «Save»",
+    en: "chatgpt.com in your browser → your name at the foot of the side menu → «Personalization» → scroll down to «Custom instructions» → by «ChatGPT», tap «Edit» → paste the text → «Save»",
+    ru: "chatgpt.com в браузере → ваше имя внизу бокового меню → «Персонализация» → пролистайте вниз до «Пользовательские инструкции» → у «ChatGPT» нажмите «Редактировать» → вставьте текст → «Сохранить»",
+    he: "chatgpt.com בדפדפן ← השם שלכם בתחתית התפריט הצדדי ← «Personalization» ← גללו למטה עד «Custom instructions» ← ליד «ChatGPT» לחצו «Edit» ← הדביקו את הטקסט ← «Save»",
   },
   "Claude: Settings, Your Claude, Instructions": {
     en: "the Claude app → your account's icon at the foot of the side menu → Settings → Profile → Instructions → paste the text → the ✓ at the top",

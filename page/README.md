@@ -19,7 +19,7 @@ no sign-in, nothing kept.
   (`field` of the platform table — one place on every platform from v0.1.15, the field for every chat) is said in
   Russian and Hebrew as a path through the menus (`PLACES`), the buttons named as the screen shows them: ChatGPT in the
   browser by the owner's own screens (Safari on an iPhone, Russian interface, 19.11.2026) — his name at the foot of the
-  side menu, «Персонализация», «Пользовательские инструкции», the row ChatGPT, «Edit»; Claude by the English names of
+  side menu, «Персонализация», «Пользовательские инструкции», scrolled down to it, by «ChatGPT», «Редактировать»; Claude by the English names of
   Anthropic's help («Settings», «Your Claude», «Instructions», read 19.11.2026) in both — its interface in Russian or
   Hebrew was not seen; Hebrew names ChatGPT's English buttons; Grok's app is said in words. English keeps the release's
   words, held to the Issue. A link in a sentence is written `[words](address)` and drawn by `app.js` (`rich`): the
