@@ -288,6 +288,7 @@ function installOutput(t, a, field, p) {
     el("h3", { text: t.step2_h }),
     el("p", { text: t.after }),
     el("p", { text: t.old }),
+    el("p", { text: t.box2 }),
     el("p", { text: t.step2 }),
     copyBox(firstMessage(p), t),
   ];
