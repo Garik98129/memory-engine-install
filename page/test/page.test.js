@@ -36,7 +36,6 @@ test("every refusal has its words, and every platform's «not known yet» line i
     if (!row.unknown) continue;
     assert.ok(UNKNOWN[row.unknown], `${k}: «${row.unknown}» has no translation in i18n.js`);
     for (const code of ["ru", "he"]) assert.ok(UNKNOWN[row.unknown][code], `${k} ${code}`);
-    assert.ok(T.en.notion[row.notion] && (row.schedule === "paid" || T.en.schedule[row.schedule]), k);
   }
 });
 
@@ -75,7 +74,6 @@ test("the page says «setup» in every language, and names the repositories as t
       assert.ok(!project[code].test(words), `${code}: «${words.slice(0, 60)}…» names a project — the text has one place, the field for every chat`);
       assert.ok(!/Garik98129|memory-engine|memory engine|движ[ко]к? памяти|מנוע הזיכרון/i.test(words), `${code}: «${words.slice(0, 60)}…» names the old place`);
     }
-    assert.ok(T[code].privacy[3].includes(DATA.manifests), `${code}: the rules are public in ${DATA.manifests}`);
     assert.ok(T[code].footer("v0").includes("grafyla/setup"), `${code}: the page's own code`);
   }
   for (const page of ["index.html", "done.html"]) assert.ok(!/<title>[^<]*install/i.test(source(page)), page);
@@ -136,12 +134,12 @@ test("a link is drawn as its words and an https address; everything else stays t
 
 // Not the Issue's order on purpose (the owner's word, 26.11.2026): once she has copied a text she goes to her AI and may
 // not come back, so whatever she is to read comes before the box it is about, and nothing comes after the last box.
-test("the page shows what she gets with nothing after the last box: what works, the check, the instructions, the first message", () => {
+test("the page shows what she gets with nothing after the last box: what comes later, the check, the instructions, the first message", () => {
   const app = source("app.js");
   const out = app.slice(app.indexOf("function installOutput("), app.indexOf("function settingsOutput("));
-  const order = ["t.out_h", "t.need_plan(", "t.works_h(", "t.no_daily", "t.later_h", "t.later }", "t.two_texts", "t.check_h",
+  const order = ["t.out_h", "t.need_plan(", "text: unknown", "t.later_h", "t.later }", "t.two_texts", "t.check_h",
     "t.check(DATA.manifests)", "t.step1_h", "`${t.step1} ${where}`", "t.paste(", "copyBox(field, t)", "t.step2_h", "t.after }",
-    "t.after2 }", "t.old }", "t.step2 }", "copyBox(firstMessage(p), t)"];
+    "t.old }", "t.step2 }", "copyBox(firstMessage(p), t)"];
   let at = out.indexOf("return [");
   for (const piece of order) {
     const next = out.indexOf(piece, at);
@@ -281,22 +279,30 @@ test("the page sends as the counter asks: POST, keepalive, an ordinary CORS requ
   assert.ok(done.indexOf("if (ended !== null) return;") < done.indexOf("send(line("), "a press after an answer sends nothing");
 });
 
-test("the page says what the counter does: the day is the counter's, and nothing reaches the creator without her press", () => {
+// What is seen by whom is the site's now (the owner's word, 26.11.2026); the page keeps, beside each button that
+// sends, what that one line holds — and no more than is true.
+test("the page says what the line holds beside each button that sends it, and nothing reaches the creator without her press", () => {
+  const holds = { en: "your AI, your language and your country, with no name", ru: "ваш ИИ, язык и стран", he: "ה-AI, השפה והמדינה שלכם, בלי שם" };
   for (const code of LANGS) {
-    for (const words of [T[code].privacy[1], T[code].done_text]) {
+    for (const words of [T[code].buttons_note, T[code].done_text]) {
+      assert.ok(words.includes(holds[code]), `${code}: «${words.slice(0, 60)}…» does not say what the line holds`);
       assert.ok(!/, and the day\.|, и день\.|, והיום\./.test(words), `${code}: the line holds no day — the counter adds it`);
     }
   }
-  assert.ok(T.en.privacy[1].includes("the day is set by the counter of Grafyla's creator — the day the line reaches it"));
+  assert.ok(T.ru.buttons_note.includes("без имени") && T.ru.done_text.includes("без имени"), "ru: with no name");
   assert.ok(T.en.done_text.includes("Nothing reaches the creator unless you press the button"),
     "opening the page sends its address to GitHub: «nothing is sent» would say more than is true");
-  // What GitHub saw is the visitor's own address, not the page's (the owner's review, 25.11.2026).
-  assert.ok(T.en.done_text.includes("saw your IP address when you opened it"));
-  assert.ok(T.ru.done_text.includes("увидел ваш IP-адрес, когда вы её открыли"));
-  assert.ok(T.he.done_text.includes("ראה את כתובת ה-IP שלכם כשפתחתם אותו"));
+});
+
+// The page is for a setup, not for how the system works (the owner's word, 26.11.2026): no word of IP addresses,
+// Cloudflare, cookies or the e-mail a user dictates, and no section of what the page does and does not.
+test("the page says nothing a setup does not need: no IP, Cloudflare, cookies or dictated e-mail", () => {
+  const away = (words) => /\bIP\b/.test(words) || /cloudflare|cookie|dictat|диктуе|מכתיב|עוגיות/i.test(words);
   for (const code of LANGS) {
-    assert.ok(!/saw its address|увидел её адрес|את הכתובת שלו/.test(T[code].done_text), `${code}: GitHub saw her address`);
+    for (const words of all(T[code])) assert.ok(!away(words), `${code}: «${words.slice(0, 70)}…»`);
+    assert.ok(!("privacy" in T[code]) && !("privacy_h" in T[code]), `${code}: no section of what the page does`);
   }
+  assert.ok(!/t\.privacy/.test(source("app.js")), "the page draws no such section");
 });
 
 test("in Hebrew a run of Latin words is an isolate; a full stop goes in only before «»»", () => {

@@ -13,7 +13,6 @@ h3 { font-size: 1.05rem; margin: 1.25rem 0 0.25rem; }
 .langs { display: flex; gap: 8px; justify-content: flex-end; }
 .langs button { background: none; border: 1px solid var(--line); border-radius: 999px; color: var(--fg); padding: 4px 12px; font: inherit; font-size: 0.9rem; }
 .langs button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
-.privacy { border-inline-start: 3px solid var(--accent); padding-inline-start: 12px; }
 .field { margin: 0.9rem 0; }
 .field label, .field .label { display: block; font-weight: 600; margin-bottom: 4px; }
 select, input[type="text"] { width: 100%; font: inherit; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); margin-bottom: 6px; }

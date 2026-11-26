@@ -243,7 +243,6 @@ export function render(code) {
     }),
     el("h1", { text: t.title }),
     el("p", { text: t.intro }),
-    el("section", { class: "privacy" }, el("h2", { text: t.privacy_h }), t.privacy.map((x) => el("p", { text: x }))),
     el("section", {}, el("h2", { text: t.need_h }), el("ul", {}, t.need.map((x) => el("li", { rich: x })))),
     el("section", {},
       el("h2", { text: t.purpose_q }), purposes,
@@ -265,22 +264,20 @@ export function render(code) {
 
 function installOutput(t, a, field, p) {
   const row = DATA.platforms[a.platform];
-  // English keeps the release's own words (the parity test holds them to the Issue); the others go by the menus.
+  // English names the place in the release's own words; the others go by the menus.
   const place = (words) => (t === T.en ? words : PLACES[words]?.[langOf(t)] || words);
   // One place on every platform from v0.1.15 — the field for every chat; a release that brings a second place back
   // (`field_all`) fails page/test/page.test.js until the page has words for the choice again.
   const where = t.where_one(place(row.field));
   const unknown = row.unknown ? t.unknown(t === T.en ? row.unknown : (UNKNOWN[row.unknown]?.[langOf(t)] || row.unknown)) : "";
-  const schedule = row.schedule === "paid" ? t.schedule.paid(row.plan) : t.schedule[row.schedule];
   // Everything she is to read comes before the box it is about, and nothing after the last box: once she has
-  // copied a text she goes to her AI and may not come back to this page (the owner's word, 26.11.2026). So what works
-  // and what comes later open the page, and what the first message brings — the AI's questions, what to do if it
-  // stops, her old instructions — comes before that message's box, not after it.
+  // copied a text she goes to her AI and may not come back to this page (the owner's word, 26.11.2026). And only what
+  // she needs to set it up: how the system works, what is seen by whom and what each platform can do are the site's
+  // (the owner's word, 26.11.2026); a platform in beta keeps its one line of what is not known yet.
   return [
     el("h2", { text: t.out_h }),
     row.plan === "any" ? null : el("p", { class: "plan", text: t.need_plan(row.plan) }),
-    el("h3", { text: t.works_h(row.title) }),
-    el("p", { text: [t.notion[row.notion], schedule, unknown, t.no_daily].filter(Boolean).join(" ") }),
+    unknown ? el("p", { text: unknown }) : null,
     el("h3", { text: t.later_h }),
     el("p", { text: t.later }),
     el("p", { text: t.two_texts }),
@@ -292,7 +289,6 @@ function installOutput(t, a, field, p) {
     copyBox(field, t),
     el("h3", { text: t.step2_h }),
     el("p", { text: t.after }),
-    el("p", { text: t.after2 }),
     el("p", { text: t.old }),
     el("p", { text: t.step2 }),
     copyBox(firstMessage(p), t),
