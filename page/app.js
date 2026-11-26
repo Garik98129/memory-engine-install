@@ -272,9 +272,17 @@ function installOutput(t, a, field, p) {
   const where = t.where_one(place(row.field));
   const unknown = row.unknown ? t.unknown(t === T.en ? row.unknown : (UNKNOWN[row.unknown]?.[langOf(t)] || row.unknown)) : "";
   const schedule = row.schedule === "paid" ? t.schedule.paid(row.plan) : t.schedule[row.schedule];
+  // Everything she is to read comes before the box it is about, and nothing after the last box: once she has
+  // copied a text she goes to her AI and may not come back to this page (the owner's word, 26.11.2026). So what works
+  // and what comes later open the page, and what the first message brings — the AI's questions, what to do if it
+  // stops, her old instructions — comes before that message's box, not after it.
   return [
     el("h2", { text: t.out_h }),
     row.plan === "any" ? null : el("p", { class: "plan", text: t.need_plan(row.plan) }),
+    el("h3", { text: t.works_h(row.title) }),
+    el("p", { text: [t.notion[row.notion], schedule, unknown, t.no_daily].filter(Boolean).join(" ") }),
+    el("h3", { text: t.later_h }),
+    el("p", { text: t.later }),
     el("p", { text: t.two_texts }),
     el("h3", { text: t.check_h }),
     el("p", { rich: t.check(DATA.manifests) }),
@@ -283,15 +291,11 @@ function installOutput(t, a, field, p) {
     el("p", { text: t.paste(lastLine(field), lastWords(field), length(field), MARK_RE.test(lastLine(field))) }),
     copyBox(field, t),
     el("h3", { text: t.step2_h }),
-    el("p", { text: t.step2 }),
-    copyBox(firstMessage(p), t),
     el("p", { text: t.after }),
     el("p", { text: t.after2 }),
     el("p", { text: t.old }),
-    el("h3", { text: t.works_h(row.title) }),
-    el("p", { text: [t.notion[row.notion], schedule, unknown, t.no_daily].filter(Boolean).join(" ") }),
-    el("h3", { text: t.later_h }),
-    el("p", { text: t.later }),
+    el("p", { text: t.step2 }),
+    copyBox(firstMessage(p), t),
   ];
 }
 
