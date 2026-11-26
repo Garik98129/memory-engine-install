@@ -294,6 +294,29 @@ test("the page says what the line holds beside each button that sends it, and no
     "opening the page sends its address to GitHub: «nothing is sent» would say more than is true");
 });
 
+// What the cut must not lose (Tolik's note on #13): the words a setup needs, held by their words, not by the call.
+test("the words a setup needs stay: not back into the field, the last line, Notion not seen, stopped halfway, old instructions", () => {
+  const need = {
+    en: { paste: ["Do not put them back into the instructions field you copied them from", "Check that its last line came in too", "keep it"],
+          after: ["If it says it cannot see your Notion, check the connection and send the same message again", "If it stops halfway, send it again"],
+          old: ["My old instructions"] },
+    ru: { paste: ["Не возвращайте их в поле инструкций, откуда скопировали", "Проверьте, что вошла и его последняя строка", "не удаляйте её"],
+          after: ["не видит ваш Notion, проверьте подключение и отправьте то же сообщение снова", "остановится на полпути — отправьте снова"],
+          old: ["Мои старые инструкции"] },
+    he: { paste: ["אל תחזירו אותן לשדה ההוראות שממנו העתקתם", "בדקו שגם השורה האחרונה שלו נכנסה", "השאירו אותה"],
+          after: ["לא רואה את ה-Notion שלכם, בדקו את החיבור ושלחו שוב את אותה הודעה", "נעצר באמצע, שלחו אותה שוב"],
+          old: ["ההוראות הישנות שלי"] },
+  };
+  for (const code of LANGS) {
+    const shown = { paste: T[code].paste("LAST", "WORDS", 1, true), after: T[code].after, old: T[code].old };
+    for (const [key, words] of Object.entries(need[code])) {
+      for (const w of words) assert.ok(shown[key].includes(w), `${code}.${key}: «${w}» is gone`);
+    }
+    assert.ok(shown.paste.includes("«LAST»"), `${code}: the last line itself is quoted`);
+    assert.ok(T[code].paste("LAST", "WORDS", 1, false).includes("«WORDS»"), `${code}: a text without its mark — its last words`);
+  }
+});
+
 // The page is for a setup, not for how the system works (the owner's word, 26.11.2026): no word of IP addresses,
 // Cloudflare, cookies or the e-mail a user dictates, and no section of what the page does and does not.
 test("the page says nothing a setup does not need: no IP, Cloudflare, cookies or dictated e-mail", () => {
