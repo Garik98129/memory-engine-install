@@ -92,7 +92,7 @@ which never waits for the answer, still says the line was sent. «Enforce HTTPS�
 https, and without https the page has no fingerprints and the counter would refuse its origin. What `main` holds is
 what people get — at once, so two things come before a merge here: the release the page names is tagged in
 `grafyla/releases`, and the branch `stable` there is on a release whose index that text can read (the text she pastes
-sends her AI to `rules-index.md` at `stable`; with no such branch her AI says the rules are unavailable): `data.js` is v0.1.18's, written again by `write.py`
+sends her AI to `rules-index.md` at `stable`; with no such branch her AI says the rules are unavailable): `data.js` is v0.1.19's, written again by `write.py`
 with each release the page follows. `.nojekyll` keeps GitHub from building the folder. Until 23.11.2026 the page's
 address was `https://garik98129.github.io/memory-engine-install/page/`; GitHub Pages does not lead from an old address
 to a new one.
@@ -105,7 +105,7 @@ to a new one.
 сверяются с движком байт в байт тестом `test:parity`. По-русски и на иврите место для текста показано путём по меню со
 стрелками: кнопки ChatGPT — так, как они написаны на экране (по скриншотам владельца с chatgpt.com в Safari, русский
 интерфейс), кнопки Claude — английскими названиями из справки Anthropic. Страница опубликована на GitHub Pages по
-адресу `https://setup.grafyla.com/page/`; данные собраны из выпуска `v0.1.18`. Порядок блоков — не как в Issue (слово владельца
+адресу `https://setup.grafyla.com/page/`; данные собраны из выпуска `v0.1.19`. Порядок блоков — не как в Issue (слово владельца
 26.11.2026): скопировав текст, человек уходит в свой ИИ и может не вернуться, поэтому всё, что нужно прочесть, стоит
 до окошка, к которому относится, а после последнего окошка ничего нет. И только то, что нужно для настройки (слово
 владельца 26.11.2026): как устроена Grafyla, кто что видит (GitHub, Cloudflare, счётчик) и что умеет каждая платформа —
