@@ -108,12 +108,14 @@ def data(release: Path) -> dict:
         platforms[key] = {
             "title": row["title"], "plan": row["plan"], "status": row["status"], "notion": row["notion"],
             "schedule": row["schedule"], "field": row["field"], "field_all": row.get("field_all", ""),
-            "unknown": row.get("unknown", ""), "limit": setup.limit_of(row, floor), "works": setup._works(row),
+            "unknown": row.get("unknown", ""), "limit": setup.field_limit(row, floor), "works": setup._works(row),
+            # the one text's addendum, set before its mark on this platform (setup.field_text, from text mark 8)
+            "addendum": row.get("addendum") is True,
         }
-    field = setup.field_text()
     for key, row in platforms.items():
+        field = setup.field_text(row=table[key])
         if len(field.encode("utf-16-le")) // 2 > row["limit"]:
-            raise SystemExit(f"the one text does not fit {key}'s field: setup.prepare would refuse it")
+            raise SystemExit(f"the text does not fit {key}'s field: setup.prepare would refuse it")
     for code in LANGUAGES:
         if len(code) > setup.LANGUAGE_MAX or not re.fullmatch(r"[a-z]{2,3}(-[A-Za-z]{2,8})*", code):
             raise SystemExit(f"LANGUAGES: {code!r} is not a code without digits that setup takes")
@@ -123,6 +125,7 @@ def data(release: Path) -> dict:
         "manifests": setup._toml(setup.DEFAULTS)["release"]["manifests"],
         "python": sys.version.split()[0],
         "fixed": setup.FIXED.read_bytes().decode("utf-8"),
+        "addendum": setup.ADDENDUM.read_bytes().decode("utf-8"),
         "platforms": platforms,
         "grammar": dict(setup.GRAMMAR),
         "messages": {"first": setup.FIRST_MESSAGE, "settings": setup.SETTINGS_MESSAGE, "part": setup.PART_MESSAGE},

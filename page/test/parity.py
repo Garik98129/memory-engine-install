@@ -46,7 +46,7 @@ def built(setup, answers: dict) -> dict:
     except setup.SetupError as exc:
         return {"ok": False, "why": str(exc)}
     part = files[setup.PART]
-    field = setup.field_text()
+    field = setup.field_text(row=setup.platforms()[answers["platform"]])
     return {"ok": True, "part": part, "first": setup.first_message(part),
             "settings": setup.first_message(part, setup.SETTINGS_MESSAGE),
             # as setup_run.open_issue ends the Issue: the text's and her part's fingerprints
@@ -107,6 +107,8 @@ def main(argv: list[str] | None = None) -> int:
     out = {
         "release": found["release"],
         "field": setup.field_text(),
+        "fields": {key: setup.field_text(row=row) for key, row in setup.platforms().items()
+                   if row.get("status") in setup.INSTALLABLE},
         "messages": {"first": setup.FIRST_MESSAGE, "settings": setup.SETTINGS_MESSAGE},
         "answers": [built(setup, a) for a in asked["answers"]],
         "names": [{"name_ok": setup.name_ok(n), "length": limits_check.length(n),

@@ -136,9 +136,15 @@ export function firstMessage(partText, lead = DATA.messages.first) {
   return `${lead}\n\n${stripNewlines(partText)}`;
 }
 
-// setup.field_text: the one text she pastes, as the release holds it, without its outer line breaks.
-export function fieldText(d = DATA) {
-  return stripNewlines(d.fixed);
+// setup.field_text: the text she pastes, as the release holds it, without its outer line breaks — the one text, and
+// on a platform whose row asks for it (ChatGPT, from text mark 8) the addendum set before its mark, an empty line on
+// each side, so the mark stays the last line.
+export function fieldText(d = DATA, platform = "") {
+  const text = stripNewlines(d.fixed);
+  if (!platform || !d.platforms[platform] || d.platforms[platform].addendum !== true) return text;
+  const cut = text.lastIndexOf("\n");
+  const body = text.slice(0, cut).replace(/\n+$/, "");
+  return `${body}\n\n${stripNewlines(d.addendum)}\n\n${text.slice(cut + 1)}`;
 }
 
 export const lastLine = (field) => field.slice(field.lastIndexOf("\n") + 1);

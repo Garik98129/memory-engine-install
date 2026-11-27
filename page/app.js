@@ -210,7 +210,7 @@ export function render(code) {
     }
     error.textContent = "";
     const p = part(a);
-    const field = fieldText();
+    const field = fieldText(DATA, a.platform);
     if (purpose() === "settings") out.append(...settingsOutput(t, p));
     else out.append(...installOutput(t, a, field, p));
     // The texts are built and shown first; the line goes after them, once from this page, and nothing waits on it.

@@ -93,6 +93,9 @@ test("every set of answers: the same refusal or the same part, messages and fing
   writeFileSync(join(dir, "in.json"), JSON.stringify({ answers: sets, names: [] }));
   const out = python(["--answers", join(dir, "in.json")]);
   assert.equal(out.field, fieldText(), "the one text");
+  for (const [k, field] of Object.entries(out.fields)) {
+    assert.equal(fieldText(DATA, k), field, `${k}: setup.field_text(row) — the addendum where the row asks for it`);
+  }
   assert.equal(out.messages.first, DATA.messages.first);
   assert.equal(out.messages.settings, DATA.messages.settings);
   let built = 0;
@@ -107,10 +110,10 @@ test("every set of answers: the same refusal or the same part, messages and fing
     assert.equal(p, py.part, `part ${JSON.stringify(a)}`);
     assert.equal(firstMessage(p), py.first);
     assert.equal(firstMessage(p, DATA.messages.settings), py.settings);
-    fingerprints.push([p, py.marker]);
+    fingerprints.push([p, py.marker, a.platform]);
   });
-  for (const [p, want] of fingerprints) {
-    const lines = (await marker(fieldText(), p)).map((m) => `<!-- ${m} -->\n`).join("");
+  for (const [p, want, platform] of fingerprints) {
+    const lines = (await marker(fieldText(DATA, platform), p)).map((m) => `<!-- ${m} -->\n`).join("");
     assert.equal(lines, want, "field_issue.marker, as setup_run.open_issue ends the Issue");
   }
   assert.ok(built > 100, `${built} parts compared`);

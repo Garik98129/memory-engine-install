@@ -230,7 +230,12 @@ test("names: the engine's own cases, with marks, initials and look-alike letters
 
 test("the one text fits every platform's field, and its last line is what the page asks her to check", () => {
   const field = fieldText();
-  for (const [k, row] of Object.entries(DATA.platforms)) assert.ok(length(field) <= row.limit, k);
+  for (const [k, row] of Object.entries(DATA.platforms)) {
+    assert.ok(length(fieldText(DATA, k)) <= row.limit, k);
+    assert.equal(lastLine(fieldText(DATA, k)), lastLine(field), `${k}: the mark stays the last line`);
+    assert.equal(fieldText(DATA, k).includes(DATA.addendum.trim().split("\n")[0]), row.addendum === true,
+      `${k}: the addendum where the row asks for it, and nowhere else`);
+  }
   assert.ok(!field.startsWith("\n") && !field.endsWith("\n"));
   assert.equal(lastLine(field), field.split("\n").at(-1));
   assert.ok(field.endsWith(lastWords(field)), "a text without the mark: the page names the words it ends with");
